@@ -1,3 +1,4 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import * as React from 'react';
 import {
   StyleSheet,
@@ -8,25 +9,23 @@ import AppText from '#components/AppText';
 import theme from '#helpers/theme';
 
 type Align = 'left' | 'center' | 'right';
+type Variant = 'primary' | 'secondary';
 
 interface ButtonI {
   align?: Align;
-  color?: string,
   disabled: boolean;
   fontSize?: number;
   height?: number;
   marginBottom?: number;
   onPress: () => void,
   title: string;
-  variant?: 'primary' | 'secondary';
+  variant?: Variant;
 }
 
 interface StyleSheetI {
   align: Align;
-  color?: string;
   height: number;
   marginBottom: number;
-  variant?: 'primary' | 'secondary';
 }
 
 const convertAlign = (align?: Align) => {
@@ -42,62 +41,64 @@ const convertAlign = (align?: Align) => {
   }
 };
 
-const convertColor = (color?: string) => (color || theme.color.primary);
-
 const Button = ({
   align = 'center',
-  color,
   disabled,
-  fontSize = theme.button.fontSize,
   height = theme.button.height,
+  fontSize = theme.button.fontSize,
   marginBottom = 0,
   onPress,
   title,
   variant = 'primary',
 }: ButtonI) => (
   <TouchableOpacity
+    activeOpacity={theme.button.activeOpacity}
     disabled={disabled}
     onPress={onPress}
-    activeOpacity={theme.button.activeOpacity}
-    style={
-      styles({
+    style={styles({
+      align,
+      height,
+      marginBottom,
+    }).container}
+  >
+    <LinearGradient
+      end={[1, 1]}
+      colors={variant === 'primary' ? [theme.color.tertiary, theme.color.primary] : [theme.color.primary, theme.color.tertiary]}
+      start={[0, 0]}
+      style={styles({
         align,
-        color,
         height,
         marginBottom,
-        variant,
-      }).container
-    }
-  >
-    <AppText
-      color={variant === 'primary' ? 'secondary' : 'primary'}
-      fontSize={fontSize}
+      }).gradient}
     >
-      {title}
-    </AppText>
+      <AppText
+        color='secondary'
+        fontSize={fontSize}
+      >
+        {title}
+      </AppText>
+    </LinearGradient>
   </TouchableOpacity>
 );
 
 const styles = ({
   align,
-  color,
   height,
   marginBottom,
-  variant,
 }: StyleSheetI) => StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    backgroundColor: variant === 'primary' ? convertColor(color) : theme.color.secondary,
-    borderColor: convertColor(color),
-    borderRadius: theme.button.borderRadius,
-    borderWidth: theme.button.borderWidth,
-    elevation: theme.button.elevation,
-    flexDirection: 'row',
-    height,
-    justifyContent: convertAlign(align),
-    marginBottom,
+  gradient: {
+    alignItems: convertAlign(align),
+    flex: 1,
+    justifyContent: 'center',
     paddingHorizontal: theme.button.paddingHorizontal,
-    paddingVertical: theme.button.paddingHorizontal,
+    paddingVertical: theme.button.paddingVertical,
+  },
+  container: {
+    borderRadius: theme.button.borderRadius,
+    elevation: theme.button.elevation,
+    height,
+    marginBottom,
+    overflow: 'hidden',
   },
 });
 

@@ -4,47 +4,54 @@ import {
   Text,
 } from 'react-native';
 
-type Color = 'primary' | 'secondary' | 'black' | 'white';
+import theme from '#helpers/theme';
+
+type Color = 'primary' | 'secondary' | 'black' | 'white' | 'error';
 type FontFamily = 'bold' | 'oblique' | 'roman';
+type TextTransform = 'capitalize' | 'uppercase' | 'lowerCase' | 'none';
 
 interface LoaderI {
   children: string | string[];
   color?: Color;
   fontFamily?: FontFamily
   fontSize?: number;
+  textTransform?: TextTransform;
 }
 
 interface StyleSheetI {
   color: Color;
   fontFamily: FontFamily
   fontSize: number;
+  textTransform: TextTransform;
 }
 
 const convertFontFamily = (fontFamily: FontFamily) => {
   switch (fontFamily) {
     case 'bold':
-      return 'HelveticaLTStd-Bold';
+      return theme.fonts.helvetica.bold;
     case 'oblique':
-      return 'HelveticaLTStd-Obl';
+      return theme.fonts.helvetica.oblique;
     case 'roman':
-      return 'HelveticaLTStd-Roman';
+      return theme.fonts.helvetica.roman;
     default:
-      return 'HelveticaLTStd-Obl';
+      return theme.fonts.helvetica.roman;
   }
 };
 
 const converColor = (color: Color) => {
   switch (color) {
     case 'primary':
-      return '#7483FF';
+      return theme.color.primary;
     case 'secondary':
-      return '#FFFFF4';
+      return theme.color.secondary;
     case 'black':
-      return '#000';
+      return theme.color.black;
     case 'white':
-      return '#fff';
+      return theme.color.white;
+    case 'error':
+      return theme.color.error;
     default:
-      return '#7483FF';
+      return theme.color.black;
   }
 };
 
@@ -52,13 +59,15 @@ const AppText: React.FC<LoaderI> = ({
   children,
   color = 'primary',
   fontFamily = 'roman',
-  fontSize = 12,
+  fontSize = theme.text.fontSize,
+  textTransform = 'none',
 }) => (
   <Text
     style={styles({
       color,
       fontFamily,
       fontSize,
+      textTransform,
     }).text}
   >
     { children }
@@ -69,11 +78,13 @@ const styles = ({
   color,
   fontFamily,
   fontSize,
+  textTransform,
 }: StyleSheetI) => StyleSheet.create({
   text: {
     color: converColor(color),
     fontFamily: convertFontFamily(fontFamily),
     fontSize,
+    textTransform,
   },
 });
 

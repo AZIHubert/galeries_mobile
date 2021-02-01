@@ -85,6 +85,7 @@ const Home = () => {
                 <AppButton
                   disabled={loading}
                   onPress={() => {}}
+                  marginBottom={24}
                   title='log in'
                 />
               </View>
@@ -94,6 +95,7 @@ const Home = () => {
                 <AppButton
                   disabled={loading}
                   onPress={() => {}}
+                  marginBottom={24}
                   title='sign in'
                   variant='secondary'
                 />
@@ -138,7 +140,6 @@ const styles = StyleSheet.create({
   loggersContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 24,
   },
   texts: {
     position: 'absolute',

@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 
 import AppText from '#components/AppText';
+import theme from '#helpers/theme';
 import logoFacebook from '#ressources/images/logoFacebook.png';
 import logoGoogle from '#ressources/images/logoGoogle.png';
 
@@ -33,7 +34,7 @@ const Button = ({
   <TouchableOpacity
     disabled={disabled}
     onPress={onPress}
-    activeOpacity={0.8}
+    activeOpacity={theme.button.activeOpacity}
     style={styles({
       marginBottom,
       variant,
@@ -66,15 +67,15 @@ const Button = ({
 const styles = ({ marginBottom, variant }: StyleSheetI) => StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: variant === 'facebook' ? '#3B579D' : '#fff',
-    borderColor: variant === 'facebook' ? '#3B579D' : '#000',
-    borderRadius: 8,
-    borderWidth: 2,
-    elevation: 2,
+    backgroundColor: variant === 'facebook' ? theme.color.facebook : theme.color.white,
+    borderColor: variant === 'facebook' ? theme.color.facebook : theme.color.white,
+    borderRadius: theme.button.borderRadius,
+    borderWidth: theme.button.borderWidth,
+    elevation: theme.button.elevation,
     flexDirection: 'row',
-    height: 45,
-    marginBottom,
+    height: theme.button.height,
     justifyContent: 'space-between',
+    marginBottom,
     paddingHorizontal: 20,
   },
   image: {

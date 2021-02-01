@@ -1,11 +1,13 @@
 import React from 'react';
 
-import Home from '#routes/Home';
+// import Home from '#routes/Home';
+import Login from '#routes/Login';
 import Loader from '#src/Loader';
 
 const App = () => (
   <Loader>
-    <Home />
+    <Login />
+    {/* <Home /> */}
   </Loader>
 );
 

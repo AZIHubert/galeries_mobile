@@ -1,27 +1,43 @@
 import * as React from 'react';
 import Constants from 'expo-constants';
 import {
+  Keyboard,
   SafeAreaView,
   StyleSheet,
+  TouchableWithoutFeedback,
 } from 'react-native';
 
+import theme from '#helpers/theme';
+
+type SafeView = true | false;
 interface ScreenI {
   children: React.ReactChild | React.ReactChild[];
+  safeView?: SafeView;
 }
 
-const Screen: React.FC<ScreenI> = ({ children }) => (
-  <SafeAreaView
-    style={styles.container}
+interface StyleSheetI {
+  safeView: SafeView
+}
+
+const Screen: React.FC<ScreenI> = ({ children, safeView = true }) => (
+  <TouchableWithoutFeedback
+    onPress={() => Keyboard.dismiss()}
   >
-    {children}
-  </SafeAreaView>
+    <SafeAreaView
+      style={styles({ safeView }).container}
+    >
+      {children}
+    </SafeAreaView>
+  </TouchableWithoutFeedback>
 );
 
-const styles = StyleSheet.create({
+const styles = ({
+  safeView,
+}: StyleSheetI) => StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Constants.statusBarHeight,
-    backgroundColor: '#FFFFF4',
+    paddingTop: safeView ? Constants.statusBarHeight : 0,
+    backgroundColor: theme.color.secondary,
   },
 });
 
