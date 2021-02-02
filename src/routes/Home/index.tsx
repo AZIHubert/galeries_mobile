@@ -8,6 +8,7 @@ import {
 
 import AppButton from '#components/AppButton';
 import AppText from '#components/AppText';
+import Column from '#components/Column';
 import Screen from '#components/Screen';
 import SocialMediaButton from '#components/SocialMediaButton';
 import Wrapper from '#components/Wrapper';
@@ -23,7 +24,7 @@ const Home = () => {
   return (
     <Screen>
       <ImageBackground
-        style={{ width: '100%', flex: 1 }}
+        style={styles.ImageBackground}
         source={homeBackground}
       >
         <Wrapper>
@@ -79,19 +80,15 @@ const Home = () => {
             <View
               style={styles.loggersContainer}
             >
-              <View
-                style={{ width: '48%' }}
-              >
+              <Column>
                 <AppButton
                   disabled={loading}
                   onPress={() => {}}
                   marginBottom={24}
                   title='log in'
                 />
-              </View>
-              <View
-                style={{ width: '48%' }}
-              >
+              </Column>
+              <Column>
                 <AppButton
                   disabled={loading}
                   onPress={() => {}}
@@ -99,7 +96,7 @@ const Home = () => {
                   title='sign in'
                   variant='secondary'
                 />
-              </View>
+              </Column>
             </View>
           </View>
           <View>
@@ -136,6 +133,10 @@ const styles = StyleSheet.create({
   gLogo: {
     position: 'absolute',
     top: 10,
+  },
+  ImageBackground: {
+    width: '100%',
+    flex: 1,
   },
   loggersContainer: {
     flexDirection: 'row',

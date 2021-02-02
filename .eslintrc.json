@@ -1,78 +1,81 @@
 {
     "env": {
-    "browser": true,
-    "es2021": true,
-    "node": true,
-    "mocha": true,
-    "commonjs": true,
-    "jest": true
+        "browser": true,
+        "es2021": true,
+        "node": true,
+        "mocha": true,
+        "commonjs": true,
+        "jest": true
+    },
+    "globals": {
+        "JSX": "readonly"
     },
     "extends": [
-    "airbnb-base",
-    "prettier/@typescript-eslint"
+        "airbnb-base",
+        "prettier/@typescript-eslint"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
-    "ecmaVersion": 12,
-    "sourceType": "module"
+        "ecmaVersion": 12,
+        "sourceType": "module"
     },
     "plugins": [
-    "react",
-    "react-native",
-    "@typescript-eslint",
-    "prettier"
+        "react",
+        "react-native",
+        "@typescript-eslint",
+        "prettier"
     ],
     "settings": {
     "import/resolver": {
-    "typescript": {},
-    "node": {
-    "extensions": [
-    ".js",
-    ".jsx",
-    ".ts",
-    ".tsx"
-    ]
-    }
+        "typescript": {},
+        "node": {
+            "extensions": [
+                ".js",
+                ".jsx",
+                ".ts",
+                ".tsx"
+            ]
+        }
     }
     },
     "rules": {
         "global-require": 0,
     "import/no-extraneous-dependencies": [
-    "error",
-    {
-    "devDependencies": [
-    "**/*.d.ts",
-    "**/*.test.tsx",
-    "**/*.spec.tsx"
-    ]
-    }
+        "error",
+        {
+            "devDependencies": [
+                "**/*.d.ts",
+                "**/*.test.tsx",
+                "**/*.spec.tsx"
+            ]
+        }
     ],
     "no-use-before-define": "off",
     "no-console": "off",
     "indent": "off",
     "@typescript-eslint/indent": [
-    "error",
-    2
+        "error",
+        2
     ],
     "@typescript-eslint/naming-convention": [
-    "error",
-    {
-    "selector": [
-    "interface"
-    ],
-    "format": [
-    "PascalCase"
-    ]
-    }
+        "error",
+        {
+            "selector": [
+                "interface"
+            ],
+            "format": [
+                "PascalCase"
+            ]
+        }
     ],
     "import/extensions": [
-    "error",
-    {
-    "js": "never",
-    "jsx": "never",
-    "ts": "never",
-    "tsx": "never"
+        "error",
+            {
+                "js": "never",
+                "jsx": "never",
+                "ts": "never",
+                "tsx": "never"
+            }
+        ]
     }
-    ]
-    }
-    }
+}

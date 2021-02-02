@@ -4,40 +4,82 @@ import {
   Keyboard,
   SafeAreaView,
   StyleSheet,
+  ScrollView,
   TouchableWithoutFeedback,
+  View,
 } from 'react-native';
 
 import theme from '#helpers/theme';
 
-type SafeView = true | false;
 interface ScreenI {
   children: React.ReactChild | React.ReactChild[];
-  safeView?: SafeView;
+  header?: () => JSX.Element,
 }
 
 interface StyleSheetI {
-  safeView: SafeView
+  asHeader: boolean
 }
 
-const Screen: React.FC<ScreenI> = ({ children, safeView = true }) => (
-  <TouchableWithoutFeedback
-    onPress={() => Keyboard.dismiss()}
-  >
-    <SafeAreaView
-      style={styles({ safeView }).container}
-    >
-      {children}
-    </SafeAreaView>
-  </TouchableWithoutFeedback>
-);
+const Screen: React.FC<ScreenI> = ({
+  children,
+  header: Header,
+}) => {
+  const asHeader = !!Header;
+  return (
+    <View style={styles({
+      asHeader,
+    }).container}>
+      {Header ? (
+        <TouchableWithoutFeedback
+          onPress={() => {
+            Keyboard.dismiss();
+          }}
+        >
+          <Header />
+        </TouchableWithoutFeedback>
+      ) : null}
+      <ScrollView
+        contentContainerStyle={styles({
+          asHeader,
+        }).scrollViewContainer}
+        style={styles({
+          asHeader,
+        }).scrollView}
+      >
+        <TouchableWithoutFeedback
+          onPress={() => {
+            Keyboard.dismiss();
+          }}
+        >
+          <SafeAreaView
+            style={styles({
+              asHeader,
+            }).safeArea}
+          >
+            {children}
+          </SafeAreaView>
+        </TouchableWithoutFeedback>
+      </ScrollView>
+    </View>
+  );
+};
 
 const styles = ({
-  safeView,
+  asHeader,
 }: StyleSheetI) => StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: safeView ? Constants.statusBarHeight : 0,
+  },
+  safeArea: {
+    flex: 1,
+    paddingTop: asHeader ? 0 : Constants.statusBarHeight,
     backgroundColor: theme.color.secondary,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollViewContainer: {
+    flexGrow: 1,
   },
 });
 

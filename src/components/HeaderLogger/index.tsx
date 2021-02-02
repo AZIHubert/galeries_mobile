@@ -31,9 +31,9 @@ const HeaderLogger = ({
       borderRadius: 40 / 2,
     }}>
       <AntDesign
+        color={theme.color.secondary}
         name="arrowleft"
         size={theme.header.iconSize}
-        color={theme.color.secondary}
       />
     </TouchableOpacity>
     <AppText

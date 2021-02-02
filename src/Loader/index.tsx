@@ -17,6 +17,7 @@ const Loader: React.FC<LoaderI> = ({ children }) => {
     'HelveticaLTStd-Roman': require('#ressources/fonts/HelveticaLTStd-Roman.otf'),
   });
   const [assets] = useAssets([
+    require('#ressources/images/defaultProfilePicture.png'),
     require('#ressources/images/homeBackground.png'),
     require('#ressources/images/logoFacebook.png'),
     require('#ressources/images/logoG.png'),
