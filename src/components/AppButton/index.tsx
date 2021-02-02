@@ -8,25 +8,25 @@ import AppText from '#components/AppText';
 import theme from '#helpers/theme';
 
 type Align = 'left' | 'center' | 'right';
-
+type Variant = 'primary' | 'secondary';
 interface ButtonI {
   align?: Align;
-  color?: string,
   disabled: boolean;
   fontSize?: number;
   height?: number;
   marginBottom?: number;
   onPress: () => void,
+  reverse?: boolean;
   title: string;
-  variant?: 'primary' | 'secondary';
+  variant?: Variant;
 }
 
 interface StyleSheetI {
   align: Align;
-  color?: string;
   height: number;
   marginBottom: number;
-  variant?: 'primary' | 'secondary';
+  reverse: boolean;
+  variant: Variant;
 }
 
 const convertAlign = (align?: Align) => {
@@ -42,35 +42,48 @@ const convertAlign = (align?: Align) => {
   }
 };
 
-const convertColor = (color?: string) => (color || theme.color.primary);
+const convertBackgroundColor = (variant: Variant, reverse: boolean) => {
+  if (reverse) return variant === 'primary' ? theme.color.secondary : theme.color.primary;
+  return variant === 'primary' ? theme.color.primary : theme.color.secondary;
+};
+
+const convertBorderColor = (reverse: boolean) => {
+  if (reverse) return theme.color.secondary;
+  return theme.color.primary;
+};
+
+const convertTextColor = (variant: Variant, reverse?: boolean) => {
+  if (reverse) return variant === 'primary' ? 'primary' : 'secondary';
+  return variant === 'primary' ? 'secondary' : 'primary';
+};
 
 const Button = ({
   align = 'center',
-  color,
   disabled,
   fontSize = theme.button.fontSize,
   height = theme.button.height,
   marginBottom = 0,
   onPress,
+  reverse = false,
   title,
   variant = 'primary',
 }: ButtonI) => (
   <TouchableOpacity
     disabled={disabled}
     onPress={onPress}
-    activeOpacity={theme.button.activeOpacity}
+    activeOpacity={theme.touchableOpacity.defaultOpacity}
     style={
       styles({
         align,
-        color,
         height,
         marginBottom,
+        reverse,
         variant,
       }).container
     }
   >
     <AppText
-      color={variant === 'primary' ? 'secondary' : 'primary'}
+      color={convertTextColor(variant, reverse)}
       fontSize={fontSize}
     >
       {title}
@@ -80,15 +93,15 @@ const Button = ({
 
 const styles = ({
   align,
-  color,
   height,
   marginBottom,
+  reverse,
   variant,
 }: StyleSheetI) => StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: variant === 'primary' ? convertColor(color) : theme.color.secondary,
-    borderColor: convertColor(color),
+    backgroundColor: convertBackgroundColor(variant, reverse),
+    borderColor: convertBorderColor(reverse),
     borderRadius: theme.button.borderRadius,
     borderWidth: theme.button.borderWidth,
     elevation: theme.button.elevation,

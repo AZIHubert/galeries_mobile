@@ -5,10 +5,12 @@ import Login from '#routes/Login';
 import Signin from '#routes/Signin';
 import Profile from '#routes/Profile';
 import Loader from '#src/Loader';
+import ImageView from '#routes/ImageView';
 
 const App = () => (
   <Loader>
-    <Profile />
+    <ImageView />
+    {/* <Profile /> */}
     {/* <Signin /> */}
     {/* <Login /> */}
     {/* <Home /> */}
