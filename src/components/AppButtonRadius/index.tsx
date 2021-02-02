@@ -62,8 +62,10 @@ const Button = ({
     }).container}
   >
     <LinearGradient
+      colors={variant === 'primary'
+        ? [theme.color.tertiary, theme.color.primary]
+        : [theme.color.primary, theme.color.tertiary]}
       end={[1, 1]}
-      colors={variant === 'primary' ? [theme.color.tertiary, theme.color.primary] : [theme.color.primary, theme.color.tertiary]}
       start={[0, 0]}
       style={styles({
         align,

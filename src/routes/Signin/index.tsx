@@ -7,16 +7,16 @@ import Header from '#components/Header';
 import Screen from '#components/Screen';
 import Wrapper from '#components/Wrapper';
 
-import LoginForm from './LoginForm';
+import SigninForm from './SigninForm';
 
-const Login = () => {
+const Signin = () => {
   const [loading, setLoading] = React.useState<boolean>(false);
   return (
     <Screen
       safeView={false}
     >
       <Header
-        title='log in'
+        title='sign in'
       />
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
@@ -27,7 +27,7 @@ const Login = () => {
         <Wrapper
           marginTop={50}
         >
-          <LoginForm
+          <SigninForm
             loading={loading}
             setLoading={setLoading}
           />
@@ -37,4 +37,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signin;

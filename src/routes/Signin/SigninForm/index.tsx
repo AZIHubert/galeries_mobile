@@ -9,19 +9,21 @@ import {
 import AppButtonRadius from '#components/AppButtonRadius';
 import AppText from '#components/AppText';
 import Field from '#components/Field';
-import { loginSchema } from '#helpers/schemas';
+import { signinSchema } from '#helpers/schemas';
 
-interface LoginFormI {
+interface SigninFormI {
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const initialValues = {
+  confirmPassword: '',
+  email: '',
   password: '',
-  userNameOrEmail: '',
+  userName: '',
 };
 
-const LoginForm = ({ loading, setLoading }: LoginFormI) => {
+const LoginForm = ({ loading, setLoading }: SigninFormI) => {
   const formik = useFormik({
     initialValues,
     onSubmit: () => {
@@ -32,7 +34,7 @@ const LoginForm = ({ loading, setLoading }: LoginFormI) => {
     },
     validateOnBlur: true,
     validateOnChange: false,
-    validationSchema: loginSchema,
+    validationSchema: signinSchema,
   });
   return (
     <View
@@ -42,16 +44,29 @@ const LoginForm = ({ loading, setLoading }: LoginFormI) => {
       <View>
         <Field
           editable={!loading}
-          error={formik.errors.userNameOrEmail}
-          label='user name or email'
-          onBlur={formik.handleBlur('userNameOrEmail')}
+          error={formik.errors.userName}
+          label='user name'
+          onBlur={formik.handleBlur('userName')}
           onChangeText={(e: string) => {
-            formik.setFieldError('userNameOrEmail', '');
-            formik.setFieldValue('userNameOrEmail', e);
+            formik.setFieldError('userName', '');
+            formik.setFieldValue('userName', e);
           }}
           requiredField={true}
-          touched={formik.touched.userNameOrEmail}
-          value={formik.values.userNameOrEmail}
+          touched={formik.touched.userName}
+          value={formik.values.userName}
+        />
+        <Field
+          editable={!loading}
+          error={formik.errors.email}
+          label='email'
+          onBlur={formik.handleBlur('email')}
+          onChangeText={(e: string) => {
+            formik.setFieldError('email', '');
+            formik.setFieldValue('email', e);
+          }}
+          requiredField={true}
+          touched={formik.touched.email}
+          value={formik.values.email}
         />
         <Field
           editable={!loading}
@@ -67,6 +82,20 @@ const LoginForm = ({ loading, setLoading }: LoginFormI) => {
           touched={formik.touched.password}
           value={formik.values.password}
         />
+        <Field
+          editable={!loading}
+          error={formik.errors.confirmPassword}
+          label='confirm password'
+          onBlur={formik.handleBlur('confirmPassword')}
+          onChangeText={(e: string) => {
+            formik.setFieldError('confirmPassword', '');
+            formik.setFieldValue('confirmPassword', e);
+          }}
+          requiredField={true}
+          secureTextEntry={true}
+          touched={formik.touched.confirmPassword}
+          value={formik.values.confirmPassword}
+        />
         <View style={styles.requiredFieldIndicator}>
           <AppText
             fontSize={15}
@@ -80,7 +109,7 @@ const LoginForm = ({ loading, setLoading }: LoginFormI) => {
         fontSize={25}
         marginBottom={30}
         onPress={formik.handleSubmit}
-        title='login'
+        title='signin'
       />
     </View>
   );
@@ -92,10 +121,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   requiredFieldIndicator: {
-    marginTop: 30,
-    marginBottom: 60,
     flexDirection: 'row',
     justifyContent: 'flex-end',
+    marginTop: 30,
+    marginBottom: 60,
   },
 });
 
