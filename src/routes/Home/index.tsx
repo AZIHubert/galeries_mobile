@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
   },
   gLogo: {
     position: 'absolute',
-    top: 10,
+    top: 20,
   },
   ImageBackground: {
     width: '100%',

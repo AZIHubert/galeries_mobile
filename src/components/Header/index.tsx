@@ -16,15 +16,18 @@ const Header = () => (
     style={styles.container}
   >
     <TouchableOpacity
-      style={styles.menuContainer}
+      activeOpacity={theme.touchableOpacity.defaultOpacity}
+      style={styles.iconContainer}
     >
       <Entypo
-        color={theme.color.black}
+        color={theme.color.primary}
         name="menu"
         size={theme.header.iconSize}
       />
     </TouchableOpacity>
-    <TouchableOpacity>
+    <TouchableOpacity
+      activeOpacity={theme.touchableOpacity.defaultOpacity}
+    >
       <Image
         resizeMode='contain'
         source={logoG}
@@ -47,15 +50,18 @@ const styles = StyleSheet.create({
   image: {
     width: 30,
   },
-  menuContainer: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
+  iconContainer: {
     alignItems: 'center',
-    borderRadius: 40 / 2,
+    borderRadius: theme.header.containerIconSize / 2,
+    height: theme.header.containerIconSize,
+    justifyContent: 'center',
+    left: theme.wrapper.marginHorizontal
+    - (theme.header.containerIconSize - theme.header.iconSize) / 2,
     position: 'absolute',
-    top: Constants.statusBarHeight + theme.header.paddingVertical,
-    left: theme.wrapper.marginHorizontal,
+    top: Constants.statusBarHeight
+    + theme.header.paddingVertical
+    + (theme.header.containerIconSize - theme.header.iconSize) / 2,
+    width: theme.header.containerIconSize,
   },
 });
 

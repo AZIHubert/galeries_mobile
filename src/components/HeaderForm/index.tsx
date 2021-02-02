@@ -20,20 +20,14 @@ const HeaderLogger = ({
   <View
     style={styles.container}
   >
-    <TouchableOpacity style={{
-      width: 40,
-      height: 40,
-      position: 'absolute',
-      top: Constants.statusBarHeight + theme.header.paddingVertical - (40 - 25) / 2,
-      left: theme.wrapper.marginHorizontal,
-      justifyContent: 'center',
-      alignItems: 'center',
-      borderRadius: 40 / 2,
-    }}>
+    <TouchableOpacity
+      activeOpacity={theme.touchableOpacity.defaultOpacity}
+      style={styles.iconContainer}
+    >
       <AntDesign
         color={theme.color.secondary}
         name="arrowleft"
-        size={theme.header.iconSize}
+        size={theme.headerForm.iconSize}
       />
     </TouchableOpacity>
     <AppText
@@ -50,8 +44,21 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     backgroundColor: theme.color.primary,
-    paddingBottom: theme.header.paddingVertical,
-    paddingTop: Constants.statusBarHeight + theme.header.paddingVertical,
+    paddingBottom: theme.headerForm.paddingVertical,
+    paddingTop: Constants.statusBarHeight + theme.headerForm.paddingVertical,
+  },
+  iconContainer: {
+    alignItems: 'center',
+    borderRadius: theme.headerForm.containerIconSize / 2,
+    height: theme.headerForm.containerIconSize,
+    justifyContent: 'center',
+    left: theme.wrapper.marginHorizontal
+      - (theme.headerForm.containerIconSize - theme.headerForm.iconSize) / 2,
+    position: 'absolute',
+    top: Constants.statusBarHeight
+      + theme.headerForm.paddingVertical
+      - (theme.headerForm.containerIconSize - theme.headerForm.iconSize) / 2,
+    width: theme.headerForm.containerIconSize,
   },
 });
 

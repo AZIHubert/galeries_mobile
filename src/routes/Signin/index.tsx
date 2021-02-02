@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import HeaderLogger from '#components/HeaderLogger';
-import Screen from '#components/Screen';
+import HeaderForm from '#components/HeaderForm';
+import ScrollableScreen from '#components/ScrollableScreen';
 import Wrapper from '#components/Wrapper';
 
 import SigninForm from './SigninForm';
@@ -9,8 +9,8 @@ import SigninForm from './SigninForm';
 const Signin = () => {
   const [loading, setLoading] = React.useState<boolean>(false);
   return (
-    <Screen
-      header={() => <HeaderLogger
+    <ScrollableScreen
+      header={() => <HeaderForm
         title='sign in'
       />}
     >
@@ -22,7 +22,7 @@ const Signin = () => {
           setLoading={setLoading}
         />
       </Wrapper>
-    </Screen>
+    </ScrollableScreen>
   );
 };
 

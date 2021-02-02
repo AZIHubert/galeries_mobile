@@ -52,7 +52,7 @@ const Button = ({
   variant = 'primary',
 }: ButtonI) => (
   <TouchableOpacity
-    activeOpacity={theme.button.activeOpacity}
+    activeOpacity={theme.touchableOpacity.defaultOpacity}
     disabled={disabled}
     onPress={onPress}
     style={styles({

@@ -24,6 +24,18 @@ const Loader: React.FC<LoaderI> = ({ children }) => {
     require('#ressources/images/logoGaleries.png'),
     require('#ressources/images/logoGFill.png'),
     require('#ressources/images/logoGoogle.png'),
+    require('#ressources/images/mockImages/profilePicture1.jpg'),
+    require('#ressources/images/mockImages/profilePicture2.jpg'),
+    require('#ressources/images/mockImages/profilePicture3.jpg'),
+    require('#ressources/images/mockImages/profilePicture4.jpg'),
+    require('#ressources/images/mockImages/profilePicture5.jpg'),
+    require('#ressources/images/mockImages/profilePicture6.jpg'),
+    require('#ressources/images/mockImages/profilePicture7.jpg'),
+    require('#ressources/images/mockImages/profilePicture8.jpg'),
+    require('#ressources/images/mockImages/profilePicture9.jpg'),
+    require('#ressources/images/mockImages/profilePicture10.jpg'),
+    require('#ressources/images/mockImages/profilePicture11.jpg'),
+    require('#ressources/images/mockImages/profilePicture12.jpg'),
   ]);
 
   const appLoad = fontsLoaded && !!assets;

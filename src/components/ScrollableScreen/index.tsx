@@ -4,13 +4,14 @@ import {
   Keyboard,
   SafeAreaView,
   StyleSheet,
+  ScrollView,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
 
 import theme from '#helpers/theme';
 
-interface ScreenI {
+interface ScrollableScreenI {
   children: React.ReactChild | React.ReactChild[];
   header?: () => JSX.Element,
 }
@@ -19,7 +20,7 @@ interface StyleSheetI {
   asHeader: boolean
 }
 
-const Screen: React.FC<ScreenI> = ({
+const ScrollableScreen: React.FC<ScrollableScreenI> = ({
   children,
   header: Header,
 }) => {
@@ -37,19 +38,28 @@ const Screen: React.FC<ScreenI> = ({
           <Header />
         </TouchableWithoutFeedback>
       ) : null}
-      <TouchableWithoutFeedback
-        onPress={() => {
-          Keyboard.dismiss();
-        }}
+      <ScrollView
+        contentContainerStyle={styles({
+          asHeader,
+        }).scrollViewContainer}
+        style={styles({
+          asHeader,
+        }).scrollView}
       >
-        <SafeAreaView
-          style={styles({
-            asHeader,
-          }).safeArea}
+        <TouchableWithoutFeedback
+          onPress={() => {
+            Keyboard.dismiss();
+          }}
         >
-          {children}
-        </SafeAreaView>
-      </TouchableWithoutFeedback>
+          <SafeAreaView
+            style={styles({
+              asHeader,
+            }).safeArea}
+          >
+            {children}
+          </SafeAreaView>
+        </TouchableWithoutFeedback>
+      </ScrollView>
     </View>
   );
 };
@@ -73,4 +83,4 @@ const styles = ({
   },
 });
 
-export default Screen;
+export default ScrollableScreen;
