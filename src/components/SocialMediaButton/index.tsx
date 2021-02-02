@@ -34,7 +34,7 @@ const Button = ({
   <TouchableOpacity
     disabled={disabled}
     onPress={onPress}
-    activeOpacity={theme.button.activeOpacity}
+    activeOpacity={theme.touchableOpacity.defaultOpacity}
     style={styles({
       marginBottom,
       variant,

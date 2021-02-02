@@ -1,6 +1,5 @@
 export default {
   button: {
-    activeOpacity: 0.8,
     borderRadius: 10,
     borderWidth: 2,
     elevation: 2,
@@ -38,8 +37,17 @@ export default {
     },
   },
   header: {
+    containerIconSize: 40,
+    iconSize: 25,
+    paddingVertical: 10,
+  },
+  headerForm: {
+    containerIconSize: 40,
     iconSize: 24,
     paddingVertical: 25,
+  },
+  touchableOpacity: {
+    defaultOpacity: 0.1,
   },
   text: {
     fontSize: 12,
