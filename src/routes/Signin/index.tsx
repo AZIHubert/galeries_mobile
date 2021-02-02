@@ -3,7 +3,7 @@ import {
   ScrollView,
 } from 'react-native';
 
-import Header from '#components/Header';
+import HeaderLogger from '#components/HeaderLogger';
 import Screen from '#components/Screen';
 import Wrapper from '#components/Wrapper';
 
@@ -15,7 +15,7 @@ const Signin = () => {
     <Screen
       safeView={false}
     >
-      <Header
+      <HeaderLogger
         title='sign in'
       />
       <ScrollView

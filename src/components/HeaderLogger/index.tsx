@@ -10,13 +10,13 @@ import {
 import AppText from '#components/AppText';
 import theme from '#helpers/theme';
 
-interface HeaderI {
+interface HeaderLoggerI {
   title: string;
 }
 
-const Header = ({
+const HeaderLogger = ({
   title,
-}: HeaderI) => (
+}: HeaderLoggerI) => (
   <View
     style={styles.container}
   >
@@ -55,4 +55,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Header;
+export default HeaderLogger;
