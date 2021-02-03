@@ -29,8 +29,10 @@ const Profile = () => {
         numColumns={2}
         renderItem={({ item }) => (
           <ProfilePicture
+            id={item.id}
             current={item.current}
             source={item.profilePicture}
+            setProfilePictures={setAllProfilePictures}
           />
         )}
       />

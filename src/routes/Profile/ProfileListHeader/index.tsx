@@ -21,11 +21,25 @@ const ProfileListHeader = ({
   setProfilePictures,
 }: ProfileListHeaderi) => {
   const selectImage = async () => {
-    console.log('select');
     try {
-      const result = await Picker.launchImageLibraryAsync();
+      const result = await Picker.launchImageLibraryAsync({
+        quality: 1,
+      });
       if (!result.cancelled) {
-        console.log(result.uri);
+        // result uri
+        setProfilePictures((prevState: ProfilePictureI[]) => [
+          ...prevState,
+        ]);
+      }
+    } catch (err) {
+      console.log('Error reading image', err);
+    }
+  };
+  const takeImage = async () => {
+    try {
+      const result = await Picker.launchCameraAsync();
+      if (!result.cancelled) {
+        // result.uri
         setProfilePictures((prevState: ProfilePictureI[]) => [
           ...prevState,
         ]);
@@ -38,7 +52,6 @@ const ProfileListHeader = ({
     <Wrapper
       marginTop={50}
     >
-
       <View
         style={styles.container}
       >
@@ -59,6 +72,13 @@ const ProfileListHeader = ({
         marginBottom={16}
         onPress={selectImage}
         title='Add a profile picture'
+      />
+      <AppButton
+        disabled={false}
+        height={35}
+        marginBottom={32}
+        onPress={takeImage}
+        title='Take a picture'
       />
       <AppButton
         disabled={false}

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  Alert,
   Dimensions,
   Image,
   ImageSourcePropType,
@@ -8,11 +9,14 @@ import {
   View,
 } from 'react-native';
 
+import { ProfilePictureI } from '#helpers/interfaces';
 import theme from '#helpers/theme';
 
-interface ProfilePictureI {
+interface SingleProfilePictureI {
+  id: number;
   current?: boolean;
   source: ImageSourcePropType;
+  setProfilePictures: React.Dispatch<React.SetStateAction<ProfilePictureI[]>>;
 }
 
 interface StyleSheetI {
@@ -24,7 +28,9 @@ const { width } = Dimensions.get('window');
 const ProfilePicture = ({
   source,
   current = false,
-}: ProfilePictureI) => (
+  id,
+  setProfilePictures,
+}: SingleProfilePictureI) => (
   <View
     style={styles({
       current,
@@ -38,6 +44,16 @@ const ProfilePicture = ({
     />
     <TouchableOpacity
       activeOpacity={theme.touchableOpacity.defaultOpacity}
+      onLongPress={() => Alert.alert('Delete', 'Are you sure you want to delete this image?', [
+        {
+          text: 'yes',
+          onPress: () => setProfilePictures((prevState) => {
+            const profilePictures = prevState.filter((pp) => pp.id !== id);
+            return [...profilePictures];
+          }),
+        },
+        { text: 'no' },
+      ])}
     >
       <Image
         source={source}
