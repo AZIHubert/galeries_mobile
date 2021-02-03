@@ -36,6 +36,15 @@ export default {
       roman: 'HelveticaLTStd-Roman',
     },
   },
+  imageView: {
+    informations: {
+      fontSize: 18,
+    },
+    scrollButton: {
+      paddingBottom: 30,
+      size: 50,
+    },
+  },
   header: {
     containerIconSize: 40,
     iconSize: 25,
@@ -47,7 +56,7 @@ export default {
     paddingVertical: 25,
   },
   touchableOpacity: {
-    defaultOpacity: 0.1,
+    defaultOpacity: 0.8,
   },
   text: {
     fontSize: 12,
