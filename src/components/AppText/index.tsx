@@ -8,13 +8,15 @@ import theme from '#helpers/theme';
 
 type Color = 'primary' | 'secondary' | 'black' | 'white' | 'error';
 type FontFamily = 'bold' | 'oblique' | 'roman';
-type TextTransform = 'capitalize' | 'uppercase' | 'lowerCase' | 'none';
+type TextAlign = 'auto' | 'left' | 'right' | 'center' | 'justify';
+type TextTransform = 'capitalize' | 'uppercase' | 'none' | 'lowercase';
 
 interface LoaderI {
   children: string | string[];
   color?: Color;
   fontFamily?: FontFamily
   fontSize?: number;
+  textAlign?: TextAlign;
   textTransform?: TextTransform;
 }
 
@@ -22,6 +24,7 @@ interface StyleSheetI {
   color: Color;
   fontFamily: FontFamily
   fontSize: number;
+  textAlign: TextAlign;
   textTransform: TextTransform;
 }
 
@@ -60,6 +63,7 @@ const AppText: React.FC<LoaderI> = ({
   color = 'primary',
   fontFamily = 'roman',
   fontSize = theme.text.fontSize,
+  textAlign = 'auto',
   textTransform = 'none',
 }) => (
   <Text
@@ -67,6 +71,7 @@ const AppText: React.FC<LoaderI> = ({
       color,
       fontFamily,
       fontSize,
+      textAlign,
       textTransform,
     }).text}
   >
@@ -78,6 +83,7 @@ const styles = ({
   color,
   fontFamily,
   fontSize,
+  textAlign,
   textTransform,
 }: StyleSheetI) => StyleSheet.create({
   text: {
@@ -85,6 +91,7 @@ const styles = ({
     fontFamily: convertFontFamily(fontFamily),
     fontSize,
     textTransform,
+    textAlign,
   },
 });
 

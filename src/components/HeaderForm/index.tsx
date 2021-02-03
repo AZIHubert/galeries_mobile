@@ -10,19 +10,42 @@ import {
 import AppText from '#components/AppText';
 import theme from '#helpers/theme';
 
+type Variant = 'primary' | 'danger';
+
 interface HeaderLoggerI {
   title: string;
+  variant?: Variant;
 }
+
+interface StyleSheetI {
+  variant: Variant;
+}
+
+const convertBackgroundColor = (variant: Variant) => {
+  switch (variant) {
+    case 'primary':
+      return theme.color.primary;
+    case 'danger':
+      return theme.color.error;
+    default:
+      return theme.color.secondary;
+  }
+};
 
 const HeaderLogger = ({
   title,
+  variant = 'primary',
 }: HeaderLoggerI) => (
   <View
-    style={styles.container}
+    style={styles({
+      variant,
+    }).container}
   >
     <TouchableOpacity
       activeOpacity={theme.touchableOpacity.defaultOpacity}
-      style={styles.iconContainer}
+      style={styles({
+        variant,
+      }).iconContainer}
     >
       <AntDesign
         color={theme.color.secondary}
@@ -40,10 +63,12 @@ const HeaderLogger = ({
   </View>
 );
 
-const styles = StyleSheet.create({
+const styles = ({
+  variant,
+}: StyleSheetI) => StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: theme.color.primary,
+    backgroundColor: convertBackgroundColor(variant),
     paddingBottom: theme.headerForm.paddingVertical,
     paddingTop: Constants.statusBarHeight + theme.headerForm.paddingVertical,
   },
