@@ -8,7 +8,7 @@ import AppText from '#components/AppText';
 import theme from '#helpers/theme';
 
 type Align = 'left' | 'center' | 'right';
-type Variant = 'primary' | 'secondary';
+type Variant = 'primary' | 'secondary' | 'tertiary' | 'danger';
 interface ButtonI {
   align?: Align;
   disabled: boolean;
@@ -16,7 +16,6 @@ interface ButtonI {
   height?: number;
   marginBottom?: number;
   onPress: () => void,
-  reverse?: boolean;
   title: string;
   variant?: Variant;
 }
@@ -25,7 +24,6 @@ interface StyleSheetI {
   align: Align;
   height: number;
   marginBottom: number;
-  reverse: boolean;
   variant: Variant;
 }
 
@@ -42,21 +40,50 @@ const convertAlign = (align?: Align) => {
   }
 };
 
-const convertBackgroundColor = (variant: Variant, reverse: boolean) => {
-  if (reverse) return variant === 'primary' ? theme.color.secondary : theme.color.primary;
-  return variant === 'primary' ? theme.color.primary : theme.color.secondary;
+const convertBackgroundColor = (variant: Variant) => {
+  switch (variant) {
+    case 'primary':
+      return theme.color.primary;
+    case 'secondary':
+      return theme.color.secondary;
+    case 'tertiary':
+      return theme.color.primary;
+    case 'danger':
+      return theme.color.secondary;
+    default:
+      return theme.color.secondary;
+  }
 };
 
-const convertBorderColor = (reverse: boolean) => {
-  if (reverse) return theme.color.secondary;
-  return theme.color.primary;
+const convertBorderColor = (variant: Variant) => {
+  switch (variant) {
+    case 'primary':
+      return theme.color.primary;
+    case 'secondary':
+      return theme.color.primary;
+    case 'tertiary':
+      return theme.color.secondary;
+    case 'danger':
+      return theme.color.error;
+    default:
+      return theme.color.primary;
+  }
 };
 
-const convertTextColor = (variant: Variant, reverse?: boolean) => {
-  if (reverse) return variant === 'primary' ? 'primary' : 'secondary';
-  return variant === 'primary' ? 'secondary' : 'primary';
+const convertTextColor = (variant: Variant) => {
+  switch (variant) {
+    case 'primary':
+      return 'secondary';
+    case 'secondary':
+      return 'primary';
+    case 'tertiary':
+      return 'secondary';
+    case 'danger':
+      return 'error';
+    default:
+      return 'secondary';
+  }
 };
-
 const Button = ({
   align = 'center',
   disabled,
@@ -64,7 +91,6 @@ const Button = ({
   height = theme.button.height,
   marginBottom = 0,
   onPress,
-  reverse = false,
   title,
   variant = 'primary',
 }: ButtonI) => (
@@ -77,13 +103,12 @@ const Button = ({
         align,
         height,
         marginBottom,
-        reverse,
         variant,
       }).container
     }
   >
     <AppText
-      color={convertTextColor(variant, reverse)}
+      color={convertTextColor(variant)}
       fontSize={fontSize}
     >
       {title}
@@ -95,13 +120,12 @@ const styles = ({
   align,
   height,
   marginBottom,
-  reverse,
   variant,
 }: StyleSheetI) => StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: convertBackgroundColor(variant, reverse),
-    borderColor: convertBorderColor(reverse),
+    backgroundColor: convertBackgroundColor(variant),
+    borderColor: convertBorderColor(variant),
     borderRadius: theme.button.borderRadius,
     borderWidth: theme.button.borderWidth,
     elevation: theme.button.elevation,

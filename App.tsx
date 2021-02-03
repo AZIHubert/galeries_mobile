@@ -1,5 +1,6 @@
 import React from 'react';
 
+import EditInformation from '#routes/EditInformation';
 import Home from '#routes/Home';
 import ImageView from '#routes/ImageView';
 import Login from '#routes/Login';
@@ -10,11 +11,12 @@ import Loader from '#src/Loader';
 
 const App = () => (
   <Loader>
+    <EditInformation />
     {/* <Home /> */}
     {/* <ImageView /> */}
     {/* <Login /> */}
     {/* <Profile /> */}
-    <SendTicket />
+    {/* <SendTicket /> */}
     {/* <Signin /> */}
   </Loader>
 );
