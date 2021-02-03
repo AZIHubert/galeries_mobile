@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import AppText from '#components/AppText';
 import HeaderForm from '#components/HeaderForm';
 import ScrollableScreen from '#components/ScrollableScreen';
 import Wrapper from '#components/Wrapper';
