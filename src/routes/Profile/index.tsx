@@ -6,30 +6,37 @@ import {
 
 import Header from '#components/Header';
 import Screen from '#components/Screen';
+import { ProfilePictureI } from '#helpers/interfaces';
 import { profilePictures } from '#helpers/mockDatas';
 
 import ProfileListHeader from './ProfileListHeader';
 import ProfilePicture from './ProfilePicture';
 
-const Profile = () => (
-  <Screen
-    header={Header}
-  >
-    <FlatList
-      columnWrapperStyle={styles.columnWrapperStyle}
-      data={profilePictures}
-      keyExtractor={(profilePicture) => profilePicture.id.toString()}
-      ListHeaderComponent={<ProfileListHeader />}
-      numColumns={2}
-      renderItem={({ item }) => (
-        <ProfilePicture
-          current={item.current}
-          source={item.profilePicture}
-        />
-      )}
-    />
-  </Screen>
-);
+const Profile = () => {
+  const [allProfilePictures, setAllProfilePictures] = React
+    .useState<ProfilePictureI[]>(profilePictures);
+  return (
+    <Screen
+      header={Header}
+    >
+      <FlatList
+        columnWrapperStyle={styles.columnWrapperStyle}
+        data={allProfilePictures}
+        keyExtractor={(profilePicture) => profilePicture.id.toString()}
+        ListHeaderComponent={() => <ProfileListHeader
+          setProfilePictures={setAllProfilePictures}
+        />}
+        numColumns={2}
+        renderItem={({ item }) => (
+          <ProfilePicture
+            current={item.current}
+            source={item.profilePicture}
+          />
+        )}
+      />
+    </Screen>
+  );
+};
 
 const styles = StyleSheet.create({
   columnWrapperStyle: {
