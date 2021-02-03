@@ -7,18 +7,20 @@ import ImageView from '#routes/ImageView';
 import Login from '#routes/Login';
 import Profile from '#routes/Profile';
 import SendTicket from '#routes/SendTicket';
+import SideBar from '#routes/SideBar';
 import Signin from '#routes/Signin';
 import Loader from '#src/Loader';
 
 const App = () => (
   <Loader>
     {/* <EditInformation /> */}
-    <DeleteAccount />
+    {/* <DeleteAccount /> */}
     {/* <Home /> */}
     {/* <ImageView /> */}
     {/* <Login /> */}
     {/* <Profile /> */}
     {/* <SendTicket /> */}
+    <SideBar />
     {/* <Signin /> */}
   </Loader>
 );
