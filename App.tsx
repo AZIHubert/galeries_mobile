@@ -10,18 +10,21 @@ import SendTicket from '#routes/SendTicket';
 import SideBar from '#routes/SideBar';
 import Signin from '#routes/Signin';
 import Loader from '#src/Loader';
+import Permission from '#src/Permission';
 
 const App = () => (
   <Loader>
-    {/* <EditInformation /> */}
-    {/* <DeleteAccount /> */}
-    {/* <Home /> */}
-    {/* <ImageView /> */}
-    {/* <Login /> */}
-    {/* <Profile /> */}
-    {/* <SendTicket /> */}
-    <SideBar />
-    {/* <Signin /> */}
+    <Permission>
+      {/* <EditInformation /> */}
+      {/* <DeleteAccount /> */}
+      {/* <Home /> */}
+      {/* <ImageView /> */}
+      {/* <Login /> */}
+      <Profile />
+      {/* <SendTicket /> */}
+      {/* <SideBar /> */}
+      {/* <Signin /> */}
+    </Permission>
   </Loader>
 );
 

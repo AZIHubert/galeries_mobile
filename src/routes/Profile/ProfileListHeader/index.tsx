@@ -1,3 +1,4 @@
+import * as Picker from 'expo-image-picker';
 import * as React from 'react';
 import {
   StyleSheet,
@@ -7,44 +8,69 @@ import {
 import AppButton from '#components/AppButton';
 import AppText from '#components/AppText';
 import Wrapper from '#components/Wrapper';
-import CurrentProfilePicture from './CurrentProfilePicture';
+import { ProfilePictureI } from '#helpers/interfaces';
 import theme from '#helpers/theme';
 
-const ProfileListHeader = () => (
-  <Wrapper
-    marginTop={50}
-  >
-    <View
-      style={styles.container}
+import CurrentProfilePicture from './CurrentProfilePicture';
+
+interface ProfileListHeaderi {
+  setProfilePictures: React.Dispatch<React.SetStateAction<ProfilePictureI[]>>
+}
+
+const ProfileListHeader = ({
+  setProfilePictures,
+}: ProfileListHeaderi) => {
+  const selectImage = async () => {
+    console.log('select');
+    try {
+      const result = await Picker.launchImageLibraryAsync();
+      if (!result.cancelled) {
+        console.log(result.uri);
+        setProfilePictures((prevState: ProfilePictureI[]) => [
+          ...prevState,
+        ]);
+      }
+    } catch (err) {
+      console.log('Error reading image', err);
+    }
+  };
+  return (
+    <Wrapper
+      marginTop={50}
     >
-      <CurrentProfilePicture />
-      <AppText
-        fontFamily='bold'
-        fontSize={18}
-      >
-        Allan Aoudji
-      </AppText>
+
       <View
-        style={styles.separator}
+        style={styles.container}
+      >
+        <CurrentProfilePicture />
+        <AppText
+          fontFamily='bold'
+          fontSize={18}
+        >
+        Allan Aoudji
+        </AppText>
+        <View
+          style={styles.separator}
+        />
+      </View>
+      <AppButton
+        disabled={false}
+        height={35}
+        marginBottom={16}
+        onPress={selectImage}
+        title='Add a profile picture'
       />
-    </View>
-    <AppButton
-      disabled={false}
-      height={35}
-      marginBottom={16}
-      onPress={() => {}}
-      title='Add a profile picture'
-    />
-    <AppButton
-      disabled={false}
-      height={35}
-      marginBottom={40}
-      onPress={() => {}}
-      title='Edit your info'
-      variant='secondary'
-    />
-  </Wrapper>
-);
+      <AppButton
+        disabled={false}
+        height={35}
+        marginBottom={40}
+        onPress={() => {}}
+        title='Edit your info'
+        variant='secondary'
+      />
+    </Wrapper>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -59,5 +85,4 @@ const styles = StyleSheet.create({
     width: 45,
   },
 });
-
 export default ProfileListHeader;
