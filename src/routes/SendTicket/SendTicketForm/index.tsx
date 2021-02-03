@@ -80,7 +80,7 @@ const LoginForm = ({ loading, setLoading }: LoginFormI) => {
         fontSize={25}
         marginBottom={30}
         onPress={formik.handleSubmit}
-        title='login'
+        title='send a ticket'
       />
     </View>
   );

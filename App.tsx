@@ -11,13 +11,13 @@ import Loader from '#src/Loader';
 
 const App = () => (
   <Loader>
-    <EditInformation />
+    {/* <EditInformation /> */}
     {/* <Home /> */}
     {/* <ImageView /> */}
     {/* <Login /> */}
     {/* <Profile /> */}
     {/* <SendTicket /> */}
-    {/* <Signin /> */}
+    <Signin />
   </Loader>
 );
 

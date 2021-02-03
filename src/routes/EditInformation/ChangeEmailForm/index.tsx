@@ -9,7 +9,7 @@ import {
 import AppButtonRadius from '#components/AppButtonRadius';
 import AppText from '#components/AppText';
 import Field from '#components/Field';
-import { ChangePasswordSchema } from '#helpers/schemas';
+import { changeEmailSchema } from '#helpers/schemas';
 
 interface ChangeEmailFormI {
   loading: boolean;
@@ -31,7 +31,7 @@ const ChangeEmailForm = ({ loading, setLoading }: ChangeEmailFormI) => {
     },
     validateOnBlur: true,
     validateOnChange: false,
-    validationSchema: ChangePasswordSchema,
+    validationSchema: changeEmailSchema,
   });
   return (
     <View>
