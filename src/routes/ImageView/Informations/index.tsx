@@ -101,8 +101,7 @@ const Information = ({
         title='use as profile picture'
         marginBottom={20}
         onPress={() => {}}
-        variant='secondary'
-        reverse
+        variant='tertiary'
       />
       <DownloadButton
         disabled={false}
