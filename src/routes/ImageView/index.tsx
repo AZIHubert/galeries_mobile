@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import Constants from 'expo-constants';
 import { AntDesign } from '@expo/vector-icons';
 import * as React from 'react';
@@ -6,6 +7,7 @@ import {
   ScrollView,
   StyleSheet,
   View,
+  ImageSourcePropType,
 } from 'react-native';
 
 import theme from '#helpers/theme';
@@ -14,7 +16,8 @@ import profilePicture from '#ressources/images/mockImages/profilePicture9.jpg';
 import FullPageImage from './FullPageImage';
 import Informations from './Informations';
 
-const ImageView = () => {
+const ImageView = ({ route }) => {
+  const navigation = useNavigation();
   const scrollView = React.useRef<ScrollView | null>(null);
 
   const scollToBottom = () => {
@@ -42,6 +45,7 @@ const ImageView = () => {
           <TouchableOpacity
             activeOpacity={theme.touchableOpacity.defaultOpacity}
             style={styles.buttonContainer}
+            onPress={() => navigation.goBack()}
           >
             <AntDesign
               color={theme.color.primary}
@@ -52,7 +56,7 @@ const ImageView = () => {
         </View>
         <FullPageImage
           onPress={scollToBottom}
-          source={profilePicture}
+          source={route.params.source}
         />
         <Informations
           onPress={scrollToTop}

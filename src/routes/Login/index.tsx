@@ -11,6 +11,7 @@ const Login = () => {
   return (
     <ScrollableScreen
       header={() => <HeaderForm
+        screen='sidemenu'
         title='log in'
       />}
     >

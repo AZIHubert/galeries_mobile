@@ -11,16 +11,18 @@ import SideBar from '#routes/SideBar';
 import Signin from '#routes/Signin';
 import Loader from '#src/Loader';
 import Permission from '#src/Permission';
+import Navigation from '#src/Navigation';
 
 const App = () => (
   <Loader>
     <Permission>
+      <Navigation />
       {/* <EditInformation /> */}
       {/* <DeleteAccount /> */}
       {/* <Home /> */}
       {/* <ImageView /> */}
       {/* <Login /> */}
-      <Profile />
+      {/* <Profile /> */}
       {/* <SendTicket /> */}
       {/* <SideBar /> */}
       {/* <Signin /> */}

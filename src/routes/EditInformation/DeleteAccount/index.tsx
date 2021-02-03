@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import {
   StyleSheet,
@@ -13,29 +14,32 @@ interface DeleteAccountI {
 
 const DeleteAccount = ({
   loading,
-}: DeleteAccountI) => (
-  <View>
-    <View
-      style={styles.textContainer}
-    >
-      <AppText
-        color='black'
-        fontSize={16}
+}: DeleteAccountI) => {
+  const navigation = useNavigation();
+  return (
+    <View>
+      <View
+        style={styles.textContainer}
       >
+        <AppText
+          color='black'
+          fontSize={16}
+        >
         Once you delete your account,
         there is no going back. Please be certain.
-      </AppText>
+        </AppText>
+      </View>
+      <AppButton
+        disabled={loading}
+        fontSize={25}
+        marginBottom={75}
+        onPress={() => navigation.navigate('deleteaccount')}
+        title='Delete your account'
+        variant='danger'
+      />
     </View>
-    <AppButton
-      disabled={loading}
-      fontSize={25}
-      marginBottom={75}
-      onPress={() => {}}
-      title='Delete your account'
-      variant='danger'
-    />
-  </View>
-);
+  );
+};
 
 const styles = StyleSheet.create({
   textContainer: {

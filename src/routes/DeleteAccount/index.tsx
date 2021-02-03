@@ -13,6 +13,7 @@ const DeleteAccount = () => {
       header={() => <HeaderForm
         variant='danger'
         title='delete your account'
+        screen='editinformation'
       />}
     >
       <Wrapper

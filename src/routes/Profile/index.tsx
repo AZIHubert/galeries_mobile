@@ -17,7 +17,9 @@ const Profile = () => {
     .useState<ProfilePictureI[]>(profilePictures);
   return (
     <Screen
-      header={Header}
+      header={() => <Header
+        returnButton
+      />}
     >
       <FlatList
         columnWrapperStyle={styles.columnWrapperStyle}
