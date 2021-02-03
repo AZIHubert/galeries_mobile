@@ -14,6 +14,7 @@ interface FieldI {
   editable: boolean;
   error: string | undefined;
   label?: string;
+  multiline?: boolean;
   onBlur: (e: NativeSyntheticEvent<TextInputFocusEventData>) => void;
   onChangeText: (text: string) => void;
   requiredField?: boolean;
@@ -31,6 +32,7 @@ const Field = ({
   editable,
   error,
   label,
+  multiline = false,
   onBlur,
   onChangeText,
   requiredField = false,
@@ -65,6 +67,8 @@ const Field = ({
     </View>
     <TextInput
       editable={editable}
+      multiline={multiline}
+      numberOfLines={multiline ? 10 : 1}
       onBlur={onBlur}
       onChangeText={onChangeText}
       style={styles({
@@ -107,12 +111,13 @@ const styles = ({
     borderColor: error && touched ? theme.color.error : theme.color.primary,
     borderWidth: 1,
     fontSize: theme.field.textInput.fontSize,
-    height: theme.field.textInput.height,
     marginBottom: error
       ? theme.field.textInput.marginBottom / 3
       : theme.field.textInput.marginBottom,
     marginTop: theme.field.textInput.marginTop,
     paddingHorizontal: theme.field.textInput.paddingHorizontal,
+    paddingVertical: theme.field.textInput.paddingVertical,
+    textAlignVertical: 'top',
     width: '100%',
   },
 });

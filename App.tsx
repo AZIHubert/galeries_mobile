@@ -4,6 +4,7 @@ import Home from '#routes/Home';
 import ImageView from '#routes/ImageView';
 import Login from '#routes/Login';
 import Profile from '#routes/Profile';
+import SendTicket from '#routes/SendTicket';
 import Signin from '#routes/Signin';
 import Loader from '#src/Loader';
 
@@ -13,7 +14,8 @@ const App = () => (
     {/* <ImageView /> */}
     {/* <Login /> */}
     {/* <Profile /> */}
-    <Signin />
+    <SendTicket />
+    {/* <Signin /> */}
   </Loader>
 );
 

@@ -23,10 +23,10 @@ export default {
     },
     textInput: {
       fontSize: 20,
-      height: 40,
       marginBottom: 20,
       marginTop: 10,
       paddingHorizontal: 10,
+      paddingVertical: 10,
     },
   },
   fonts: {
