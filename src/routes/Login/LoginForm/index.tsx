@@ -11,6 +11,7 @@ import AppButtonRadius from '#components/AppButtonRadius';
 import AppText from '#components/AppText';
 import Field from '#components/Field';
 import { loginSchema } from '#helpers/schemas';
+import { login } from '#helpers/api';
 
 interface LoginFormI {
   loading: boolean;
@@ -26,11 +27,27 @@ const LoginForm = ({ loading, setLoading }: LoginFormI) => {
   const navigation = useNavigation();
   const formik = useFormik({
     initialValues,
-    onSubmit: () => {
+    onSubmit: (values, { setFieldError }) => {
       if (!loading) {
         setLoading(true);
         Keyboard.dismiss();
-        navigation.navigate('sidemenu');
+        login(values)
+          .then((response) => {
+            console.log(response.data);
+            setLoading(false);
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'sideMenu' }],
+            });
+          })
+          .catch((err) => {
+            setLoading(false);
+            const { errors } = err.response.data;
+            if (typeof errors === 'object') {
+              Object.keys(errors).map((error) => setFieldError(error, errors[error]));
+            }
+            // else alert message
+          });
       }
     },
     validateOnBlur: true,

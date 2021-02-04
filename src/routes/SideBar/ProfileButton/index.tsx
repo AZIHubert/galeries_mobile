@@ -2,7 +2,6 @@ import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Image,
-  ImageSourcePropType,
   TouchableOpacity,
   View,
   StyleSheet,
@@ -10,16 +9,11 @@ import {
 
 import AppText from '#components/AppText';
 import theme from '#helpers/theme';
+import { AuthContext } from '#src/contexts/AuthProvider';
+import defaultProfilePicture from '#ressources/images/defaultProfilePicture.png';
 
-interface ProfileButtonI {
-  profilePicture: ImageSourcePropType;
-  userName: string;
-}
-
-const ProfileButton = ({
-  profilePicture,
-  userName,
-}: ProfileButtonI) => {
+const ProfileButton = () => {
+  const { user } = React.useContext(AuthContext);
   const navigation = useNavigation();
   return (
     <TouchableOpacity
@@ -34,7 +28,7 @@ const ProfileButton = ({
           style={styles.profilePictureContainer}
         >
           <Image
-            source={profilePicture}
+            source={user ? { uri: user.defaultProfilePicture } : defaultProfilePicture}
             resizeMode='contain'
             style={styles.profilePicture}
           />
@@ -48,7 +42,7 @@ const ProfileButton = ({
             fontFamily='bold'
             fontSize={20}
           >
-            {userName}
+            {user ? user.userName : 'user name'}
           </AppText>
         </View>
         <AppText
@@ -60,7 +54,6 @@ const ProfileButton = ({
     </TouchableOpacity>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
@@ -71,6 +64,7 @@ const styles = StyleSheet.create({
   },
   profilePicture: {
     width: 50,
+    height: 50,
   },
   profilePictureContainer: {
     alignItems: 'center',

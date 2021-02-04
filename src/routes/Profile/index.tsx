@@ -7,14 +7,22 @@ import {
 import Header from '#components/Header';
 import Screen from '#components/Screen';
 import { ProfilePictureI } from '#helpers/interfaces';
-import { profilePictures } from '#helpers/mockDatas';
+import { getProfilePictures } from '#helpers/api';
+import { AuthContext } from '#src/contexts/AuthProvider';
 
 import ProfileListHeader from './ProfileListHeader';
 import ProfilePicture from './ProfilePicture';
 
 const Profile = () => {
-  const [allProfilePictures, setAllProfilePictures] = React
-    .useState<ProfilePictureI[]>(profilePictures);
+  const { user } = React.useContext(AuthContext);
+  const [profilePictures, setProfilePictures] = React
+    .useState<ProfilePictureI[]>([]);
+  React.useEffect(() => {
+    getProfilePictures()
+      .then((result) => {
+        setProfilePictures(result.data);
+      });
+  }, []);
   return (
     <Screen
       header={() => <Header
@@ -23,18 +31,18 @@ const Profile = () => {
     >
       <FlatList
         columnWrapperStyle={styles.columnWrapperStyle}
-        data={allProfilePictures}
+        data={profilePictures}
         keyExtractor={(profilePicture) => profilePicture.id.toString()}
         ListHeaderComponent={() => <ProfileListHeader
-          setProfilePictures={setAllProfilePictures}
+          setProfilePictures={setProfilePictures}
         />}
         numColumns={2}
         renderItem={({ item }) => (
           <ProfilePicture
             id={item.id}
-            current={item.current}
-            source={item.profilePicture}
-            setProfilePictures={setAllProfilePictures}
+            current={user ? item.id === user.currentProfilePicture : false}
+            source={item.cropedImage.signedUrl}
+            setProfilePictures={setProfilePictures}
           />
         )}
       />

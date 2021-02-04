@@ -11,6 +11,7 @@ import AppButtonRadius from '#components/AppButtonRadius';
 import AppText from '#components/AppText';
 import Field from '#components/Field';
 import { signinSchema } from '#helpers/schemas';
+import { signin } from '#helpers/api';
 
 interface SigninFormI {
   loading: boolean;
@@ -28,11 +29,22 @@ const LoginForm = ({ loading, setLoading }: SigninFormI) => {
   const navigation = useNavigation();
   const formik = useFormik({
     initialValues,
-    onSubmit: () => {
+    onSubmit: (values, { setFieldError }) => {
       if (!loading) {
         setLoading(true);
         Keyboard.dismiss();
-        navigation.navigate('sidemenu');
+        signin(values)
+          .then((response) => {
+            setLoading(false);
+            console.log(response.data);
+            navigation.navigate('sideMenu');
+          })
+          .catch((err) => {
+            setLoading(false);
+            const { errors } = err.response.data;
+            console.log(errors);
+            Object.keys(errors).map((error) => setFieldError(error, errors[error]));
+          });
       }
     },
     validateOnBlur: true,

@@ -4,7 +4,6 @@ import {
   Alert,
   Dimensions,
   Image,
-  ImageSourcePropType,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -14,9 +13,9 @@ import { ProfilePictureI } from '#helpers/interfaces';
 import theme from '#helpers/theme';
 
 interface SingleProfilePictureI {
-  id: number;
+  id: string;
   current?: boolean;
-  source: ImageSourcePropType;
+  source: string;
   setProfilePictures: React.Dispatch<React.SetStateAction<ProfilePictureI[]>>;
 }
 
@@ -64,7 +63,7 @@ const ProfilePicture = ({
         ])}
       >
         <Image
-          source={source}
+          source={{ uri: source }}
           style={styles({
             current,
           }).image}

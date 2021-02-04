@@ -9,7 +9,11 @@ import {
 import theme from '#helpers/theme';
 import defaultProfilePicture from '#ressources/images/defaultProfilePicture.png';
 
-const ProfilePicture = () => (
+interface ProfilePictureI {
+  source: string | null
+}
+
+const ProfilePicture = ({ source }: ProfilePictureI) => (
   <LinearGradient
     colors={[theme.color.tertiary, theme.color.primary]}
     end={[1, 1]}
@@ -21,7 +25,7 @@ const ProfilePicture = () => (
     >
       <Image
         resizeMode='contain'
-        source={defaultProfilePicture}
+        source={source ? { uri: source } : defaultProfilePicture}
         style={styles.image}
       />
     </View>

@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {
@@ -17,12 +18,14 @@ import logoG from '#ressources/images/logoG.png';
 import logoGaleries from '#ressources/images/logoGaleries.png';
 import homeBackground from '#ressources/images/homeBackground.png';
 
+import {
+  facebookLogin,
+  googleLogin,
+} from '#helpers/api';
+
 const Home = () => {
   const navigation = useNavigation();
   const [loading, setLoading] = React.useState<boolean>(false);
-  const func = () => {
-    if (!loading) setLoading(true);
-  };
   return (
     <Screen>
       <ImageBackground
@@ -105,19 +108,39 @@ const Home = () => {
             <SocialMediaButton
               disabled={loading}
               marginBottom={10}
-              onPress={() => navigation.reset({
-                index: 0,
-                routes: [{ name: 'sideMenu' }],
-              })}
+              onPress={async () => {
+                try {
+                  const { data } = await facebookLogin();
+                  await AsyncStorage.setItem('auThoken', data.token);
+                  setLoading(false);
+                  navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'sideMenu' }],
+                  });
+                } catch (err) {
+                  setLoading(false);
+                }
+              }}
               variant='facebook'
             />
             <SocialMediaButton
               disabled={loading}
               marginBottom={30}
-              onPress={() => navigation.reset({
-                index: 0,
-                routes: [{ name: 'sideMenu' }],
-              })}
+              onPress={() => {
+                googleLogin()
+                  .then(() => {
+                    setLoading(false);
+                    navigation.reset({
+                      index: 0,
+                      routes: [{ name: 'sideMenu' }],
+                    });
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                    setLoading(false);
+                    // set alert
+                  });
+              }}
               variant='google'
             />
           </View>

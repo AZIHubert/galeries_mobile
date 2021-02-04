@@ -11,7 +11,6 @@ const Signin = () => {
   return (
     <ScrollableScreen
       header={() => <HeaderForm
-        screen='home'
         title='sign in'
       />}
     >

@@ -13,6 +13,8 @@ import { ProfilePictureI } from '#helpers/interfaces';
 import theme from '#helpers/theme';
 
 import CurrentProfilePicture from './CurrentProfilePicture';
+import { AuthContext } from '#src/contexts/AuthProvider';
+import { postProfilePicture } from '#helpers/api';
 
 interface ProfileListHeaderi {
   setProfilePictures: React.Dispatch<React.SetStateAction<ProfilePictureI[]>>
@@ -21,6 +23,7 @@ interface ProfileListHeaderi {
 const ProfileListHeader = ({
   setProfilePictures,
 }: ProfileListHeaderi) => {
+  const { user } = React.useContext(AuthContext);
   const navigation = useNavigation();
   const selectImage = async () => {
     try {
@@ -28,9 +31,19 @@ const ProfileListHeader = ({
         quality: 1,
       });
       if (!result.cancelled) {
-        // result uri
-        setProfilePictures((prevState: ProfilePictureI[]) => [
-          ...prevState,
+        const uriParts = result.uri.split('.');
+        const fileType = uriParts[uriParts.length - 1];
+        const formData = new FormData();
+        formData.append('image', {
+          // @ts-ignore
+          uri: result.uri,
+          name: `photo.${fileType}`,
+          type: `image/${fileType}`,
+        });
+        const response = await postProfilePicture(formData);
+        setProfilePictures((prevData) => [
+          response.data,
+          ...prevData,
         ]);
       }
     } catch (err) {
@@ -41,9 +54,19 @@ const ProfileListHeader = ({
     try {
       const result = await Picker.launchCameraAsync();
       if (!result.cancelled) {
-        // result.uri
-        setProfilePictures((prevState: ProfilePictureI[]) => [
-          ...prevState,
+        const uriParts = result.uri.split('.');
+        const fileType = uriParts[uriParts.length - 1];
+        const formData = new FormData();
+        formData.append('image', {
+          // @ts-ignore
+          uri: result.uri,
+          name: `photo.${fileType}`,
+          type: `image/${fileType}`,
+        });
+        const response = await postProfilePicture(formData);
+        setProfilePictures((prevData) => [
+          response.data,
+          ...prevData,
         ]);
       }
     } catch (err) {
@@ -57,12 +80,14 @@ const ProfileListHeader = ({
       <View
         style={styles.container}
       >
-        <CurrentProfilePicture />
+        <CurrentProfilePicture
+          source={user ? user.defaultProfilePicture : null}
+        />
         <AppText
           fontFamily='bold'
           fontSize={18}
         >
-          Allan Aoudji
+          {user ? user.userName : 'user name'}
         </AppText>
         <View
           style={styles.separator}

@@ -1,11 +1,18 @@
-import {
-  ImageSourcePropType,
-} from 'react-native';
-
+interface ImageI {
+  bucketName: string;
+  fileName: string;
+  format: string;
+  height: number;
+  id: string;
+  signedUrl: string;
+  size: string;
+  width: string;
+}
 interface ProfilePictureI {
-  id: number;
-  current?: boolean;
-  profilePicture: ImageSourcePropType;
+  cropedImage: ImageI;
+  id: string;
+  originalImage: ImageI;
+  pendingImage: ImageI
 }
 
 export default ProfilePictureI;
