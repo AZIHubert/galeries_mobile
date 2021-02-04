@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import {
@@ -24,12 +25,14 @@ const initialValues = {
 };
 
 const LoginForm = ({ loading, setLoading }: SigninFormI) => {
+  const navigation = useNavigation();
   const formik = useFormik({
     initialValues,
     onSubmit: () => {
       if (!loading) {
         setLoading(true);
         Keyboard.dismiss();
+        navigation.navigate('sidemenu');
       }
     },
     validateOnBlur: true,

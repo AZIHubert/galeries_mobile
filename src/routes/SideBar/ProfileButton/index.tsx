@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Image,
@@ -18,43 +19,47 @@ interface ProfileButtonI {
 const ProfileButton = ({
   profilePicture,
   userName,
-}: ProfileButtonI) => (
-  <TouchableOpacity
-    activeOpacity={theme.touchableOpacity.defaultOpacity}
-    style={styles.container}
-  >
-    <View
-      style={styles.imageContainer}
+}: ProfileButtonI) => {
+  const navigation = useNavigation();
+  return (
+    <TouchableOpacity
+      activeOpacity={theme.touchableOpacity.defaultOpacity}
+      onPress={() => navigation.navigate('profileStack')}
+      style={styles.container}
     >
       <View
-        style={styles.profilePictureContainer}
+        style={styles.imageContainer}
       >
-        <Image
-          source={profilePicture}
-          resizeMode='contain'
-          style={styles.profilePicture}
-        />
-      </View>
-    </View>
-    <View>
-      <View
-        style={styles.textMargin}
-      >
-        <AppText
-          fontFamily='bold'
-          fontSize={20}
+        <View
+          style={styles.profilePictureContainer}
         >
-          {userName}
+          <Image
+            source={profilePicture}
+            resizeMode='contain'
+            style={styles.profilePicture}
+          />
+        </View>
+      </View>
+      <View>
+        <View
+          style={styles.textMargin}
+        >
+          <AppText
+            fontFamily='bold'
+            fontSize={20}
+          >
+            {userName}
+          </AppText>
+        </View>
+        <AppText
+          fontSize={15}
+        >
+         See your profile
         </AppText>
       </View>
-      <AppText
-        fontSize={15}
-      >
-         See your profile
-      </AppText>
-    </View>
-  </TouchableOpacity>
-);
+    </TouchableOpacity>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

@@ -12,6 +12,7 @@ const SendTicket = () => {
     <ScrollableScreen
       header={() => <HeaderForm
         title='send a ticket'
+        screen='desktop'
       />}
     >
       <Wrapper

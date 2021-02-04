@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Alert,
@@ -30,40 +31,48 @@ const ProfilePicture = ({
   current = false,
   id,
   setProfilePictures,
-}: SingleProfilePictureI) => (
-  <View
-    style={styles({
-      current,
-    }).container}
-  >
-    <TouchableOpacity
-      activeOpacity={theme.touchableOpacity.defaultOpacity}
+}: SingleProfilePictureI) => {
+  const navigation = useNavigation();
+  return (
+    <View
       style={styles({
         current,
-      }).button}
-    />
-    <TouchableOpacity
-      activeOpacity={theme.touchableOpacity.defaultOpacity}
-      onLongPress={() => Alert.alert('Delete', 'Are you sure you want to delete this image?', [
-        {
-          text: 'yes',
-          onPress: () => setProfilePictures((prevState) => {
-            const profilePictures = prevState.filter((pp) => pp.id !== id);
-            return [...profilePictures];
-          }),
-        },
-        { text: 'no' },
-      ])}
+      }).container}
     >
-      <Image
-        source={source}
+      <TouchableOpacity
+        activeOpacity={theme.touchableOpacity.defaultOpacity}
         style={styles({
           current,
-        }).image}
+        }).button}
       />
-    </TouchableOpacity>
-  </View>
-);
+      <TouchableOpacity
+        activeOpacity={theme.touchableOpacity.defaultOpacity}
+        onPress={() => {
+          navigation.navigate('imageView', {
+            source,
+          });
+        }}
+        onLongPress={() => Alert.alert('Delete', 'Are you sure you want to delete this image?', [
+          {
+            text: 'yes',
+            onPress: () => setProfilePictures((prevState) => {
+              const profilePictures = prevState.filter((pp) => pp.id !== id);
+              return [...profilePictures];
+            }),
+          },
+          { text: 'no' },
+        ])}
+      >
+        <Image
+          source={source}
+          style={styles({
+            current,
+          }).image}
+        />
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 const styles = ({
   current,

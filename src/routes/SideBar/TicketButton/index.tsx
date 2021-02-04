@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import {
   SimpleLineIcons,
 } from '@expo/vector-icons';
@@ -11,38 +12,42 @@ import {
 import AppText from '#components/AppText';
 import theme from '#helpers/theme';
 
-const TicketButton = () => (
-  <TouchableOpacity
-    activeOpacity={theme.touchableOpacity.defaultOpacity}
-    style={styles.container}
-  >
-    <View
-      style={styles.imageContainer}
+const TicketButton = () => {
+  const navigation = useNavigation();
+  return (
+    <TouchableOpacity
+      activeOpacity={theme.touchableOpacity.defaultOpacity}
+      onPress={() => navigation.navigate('sendTicket')}
+      style={styles.container}
     >
-      <SimpleLineIcons
-        color={theme.color.primary}
-        name="exclamation"
-        size={35}
-      />
-    </View>
-    <View>
       <View
-        style={styles.textMargin}
+        style={styles.imageContainer}
       >
-        <AppText
-          fontSize={10}
+        <SimpleLineIcons
+          color={theme.color.primary}
+          name="exclamation"
+          size={35}
+        />
+      </View>
+      <View>
+        <View
+          style={styles.textMargin}
         >
+          <AppText
+            fontSize={10}
+          >
           Share your opinion? Find a bug?
+          </AppText>
+        </View>
+        <AppText
+          fontSize={15}
+        >
+        Send a ticket
         </AppText>
       </View>
-      <AppText
-        fontSize={15}
-      >
-        Send a ticket
-      </AppText>
-    </View>
-  </TouchableOpacity>
-);
+    </TouchableOpacity>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
 import Constants from 'expo-constants';
 import * as React from 'react';
@@ -35,33 +36,37 @@ const convertBackgroundColor = (variant: Variant) => {
 const HeaderLogger = ({
   title,
   variant = 'primary',
-}: HeaderLoggerI) => (
-  <View
-    style={styles({
-      variant,
-    }).container}
-  >
-    <TouchableOpacity
-      activeOpacity={theme.touchableOpacity.defaultOpacity}
+}: HeaderLoggerI) => {
+  const navigation = useNavigation();
+  return (
+    <View
       style={styles({
         variant,
-      }).iconContainer}
+      }).container}
     >
-      <AntDesign
-        color={theme.color.secondary}
-        name="arrowleft"
-        size={theme.headerForm.iconSize}
-      />
-    </TouchableOpacity>
-    <AppText
-      color='secondary'
-      fontSize={25}
-      textTransform='capitalize'
-    >
-      {title}
-    </AppText>
-  </View>
-);
+      <TouchableOpacity
+        activeOpacity={theme.touchableOpacity.defaultOpacity}
+        onPress={() => navigation.goBack()}
+        style={styles({
+          variant,
+        }).iconContainer}
+      >
+        <AntDesign
+          color={theme.color.secondary}
+          name="arrowleft"
+          size={theme.headerForm.iconSize}
+        />
+      </TouchableOpacity>
+      <AppText
+        color='secondary'
+        fontSize={25}
+        textTransform='capitalize'
+      >
+        {title}
+      </AppText>
+    </View>
+  );
+};
 
 const styles = ({
   variant,

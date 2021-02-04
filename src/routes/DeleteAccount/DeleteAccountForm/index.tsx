@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import {
@@ -21,12 +22,17 @@ const initialValues = {
 };
 
 const DeleteAccountForm = ({ loading, setLoading }: DeleteAccountFormI) => {
+  const navigation = useNavigation();
   const formik = useFormik({
     initialValues,
     onSubmit: () => {
       if (!loading) {
         setLoading(true);
         Keyboard.dismiss();
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'home' }],
+        });
       }
     },
     validateOnBlur: true,

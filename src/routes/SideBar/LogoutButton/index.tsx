@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import {
   MaterialIcons,
 } from '@expo/vector-icons';
@@ -11,30 +12,34 @@ import {
 import AppText from '#components/AppText';
 import theme from '#helpers/theme';
 
-const LogoutButton = () => (
-  <TouchableOpacity
-    activeOpacity={theme.touchableOpacity.defaultOpacity}
-    style={styles.container}
-  >
-    <View
-      style={styles.imageContainer}
+const LogoutButton = () => {
+  const navigation = useNavigation();
+  return (
+    <TouchableOpacity
+      activeOpacity={theme.touchableOpacity.defaultOpacity}
+      style={styles.container}
+      onPress={() => navigation.navigate('home')}
     >
-      <MaterialIcons
-        color={theme.color.primary}
-        name="logout"
-        size={40}
-      />
-    </View>
-    <View>
-      <AppText
-        fontFamily='bold'
-        fontSize={15}
+      <View
+        style={styles.imageContainer}
       >
+        <MaterialIcons
+          color={theme.color.primary}
+          name="logout"
+          size={40}
+        />
+      </View>
+      <View>
+        <AppText
+          fontFamily='bold'
+          fontSize={15}
+        >
         Loug out
-      </AppText>
-    </View>
-  </TouchableOpacity>
-);
+        </AppText>
+      </View>
+    </TouchableOpacity>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {
   Image,
@@ -17,6 +18,7 @@ import logoGaleries from '#ressources/images/logoGaleries.png';
 import homeBackground from '#ressources/images/homeBackground.png';
 
 const Home = () => {
+  const navigation = useNavigation();
   const [loading, setLoading] = React.useState<boolean>(false);
   const func = () => {
     if (!loading) setLoading(true);
@@ -83,7 +85,7 @@ const Home = () => {
               <Column>
                 <AppButton
                   disabled={loading}
-                  onPress={() => {}}
+                  onPress={() => navigation.navigate('login')}
                   marginBottom={24}
                   title='log in'
                 />
@@ -91,7 +93,7 @@ const Home = () => {
               <Column>
                 <AppButton
                   disabled={loading}
-                  onPress={() => {}}
+                  onPress={() => navigation.navigate('signin')}
                   marginBottom={24}
                   title='sign in'
                   variant='secondary'
@@ -103,13 +105,19 @@ const Home = () => {
             <SocialMediaButton
               disabled={loading}
               marginBottom={10}
-              onPress={() => {}}
+              onPress={() => navigation.reset({
+                index: 0,
+                routes: [{ name: 'sideMenu' }],
+              })}
               variant='facebook'
             />
             <SocialMediaButton
               disabled={loading}
               marginBottom={30}
-              onPress={() => {}}
+              onPress={() => navigation.reset({
+                index: 0,
+                routes: [{ name: 'sideMenu' }],
+              })}
               variant='google'
             />
           </View>

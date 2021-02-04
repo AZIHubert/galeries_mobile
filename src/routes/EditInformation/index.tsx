@@ -13,7 +13,9 @@ const EditInformation = () => {
   const [loading, setLoading] = React.useState<boolean>(false);
   return (
     <ScrollableScreen
-      header={Header}
+      header={() => <Header
+        returnButton
+      />}
     >
       <Wrapper
         marginTop={50}

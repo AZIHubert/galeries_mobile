@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import {
   Octicons,
 } from '@expo/vector-icons';
@@ -11,29 +12,33 @@ import {
 import AppText from '#components/AppText';
 import theme from '#helpers/theme';
 
-const InformationButton = () => (
-  <TouchableOpacity
-    activeOpacity={theme.touchableOpacity.defaultOpacity}
-    style={styles.container}
-  >
-    <View
-      style={styles.imageContainer}
+const InformationButton = () => {
+  const navigation = useNavigation();
+  return (
+    <TouchableOpacity
+      activeOpacity={theme.touchableOpacity.defaultOpacity}
+      onPress={() => navigation.navigate('editInformation')}
+      style={styles.container}
     >
-      <Octicons
-        color={theme.color.primary}
-        name="gear"
-        size={40}
-      />
-    </View>
-    <View>
-      <AppText
-        fontSize={15}
+      <View
+        style={styles.imageContainer}
       >
-        Edit your information
-      </AppText>
-    </View>
-  </TouchableOpacity>
-);
+        <Octicons
+          color={theme.color.primary}
+          name="gear"
+          size={40}
+        />
+      </View>
+      <View>
+        <AppText
+          fontSize={15}
+        >
+          Edit your information
+        </AppText>
+      </View>
+    </TouchableOpacity>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
