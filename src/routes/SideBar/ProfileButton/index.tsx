@@ -24,7 +24,7 @@ const ProfileButton = ({
   return (
     <TouchableOpacity
       activeOpacity={theme.touchableOpacity.defaultOpacity}
-      onPress={() => navigation.navigate('profile')}
+      onPress={() => navigation.navigate('profileStack')}
       style={styles.container}
     >
       <View

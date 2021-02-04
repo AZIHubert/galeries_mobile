@@ -17,8 +17,8 @@ import logoG from '#ressources/images/logoG.png';
 import logoGaleries from '#ressources/images/logoGaleries.png';
 import homeBackground from '#ressources/images/homeBackground.png';
 
-const Home = ({ navigation }) => {
-  // const navigation = useNavigation();
+const Home = () => {
+  const navigation = useNavigation();
   const [loading, setLoading] = React.useState<boolean>(false);
   const func = () => {
     if (!loading) setLoading(true);
@@ -105,13 +105,19 @@ const Home = ({ navigation }) => {
             <SocialMediaButton
               disabled={loading}
               marginBottom={10}
-              onPress={() => navigation.openDrawer()}
+              onPress={() => navigation.reset({
+                index: 0,
+                routes: [{ name: 'sideMenu' }],
+              })}
               variant='facebook'
             />
             <SocialMediaButton
               disabled={loading}
               marginBottom={30}
-              onPress={() => {}}
+              onPress={() => navigation.reset({
+                index: 0,
+                routes: [{ name: 'sideMenu' }],
+              })}
               variant='google'
             />
           </View>

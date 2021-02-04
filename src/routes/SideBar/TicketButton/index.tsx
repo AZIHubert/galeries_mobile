@@ -17,8 +17,8 @@ const TicketButton = () => {
   return (
     <TouchableOpacity
       activeOpacity={theme.touchableOpacity.defaultOpacity}
+      onPress={() => navigation.navigate('sendTicket')}
       style={styles.container}
-      onPress={() => navigation.navigate('sendticket')}
     >
       <View
         style={styles.imageContainer}

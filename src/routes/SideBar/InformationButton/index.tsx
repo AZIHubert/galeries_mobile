@@ -17,8 +17,8 @@ const InformationButton = () => {
   return (
     <TouchableOpacity
       activeOpacity={theme.touchableOpacity.defaultOpacity}
+      onPress={() => navigation.navigate('editInformation')}
       style={styles.container}
-      onPress={() => navigation.navigate('editinformation')}
     >
       <View
         style={styles.imageContainer}
@@ -33,7 +33,7 @@ const InformationButton = () => {
         <AppText
           fontSize={15}
         >
-        Edit your information
+          Edit your information
         </AppText>
       </View>
     </TouchableOpacity>

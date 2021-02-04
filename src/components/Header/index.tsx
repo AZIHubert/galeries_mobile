@@ -27,8 +27,8 @@ const Header = ({
     >
       <TouchableOpacity
         activeOpacity={theme.touchableOpacity.defaultOpacity}
-        style={styles.iconContainer}
         onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+        style={styles.iconContainer}
       >
         <Entypo
           color={theme.color.primary}
@@ -38,6 +38,10 @@ const Header = ({
       </TouchableOpacity>
       <TouchableOpacity
         activeOpacity={theme.touchableOpacity.defaultOpacity}
+        onPress={() => navigation.reset({
+          index: 0,
+          routes: [{ name: 'desktop' }],
+        })}
       >
         <Image
           resizeMode='contain'
@@ -48,7 +52,7 @@ const Header = ({
       {returnButton && <TouchableOpacity
         activeOpacity={theme.touchableOpacity.defaultOpacity}
         style={styles.returnContainer}
-        onPress={() => navigation.navigate('desktop')}
+        onPress={() => navigation.goBack()}
       >
         <AppText
           fontSize={20}

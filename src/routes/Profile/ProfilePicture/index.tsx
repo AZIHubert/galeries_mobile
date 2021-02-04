@@ -48,7 +48,7 @@ const ProfilePicture = ({
       <TouchableOpacity
         activeOpacity={theme.touchableOpacity.defaultOpacity}
         onPress={() => {
-          navigation.navigate('Imageviewprofilepicture', {
+          navigation.navigate('imageView', {
             source,
           });
         }}

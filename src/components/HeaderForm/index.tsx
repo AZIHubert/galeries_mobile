@@ -14,7 +14,6 @@ import theme from '#helpers/theme';
 type Variant = 'primary' | 'danger';
 
 interface HeaderLoggerI {
-  screen: string;
   title: string;
   variant?: Variant;
 }
@@ -35,7 +34,6 @@ const convertBackgroundColor = (variant: Variant) => {
 };
 
 const HeaderLogger = ({
-  screen,
   title,
   variant = 'primary',
 }: HeaderLoggerI) => {
@@ -48,7 +46,7 @@ const HeaderLogger = ({
     >
       <TouchableOpacity
         activeOpacity={theme.touchableOpacity.defaultOpacity}
-        onPress={() => navigation.navigate(screen)}
+        onPress={() => navigation.goBack()}
         style={styles({
           variant,
         }).iconContainer}

@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import * as Picker from 'expo-image-picker';
 import * as React from 'react';
 import {
@@ -20,6 +21,7 @@ interface ProfileListHeaderi {
 const ProfileListHeader = ({
   setProfilePictures,
 }: ProfileListHeaderi) => {
+  const navigation = useNavigation();
   const selectImage = async () => {
     try {
       const result = await Picker.launchImageLibraryAsync({
@@ -60,7 +62,7 @@ const ProfileListHeader = ({
           fontFamily='bold'
           fontSize={18}
         >
-        Allan Aoudji
+          Allan Aoudji
         </AppText>
         <View
           style={styles.separator}
@@ -84,7 +86,9 @@ const ProfileListHeader = ({
         disabled={false}
         height={35}
         marginBottom={40}
-        onPress={() => {}}
+        onPress={() => {
+          navigation.navigate('editInformation');
+        }}
         title='Edit your info'
         variant='secondary'
       />
