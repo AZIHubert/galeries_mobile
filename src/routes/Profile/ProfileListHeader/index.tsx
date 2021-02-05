@@ -9,67 +9,58 @@ import {
 import AppButton from '#components/AppButton';
 import AppText from '#components/AppText';
 import Wrapper from '#components/Wrapper';
-import { ProfilePictureI } from '#helpers/interfaces';
+
+import { postProfilePicture } from '#helpers/api';
 import theme from '#helpers/theme';
 
-import CurrentProfilePicture from './CurrentProfilePicture';
 import { AuthContext } from '#src/contexts/AuthProvider';
-import { postProfilePicture } from '#helpers/api';
 
-interface ProfileListHeaderi {
-  setProfilePictures: React.Dispatch<React.SetStateAction<ProfilePictureI[]>>;
-}
+import CurrentProfilePicture from './CurrentProfilePicture';
 
-const ProfileListHeader = ({
-  setProfilePictures,
-}: ProfileListHeaderi) => {
-  const { user, setUser } = React.useContext(AuthContext);
+const ProfileListHeader = () => {
+  const { setUser, user } = React.useContext(AuthContext);
   const navigation = useNavigation();
   const selectImage = async () => {
     try {
       const result = await Picker.launchImageLibraryAsync({
+        mediaTypes: Picker.MediaTypeOptions.Images,
         quality: 1,
       });
       if (!result.cancelled) {
-        const response = await postProfilePicture(result.uri);
-        setProfilePictures((prevData) => [
-          response.data,
-          ...prevData,
-        ]);
+        await setProfilePicture(result.uri);
+      }
+    } catch (err) {
+      console.log('Error reading image', err);
+    }
+  };
+  const setProfilePicture = async (uri: string) => {
+    try {
+      const response = await postProfilePicture(uri);
+      if (response) {
         setUser((prevState) => {
           if (prevState) {
             return {
               ...prevState,
               currentProfilePictureId: response.data.id,
               currentProfilePicture: response.data,
+              profilePictures: [
+                response.data,
+                ...prevState.profilePictures,
+              ],
             };
           }
           return null;
         });
       }
     } catch (err) {
-      console.log('Error reading image', err);
+      console.log(err);
     }
   };
   const takeImage = async () => {
     try {
       const result = await Picker.launchCameraAsync();
       if (!result.cancelled) {
-        const response = await postProfilePicture(result.uri);
-        setProfilePictures((prevData) => [
-          response.data,
-          ...prevData,
-        ]);
-        setUser((prevState) => {
-          if (prevState) {
-            return {
-              ...prevState,
-              currentProfilePictureId: response.data.id,
-              currentProfilePicture: response.data,
-            };
-          }
-          return null;
-        });
+        setProfilePicture(result.uri);
       }
     } catch (err) {
       console.log('Error reading image', err);
@@ -97,14 +88,14 @@ const ProfileListHeader = ({
         disabled={false}
         height={35}
         marginBottom={16}
-        onPress={selectImage}
+        onPress={() => selectImage()}
         title='Add a profile picture'
       />
       <AppButton
         disabled={false}
         height={35}
         marginBottom={32}
-        onPress={takeImage}
+        onPress={() => takeImage()}
         title='Take a picture'
       />
       <AppButton
@@ -134,4 +125,5 @@ const styles = StyleSheet.create({
     width: 45,
   },
 });
-export default ProfileListHeader;
+
+export default React.memo(ProfileListHeader);

@@ -13,17 +13,20 @@ import {
   View,
 } from 'react-native';
 
+import { deleteProfilePicture } from '#helpers/api';
+
 import theme from '#helpers/theme';
+
+import { AuthContext } from '#src/contexts/AuthProvider';
 
 import FullPageImage from './FullPageImage';
 import Informations from './Informations';
-import { deleteProfilePicture } from '#helpers/api';
-import { AuthContext } from '#src/contexts/AuthProvider';
 
 const ImageView = ({ route }) => {
+  const [loading, setLoading] = React.useState<boolean>(false);
   const { setUser, user } = React.useContext(AuthContext);
-  const navigation = useNavigation();
   const scrollView = React.useRef<ScrollView | null>(null);
+  const navigation = useNavigation();
 
   const scollToBottom = () => {
     if (scrollView.current) {
@@ -41,13 +44,13 @@ const ImageView = ({ route }) => {
       style={{ flex: 1 }}
     >
       <ScrollView
-        stickyHeaderIndices={[0]}
-        ref={scrollView}
         contentContainerStyle={styles.contentContainer}
-        style={styles.scrollView}
+        ref={scrollView}
+        stickyHeaderIndices={[0]}
+        style={styles.container}
       >
         <View
-          style={styles.deleteContainer}
+          style={styles.buttonsContainer}
         >
           <View
             style={{
@@ -57,49 +60,72 @@ const ImageView = ({ route }) => {
           >
             <TouchableOpacity
               activeOpacity={theme.touchableOpacity.defaultOpacity}
-              style={styles.buttonDeleteContainer}
-              onPress={() => Alert.alert('Delete', 'Are you sure you want to delete this image?', [
-                { text: 'no' },
-                {
-                  text: 'yes',
-                  onPress: async () => {
-                    await deleteProfilePicture(route.params.profilePicture.id);
-                    if (user && route.params.profilePicture.id === user.currentProfilePictureId) {
-                      setUser((prevState) => {
-                        if (prevState) {
-                          return {
-                            ...prevState,
-                            currentProfilePictureId: null,
-                            currentProfilePicture: null,
-                          };
+              onPress={
+                () => Alert.alert('Delete', 'Are you sure you want to delete this image?', [
+                  { text: 'no' },
+                  {
+                    text: 'yes',
+                    onPress: async () => {
+                      if (!loading) {
+                        setLoading(true);
+                        try {
+                          const response = await deleteProfilePicture(
+                            route.params.profilePicture.id,
+                          );
+                          if (response
+                            && user
+                            && route.params.profilePicture.id === user.currentProfilePictureId
+                          ) {
+                            setUser((prevState) => {
+                              if (prevState) {
+                                return {
+                                  ...prevState,
+                                  currentProfilePictureId: null,
+                                  currentProfilePicture: null,
+                                };
+                              }
+                              return null;
+                            });
+                            route.params.setProfilePictures((prevState) => {
+                              const profilePictures = prevState.filter(
+                                (pp) => pp.id !== route.params.profilePicture.id,
+                              );
+                              return [...profilePictures];
+                            });
+                            navigation.goBack();
+                          }
+                        } catch (err) {
+                          setLoading(false);
                         }
-                        return null;
-                      });
-                    }
-                    navigation.goBack();
-                    route.params.setProfilePictures((prevState) => {
-                      const profilePictures = prevState.filter(
-                        (pp) => pp.id !== route.params.profilePicture.id,
-                      );
-                      return [...profilePictures];
-                    });
+                      }
+                    },
                   },
-                },
-
-              ])}
+                ])
+              }
+              style={[
+                styles.buttonDeleteContainer,
+                styles.buttonsInnerContainer,
+              ]}
             >
               <MaterialIcons
+                color={theme.color.secondary}
                 name="delete-outline"
                 size={20}
-                color={theme.color.secondary}
               />
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={theme.touchableOpacity.defaultOpacity}
-              style={styles.buttonContainer}
               onPress={() => navigation.goBack()}
+              style={[
+                styles.buttonCloseContainer,
+                styles.buttonsInnerContainer,
+              ]}
             >
-              <Entypo name="cross" size={20} color={theme.color.secondary} />
+              <Entypo
+                color={theme.color.secondary}
+                name="cross"
+                size={20}
+              />
             </TouchableOpacity>
           </View>
         </View>
@@ -117,23 +143,13 @@ const ImageView = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
-  buttonDeleteContainer: {
-    alignItems: 'center',
-    backgroundColor: theme.color.danger,
-    borderRadius: 25,
-    height: 30,
-    justifyContent: 'center',
-    width: 30,
-  },
-  buttonContainer: {
-    alignItems: 'center',
+  buttonCloseContainer: {
     backgroundColor: theme.color.primary,
-    borderRadius: 25,
-    height: 30,
-    justifyContent: 'center',
-    width: 30,
   },
-  deleteContainer: {
+  buttonDeleteContainer: {
+    backgroundColor: theme.color.danger,
+  },
+  buttonsContainer: {
     paddingHorizontal: theme.wrapper.marginHorizontal,
     paddingTop: 25 + Constants.statusBarHeight,
     position: 'absolute',
@@ -141,12 +157,19 @@ const styles = StyleSheet.create({
     top: 0,
     width: '100%',
   },
-  contentContainer: {
-    flexGrow: 1,
+  buttonsInnerContainer: {
+    alignItems: 'center',
+    borderRadius: 25,
+    height: 30,
+    justifyContent: 'center',
+    width: 30,
   },
-  scrollView: {
+  container: {
     flex: 1,
     zIndex: -1,
+  },
+  contentContainer: {
+    flexGrow: 1,
   },
 });
 

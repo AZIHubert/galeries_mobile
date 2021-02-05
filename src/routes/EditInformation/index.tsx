@@ -3,6 +3,8 @@ import {
   View,
 } from 'react-native';
 
+import { AuthContext } from '#src/contexts/AuthProvider';
+
 import Header from '#components/Header';
 import ScrollableScreen from '#components/ScrollableScreen';
 import Wrapper from '#components/Wrapper';
@@ -11,7 +13,6 @@ import ChangeEmailForm from './ChangeEmailForm';
 import ChangePasswordForm from './ChangePasswordForm';
 import DeleteAccount from './DeleteAccount';
 import TitleForm from './TitleForm';
-import { AuthContext } from '#src/contexts/AuthProvider';
 
 const EditInformation = () => {
   const [loading, setLoading] = React.useState<boolean>(false);

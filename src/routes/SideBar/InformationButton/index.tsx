@@ -1,7 +1,5 @@
+import { Octicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import {
-  Octicons,
-} from '@expo/vector-icons';
 import * as React from 'react';
 import {
   StyleSheet,
@@ -10,6 +8,7 @@ import {
 } from 'react-native';
 
 import AppText from '#components/AppText';
+
 import theme from '#helpers/theme';
 
 const InformationButton = () => {

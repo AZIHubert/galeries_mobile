@@ -1,8 +1,7 @@
-import moment from 'moment';
-import Constants from 'expo-constants';
-import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
+import Constants from 'expo-constants';
 import { LinearGradient } from 'expo-linear-gradient';
+import moment from 'moment';
 import * as React from 'react';
 import {
   Dimensions,
@@ -15,14 +14,17 @@ import AppText from '#components/AppText';
 import AppButton from '#components/AppButton';
 import DownloadButton from '#components/DownloadButton';
 import Wrapper from '#components/Wrapper';
-import { AuthContext } from '#src/contexts/AuthProvider';
-import theme from '#helpers/theme';
-import { ProfilePictureI } from '#helpers/interfaces';
+
 import { setProfilePicture } from '#helpers/api';
+import { ProfilePictureI } from '#helpers/interfaces';
+import theme from '#helpers/theme';
+
+import { AuthContext } from '#src/contexts/AuthProvider';
 
 const formatBytes = (a: number, b = 2) => {
-  if (a === 0) return '0 Bytes'; const c = b < 0 ? 0 : b; const
-    d = Math.floor(Math.log(a) / Math.log(1024)); return `${parseFloat((a / 1024 ** d).toFixed(c))} ${['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'][d]}`;
+  if (a === 0) return '0 Bytes'; const c = b < 0 ? 0 : b;
+  const d = Math.floor(Math.log(a) / Math.log(1024));
+  return `${parseFloat((a / 1024 ** d).toFixed(c))} ${['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'][d]}`;
 };
 
 interface InformationI {
@@ -36,9 +38,14 @@ const Information = ({
   onPress,
   profilePicture,
 }: InformationI) => {
-  const navigation = useNavigation();
   const [loading, setLoading] = React.useState<boolean>(false);
-  const { setUser } = React.useContext(AuthContext);
+  const { setUser, user } = React.useContext(AuthContext);
+  const changeProfilePictureText = () => {
+    if (user && user.currentProfilePictureId === profilePicture.id) {
+      return 'remove profile picture';
+    }
+    return 'use as profile picture';
+  };
   return (
     <LinearGradient
       colors={[theme.color.primary, theme.color.tertiary]}
@@ -57,7 +64,7 @@ const Information = ({
             style={styles.informationInnerContainer}
           >
             <View
-              style={styles.inforamtionAlignText}
+              style={styles.informationAlignText}
             >
               <AppText
                 color='black'
@@ -67,38 +74,41 @@ const Information = ({
               </AppText>
               <AppText
                 color='secondary'
+                fontFamily='bold'
                 fontSize={theme.imageView.informations.fontSize}
               >
                 {` ${moment(profilePicture.createdAt).format('MMMM Do YYYY')}`}
               </AppText>
             </View>
             <View
-              style={styles.inforamtionAlignText}
+              style={styles.informationAlignText}
             >
               <AppText
                 color='black'
                 fontSize={theme.imageView.informations.fontSize}
               >
-                Weight
+                Weight:
               </AppText>
               <AppText
                 color='secondary'
+                fontFamily='bold'
                 fontSize={theme.imageView.informations.fontSize}
               >
                 {` ${formatBytes(profilePicture.originalImage.size)}`}
               </AppText>
             </View>
             <View
-              style={styles.inforamtionAlignText}
+              style={styles.informationAlignText}
             >
               <AppText
                 color='black'
                 fontSize={theme.imageView.informations.fontSize}
               >
-                Size
+                Size:
               </AppText>
               <AppText
                 color='secondary'
+                fontFamily='bold'
                 fontSize={theme.imageView.informations.fontSize}
               >
                 {` ${profilePicture.originalImage.width} x ${profilePicture.originalImage.height}`}
@@ -108,31 +118,36 @@ const Information = ({
         </View>
         <AppButton
           disabled={false}
-          title='use as profile picture'
           marginBottom={20}
           onPress={async () => {
             if (!loading) {
               setLoading(true);
-              await setProfilePicture(profilePicture.id);
-              setLoading(false);
-              setUser((prevState) => {
-                if (prevState) {
-                  const remove = profilePicture.id !== prevState.currentProfilePictureId;
-                  return {
-                    ...prevState,
-                    currentProfilePictureId: remove
-                      ? profilePicture.id
-                      : null,
-                    currentProfilePicture: remove
-                      ? profilePicture
-                      : null,
-                  };
+              try {
+                const response = await setProfilePicture(profilePicture.id);
+                if (response) {
+                  setLoading(false);
+                  setUser((prevState) => {
+                    if (prevState) {
+                      const remove = profilePicture.id !== prevState.currentProfilePictureId;
+                      return {
+                        ...prevState,
+                        currentProfilePictureId: remove
+                          ? profilePicture.id
+                          : null,
+                        currentProfilePicture: remove
+                          ? profilePicture
+                          : null,
+                      };
+                    }
+                    return null;
+                  });
                 }
-                return null;
-              });
-              navigation.goBack();
+              } catch (err) {
+                setLoading(false);
+              }
             }
           }}
+          title={changeProfilePictureText()}
           variant='tertiary'
         />
         <DownloadButton
@@ -162,7 +177,7 @@ const styles = StyleSheet.create({
   container: {
     height: height - Constants.statusBarHeight - theme.imageView.scrollButton.size - 50,
   },
-  inforamtionAlignText: {
+  informationAlignText: {
     flexDirection: 'row',
   },
   informationsContainer: {

@@ -25,8 +25,8 @@ const DeleteAccount = ({
           color='black'
           fontSize={16}
         >
-        Once you delete your account,
-        there is no going back. Please be certain.
+          Once you delete your account,
+          there is no going back. Please be certain.
         </AppText>
       </View>
       <AppButton

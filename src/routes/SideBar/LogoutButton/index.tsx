@@ -1,35 +1,43 @@
+import { MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-import {
-  MaterialIcons,
-} from '@expo/vector-icons';
 import * as React from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native';
-import { AuthContext } from '#src/contexts/AuthProvider';
 
 import AppText from '#components/AppText';
-import theme from '#helpers/theme';
+
 import { logout } from '#helpers/api';
+import theme from '#helpers/theme';
+
+import { AuthContext } from '#src/contexts/AuthProvider';
 
 const LogoutButton = () => {
-  const navigation = useNavigation();
+  const [loading, setLoading] = React.useState<boolean>(false);
   const { setUser } = React.useContext(AuthContext);
+  const navigation = useNavigation();
   return (
     <TouchableOpacity
       activeOpacity={theme.touchableOpacity.defaultOpacity}
       style={styles.container}
       onPress={async () => {
-        try {
-          await logout();
-          await AsyncStorage.clear();
-          setUser(null);
-          navigation.navigate('home');
-        } catch (err) {
-          console.log(err);
+        if (!loading) {
+          setLoading(true);
+          try {
+            const response = await logout();
+            if (response) {
+              await AsyncStorage.clear();
+              setUser(null);
+              setLoading(false);
+              navigation.navigate('home');
+            }
+          } catch (err) {
+            console.log(err);
+            setLoading(false);
+          }
         }
       }}
     >
@@ -47,7 +55,7 @@ const LogoutButton = () => {
           fontFamily='bold'
           fontSize={15}
         >
-        Loug out
+          Loug out
         </AppText>
       </View>
     </TouchableOpacity>

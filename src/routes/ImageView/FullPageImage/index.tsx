@@ -5,13 +5,13 @@ import {
   Dimensions,
   Image,
   ImageBackground,
-  TouchableOpacity,
   StyleSheet,
+  TouchableOpacity,
   View,
 } from 'react-native';
 
-import theme from '#helpers/theme';
 import { ProfilePictureI } from '#helpers/interfaces';
+import theme from '#helpers/theme';
 
 interface FullPageImageI {
   onPress: () => void;
@@ -19,8 +19,8 @@ interface FullPageImageI {
 }
 
 interface StyleSheetI {
-  width: number;
   height: number;
+  width: number;
 }
 
 const { height: windowHeight, width: windowWidth } = Dimensions.get('window');
@@ -30,21 +30,21 @@ const FullPageImage = ({
   profilePicture,
 }: FullPageImageI) => {
   const size = () => {
+    const defaultHeight = (profilePicture.originalImage.height
+      * (
+        windowWidth
+        - theme.wrapper.marginHorizontal
+        * 2
+      )
+    ) / profilePicture.originalImage.width;
+    const defaultWidth = windowWidth
+    - theme.wrapper.marginHorizontal
+    * 2;
     const maxHeight = windowHeight
       - 65
       - theme.imageView.scrollButton.size
       - (theme.imageView.scrollButton.paddingBottom * 2)
       - Constants.statusBarHeight;
-    const defaultHeight = (profilePicture.originalImage.height
-        * (
-          windowWidth
-          - theme.wrapper.marginHorizontal
-          * 2
-        )
-    ) / profilePicture.originalImage.width;
-    const defaultWidth = windowWidth
-      - theme.wrapper.marginHorizontal
-      * 2;
     if (defaultHeight > maxHeight) {
       return {
         height: maxHeight,
@@ -62,43 +62,43 @@ const FullPageImage = ({
       resizeMode='cover'
       source={{ uri: profilePicture.originalImage.signedUrl }}
       style={styles({
-        width: size().width,
         height: size().height,
+        width: size().width,
       }).imageBackground}
     >
       <View
         style={styles({
-          width: size().width,
           height: size().height,
+          width: size().width,
         }).imageContainer}
       >
         <Image
           resizeMode='contain'
           source={{ uri: profilePicture.originalImage.signedUrl }}
           style={styles({
-            width: size().width,
             height: size().height,
+            width: size().width,
           }).image}
         />
       </View>
       <View
         style={styles({
-          width: size().width,
           height: size().height,
+          width: size().width,
         }).scrollButtonContainer}
       >
         <TouchableOpacity
           activeOpacity={theme.touchableOpacity.defaultOpacity}
           onPress={onPress}
           style={styles({
-            width: size().width,
             height: size().height,
+            width: size().width,
           }).scrollButton}
         >
           <MaterialIcons
             color={theme.color.secondary}
             name='info'
-            size={theme.imageView.scrollButton.size}
+            size={35}
           />
         </TouchableOpacity>
       </View>
@@ -107,8 +107,8 @@ const FullPageImage = ({
 };
 
 const styles = ({
-  width,
   height,
+  width,
 }: StyleSheetI) => StyleSheet.create({
   image: {
     height,
@@ -117,8 +117,8 @@ const styles = ({
   imageBackground: {
     alignItems: 'center',
     flex: 1,
-    justifyContent: 'center',
     height: windowHeight,
+    justifyContent: 'center',
   },
   imageContainer: {
     alignItems: 'center',
@@ -129,10 +129,10 @@ const styles = ({
   scrollButton: {
     alignItems: 'center',
     backgroundColor: theme.color.primary,
-    borderRadius: theme.imageView.scrollButton.size / 2,
-    height: theme.imageView.scrollButton.size,
+    borderRadius: 35 / 2,
+    height: 35,
     justifyContent: 'center',
-    width: theme.imageView.scrollButton.size,
+    width: 35,
   },
   scrollButtonContainer: {
     alignItems: 'center',

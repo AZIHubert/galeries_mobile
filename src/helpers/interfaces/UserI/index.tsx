@@ -9,6 +9,7 @@ interface UserI {
   facebookId: string | null;
   googleId: string | null;
   id: string;
+  profilePictures: ProfilePictureI[];
   role: string;
   updatedAt: string;
   userName: string;

@@ -1,31 +1,30 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
 import * as React from 'react';
 
 import Header from '#components/Header';
 import Screen from '#components/Screen';
+
+import { getMe } from '#helpers/api';
+
 import { AuthContext } from '#src/contexts/AuthProvider';
 
 const Landing = () => {
   const { setUser } = React.useContext(AuthContext);
   React.useEffect(() => {
-    const getMe = async () => {
+    let unmount = false;
+    const getUser = async () => {
       try {
-        const token = await AsyncStorage.getItem('auThoken');
-        const response = await axios({
-          method: 'get',
-          url: 'http://192.168.1.84:5000/users/me',
-          headers: {
-            'Content-Type': 'application/json',
-            authorization: token,
-          },
-        });
-        setUser(response.data);
+        const response = await getMe();
+        if (response && !unmount) {
+          setUser(response.data);
+        }
       } catch (err) {
         console.log(err);
       }
     };
-    getMe();
+    getUser();
+    return () => {
+      unmount = true;
+    };
   }, []);
   return (
     <Screen

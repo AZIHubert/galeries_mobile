@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { useFormik } from 'formik';
 import * as React from 'react';
@@ -10,8 +11,9 @@ import {
 import AppButtonRadius from '#components/AppButtonRadius';
 import AppText from '#components/AppText';
 import Field from '#components/Field';
-import { loginSchema } from '#helpers/schemas';
+
 import { login } from '#helpers/api';
+import { loginSchema } from '#helpers/schemas';
 
 interface LoginFormI {
   loading: boolean;
@@ -27,26 +29,24 @@ const LoginForm = ({ loading, setLoading }: LoginFormI) => {
   const navigation = useNavigation();
   const formik = useFormik({
     initialValues,
-    onSubmit: (values, { setFieldError }) => {
+    onSubmit: async (values, { setFieldError }) => {
       if (!loading) {
         setLoading(true);
         Keyboard.dismiss();
-        login(values)
-          .then(() => {
-            setLoading(false);
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'sideMenu' }],
-            });
-          })
-          .catch((err) => {
-            setLoading(false);
-            const { errors } = err.response.data;
-            if (typeof errors === 'object') {
-              Object.keys(errors).map((error) => setFieldError(error, errors[error]));
-            }
-            // else alert message
+        try {
+          const response = await login(values);
+          await AsyncStorage.setItem('auThoken', response.data.token);
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'sideMenu' }],
           });
+        } catch (err) {
+          const { errors } = err.response.data;
+          if (typeof errors === 'object') {
+            Object.keys(errors).map((error) => setFieldError(error, errors[error]));
+          }
+          setLoading(false);
+        }
       }
     },
     validateOnBlur: true,
@@ -57,7 +57,6 @@ const LoginForm = ({ loading, setLoading }: LoginFormI) => {
     <View
       style={styles.container}
     >
-
       <View>
         <Field
           editable={!loading}

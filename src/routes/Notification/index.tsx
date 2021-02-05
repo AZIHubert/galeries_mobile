@@ -5,7 +5,7 @@ import Screen from '#components/Screen';
 
 const Notification = () => (
   <Screen
-    header={Header}
+    header={() => <Header />}
   >
 
   </Screen>

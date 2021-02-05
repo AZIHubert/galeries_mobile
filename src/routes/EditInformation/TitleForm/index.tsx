@@ -5,6 +5,7 @@ import {
 } from 'react-native';
 
 import AppText from '#components/AppText';
+
 import theme from '#helpers/theme';
 
 interface StyleSheetI {
@@ -26,9 +27,9 @@ const TitleForm = ({
     }).container}
   >
     <AppText
-      textTransform='capitalize'
       color={danger ? 'error' : 'black'}
       fontSize={24}
+      textTransform='capitalize'
     >
       {title}
     </AppText>
@@ -39,8 +40,8 @@ const styles = ({
   danger,
 }: StyleSheetI) => StyleSheet.create({
   container: {
-    borderBottomWidth: 2,
     borderBottomColor: danger ? theme.color.danger : theme.color.primary,
+    borderBottomWidth: 2,
     marginBottom: 30,
     paddingBottom: 10,
   },

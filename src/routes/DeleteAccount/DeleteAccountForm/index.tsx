@@ -10,6 +10,7 @@ import {
 import AppButton from '#components/AppButton';
 import AppText from '#components/AppText';
 import Field from '#components/Field';
+
 import { deleteAccountSchema } from '#helpers/schemas';
 import { deleteAccount } from '#helpers/api';
 
@@ -22,30 +23,33 @@ const initialValues = {
   password: '',
 };
 
-const DeleteAccountForm = ({ loading, setLoading }: DeleteAccountFormI) => {
+const DeleteAccountForm = ({
+  loading,
+  setLoading,
+}: DeleteAccountFormI) => {
   const navigation = useNavigation();
   const formik = useFormik({
     initialValues,
-    onSubmit: (values, { setFieldError }) => {
+    onSubmit: async (values, { setFieldError }) => {
       if (!loading) {
         setLoading(true);
         Keyboard.dismiss();
-        deleteAccount(values)
-          .then(() => {
+        try {
+          const response = await deleteAccount(values);
+          if (response) {
             setLoading(false);
             navigation.reset({
               index: 0,
               routes: [{ name: 'home' }],
             });
-          })
-          .catch((err) => {
-            setLoading(false);
-            const { errors } = err.response.data;
-            if (typeof errors === 'object') {
-              Object.keys(errors).map((error) => setFieldError(error, errors[error]));
-            }
-            // else alert message
-          });
+          }
+        } catch (err) {
+          setLoading(false);
+          const { errors } = err.response.data;
+          if (typeof errors === 'object') {
+            Object.keys(errors).map((error) => setFieldError(error, errors[error]));
+          }
+        }
       }
     },
     validateOnBlur: true,
@@ -65,8 +69,8 @@ const DeleteAccountForm = ({ loading, setLoading }: DeleteAccountFormI) => {
             fontSize={25}
             textAlign='center'
           >
-        Are you sure you want
-to do this?
+            Are you sure you want
+            to do this?
           </AppText>
         </View>
         <View>
@@ -84,11 +88,13 @@ to do this?
             touched={formik.touched.password}
             value={formik.values.password}
           />
-          <View style={styles.requiredFieldIndicator}>
+          <View
+            style={styles.requiredFieldIndicator}
+          >
             <AppText
               fontSize={15}
             >
-            * required fields
+              * required fields
             </AppText>
           </View>
         </View>
@@ -111,10 +117,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   requiredFieldIndicator: {
-    marginTop: 30,
-    marginBottom: 60,
     flexDirection: 'row',
     justifyContent: 'flex-end',
+    marginTop: 30,
+    marginBottom: 60,
   },
   textContainer: {
     alignItems: 'center',

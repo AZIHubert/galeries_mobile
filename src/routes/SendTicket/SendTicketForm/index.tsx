@@ -25,23 +25,23 @@ const initialValues = {
 const LoginForm = ({ loading, setLoading }: LoginFormI) => {
   const formik = useFormik({
     initialValues,
-    onSubmit: (values, { setFieldError, resetForm }) => {
+    onSubmit: async (values, { setFieldError, resetForm }) => {
       if (!loading) {
         setLoading(true);
         Keyboard.dismiss();
-        sendTicket(values)
-          .then(() => {
+        try {
+          const response = await sendTicket(values);
+          if (response) {
             setLoading(false);
             resetForm();
-          })
-          .catch((err) => {
-            setLoading(false);
-            const { errors } = err.response.data;
-            if (typeof errors === 'object') {
-              Object.keys(errors).map((error) => setFieldError(error, errors[error]));
-            }
-            // else alert message
-          });
+          }
+        } catch (err) {
+          const { errors } = err.response.data;
+          if (typeof errors === 'object') {
+            Object.keys(errors).map((error) => setFieldError(error, errors[error]));
+          }
+          setLoading(false);
+        }
       }
     },
     validateOnBlur: true,
@@ -52,7 +52,6 @@ const LoginForm = ({ loading, setLoading }: LoginFormI) => {
     <View
       style={styles.container}
     >
-
       <View>
         <Field
           editable={!loading}

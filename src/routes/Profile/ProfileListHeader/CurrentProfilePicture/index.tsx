@@ -2,15 +2,31 @@ import { LinearGradient } from 'expo-linear-gradient';
 import * as React from 'react';
 import {
   Image,
+  ImageSourcePropType,
   StyleSheet,
   View,
 } from 'react-native';
-import { AuthContext } from '#src/contexts/AuthProvider';
 
 import theme from '#helpers/theme';
+import { UserI } from '#helpers/interfaces';
+
+import defaultProfilePicture from '#ressources/images/defaultProfilePicture.png';
+
+import { AuthContext } from '#src/contexts/AuthProvider';
+
+const profilePicture
+: (user: UserI | null) => ImageSourcePropType | { uri: string } = (user: UserI | null) => {
+  if (user && user.currentProfilePicture) {
+    return { uri: user.currentProfilePicture.cropedImage.signedUrl };
+  }
+  if (user && user.defaultProfilePicture) {
+    return { uri: user.defaultProfilePicture };
+  }
+  return defaultProfilePicture;
+};
 
 const ProfilePicture = () => {
-  const { profilePicture } = React.useContext(AuthContext);
+  const { user } = React.useContext(AuthContext);
   return (
     <LinearGradient
       colors={[theme.color.tertiary, theme.color.primary]}
@@ -23,7 +39,7 @@ const ProfilePicture = () => {
       >
         <Image
           resizeMode='contain'
-          source={profilePicture()}
+          source={profilePicture(user)}
           style={styles.image}
         />
       </View>

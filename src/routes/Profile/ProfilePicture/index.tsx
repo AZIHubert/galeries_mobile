@@ -9,15 +9,14 @@ import {
   View,
 } from 'react-native';
 
+import { setProfilePicture, deleteProfilePicture } from '#helpers/api';
 import { ProfilePictureI } from '#helpers/interfaces';
 import theme from '#helpers/theme';
-import { setProfilePicture, deleteProfilePicture } from '#helpers/api';
+
 import { AuthContext } from '#src/contexts/AuthProvider';
 
 interface SingleProfilePictureI {
   profilePicture: ProfilePictureI;
-  current?: boolean;
-  setProfilePictures: React.Dispatch<React.SetStateAction<ProfilePictureI[]>>;
 }
 
 interface StyleSheetI {
@@ -28,12 +27,11 @@ const { width } = Dimensions.get('window');
 
 const ProfilePicture = ({
   profilePicture,
-  current = false,
-  setProfilePictures,
 }: SingleProfilePictureI) => {
   const { setUser, user } = React.useContext(AuthContext);
   const [loading, setLoading] = React.useState<boolean>(false);
   const navigation = useNavigation();
+  const current = user ? user.currentProfilePictureId === profilePicture.id : false;
   return (
     <View
       style={styles({
@@ -45,23 +43,30 @@ const ProfilePicture = ({
         onPress={async () => {
           if (!loading) {
             setLoading(true);
-            await setProfilePicture(profilePicture.id);
-            setLoading(false);
-            setUser((prevState) => {
-              if (prevState) {
-                const remove = profilePicture.id !== prevState.currentProfilePictureId;
-                return {
-                  ...prevState,
-                  currentProfilePictureId: remove
-                    ? profilePicture.id
-                    : null,
-                  currentProfilePicture: remove
-                    ? profilePicture
-                    : null,
-                };
+            try {
+              const response = await setProfilePicture(profilePicture.id);
+              if (response) {
+                setLoading(false);
+                setUser((prevState) => {
+                  if (prevState) {
+                    const remove = profilePicture.id !== prevState.currentProfilePictureId;
+                    return {
+                      ...prevState,
+                      currentProfilePictureId: remove
+                        ? profilePicture.id
+                        : null,
+                      currentProfilePicture: remove
+                        ? profilePicture
+                        : null,
+                    };
+                  }
+                  return null;
+                });
               }
-              return null;
-            });
+            } catch (err) {
+              setLoading(false);
+              console.log(err);
+            }
           }
         }}
         style={styles({
@@ -73,7 +78,6 @@ const ProfilePicture = ({
         onPress={() => {
           navigation.navigate('imageView', {
             profilePicture,
-            setProfilePictures,
           });
         }}
         onLongPress={() => Alert.alert('Delete', 'Are you sure you want to delete this image?', [
@@ -81,23 +85,34 @@ const ProfilePicture = ({
           {
             text: 'yes',
             onPress: async () => {
-              await deleteProfilePicture(profilePicture.id);
-              if (user && profilePicture.id === user.currentProfilePictureId) {
-                setUser((prevState) => {
-                  if (prevState) {
-                    return {
-                      ...prevState,
-                      currentProfilePictureId: null,
-                      currentProfilePicture: null,
-                    };
+              if (!loading) {
+                setLoading(true);
+                try {
+                  const response = await deleteProfilePicture(profilePicture.id);
+                  if (response
+                    && user
+                    && profilePicture.id === user.currentProfilePictureId
+                  ) {
+                    setUser((prevState) => {
+                      if (prevState) {
+                        const profilePictures = prevState.profilePictures
+                          .filter((pp) => pp.id !== profilePicture.id);
+                        return {
+                          ...prevState,
+                          currentProfilePictureId: null,
+                          currentProfilePicture: null,
+                          profilePictures,
+                        };
+                      }
+                      return null;
+                    });
+                    setLoading(false);
                   }
-                  return null;
-                });
+                } catch (err) {
+                  console.log(err);
+                  setLoading(false);
+                }
               }
-              setProfilePictures((prevState) => {
-                const profilePictures = prevState.filter((pp) => pp.id !== profilePicture.id);
-                return [...profilePictures];
-              });
             },
           },
 

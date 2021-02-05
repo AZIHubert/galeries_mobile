@@ -14,9 +14,10 @@ import Column from '#components/Column';
 import Screen from '#components/Screen';
 import SocialMediaButton from '#components/SocialMediaButton';
 import Wrapper from '#components/Wrapper';
+
+import homeBackground from '#ressources/images/homeBackground.png';
 import logoG from '#ressources/images/logoG.png';
 import logoGaleries from '#ressources/images/logoGaleries.png';
-import homeBackground from '#ressources/images/homeBackground.png';
 
 import {
   facebookLogin,
@@ -29,17 +30,17 @@ const Home = () => {
   return (
     <Screen>
       <ImageBackground
-        style={styles.ImageBackground}
         source={homeBackground}
+        style={styles.ImageBackground}
       >
         <Wrapper>
           <View
             style={styles.container}
           >
             <Image
+              resizeMode='contain'
               source={logoG}
               style={styles.gLogo}
-              resizeMode='contain'
             />
             <View
               style={styles.texts}
@@ -52,9 +53,9 @@ const Home = () => {
                 Welcome to
               </AppText>
               <Image
+                resizeMode='contain'
                 source={logoGaleries}
                 style={styles.galerieLogo}
-                resizeMode='contain'
               />
               <View
                 style={styles.catchPhraseContainer}
@@ -88,16 +89,16 @@ const Home = () => {
               <Column>
                 <AppButton
                   disabled={loading}
-                  onPress={() => navigation.navigate('login')}
                   marginBottom={24}
+                  onPress={() => navigation.navigate('login')}
                   title='log in'
                 />
               </Column>
               <Column>
                 <AppButton
                   disabled={loading}
-                  onPress={() => navigation.navigate('signin')}
                   marginBottom={24}
+                  onPress={() => navigation.navigate('signin')}
                   title='sign in'
                   variant='secondary'
                 />
@@ -110,15 +111,16 @@ const Home = () => {
               marginBottom={10}
               onPress={async () => {
                 try {
+                  setLoading(true);
                   const response = await facebookLogin();
                   if (response) {
                     await AsyncStorage.setItem('auThoken', response.data.token);
+                    navigation.reset({
+                      index: 0,
+                      routes: [{ name: 'sideMenu' }],
+                    });
                   }
                   setLoading(false);
-                  navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'sideMenu' }],
-                  });
                 } catch (err) {
                   setLoading(false);
                 }
@@ -128,20 +130,20 @@ const Home = () => {
             <SocialMediaButton
               disabled={loading}
               marginBottom={30}
-              onPress={() => {
-                googleLogin()
-                  .then(() => {
-                    setLoading(false);
+              onPress={async () => {
+                try {
+                  setLoading(true);
+                  const response = await googleLogin();
+                  if (response) {
+                    await AsyncStorage.setItem('auThoken', response.data.token);
                     navigation.reset({
                       index: 0,
                       routes: [{ name: 'sideMenu' }],
                     });
-                  })
-                  .catch((err) => {
-                    console.log(err);
-                    setLoading(false);
-                    // set alert
-                  });
+                  }
+                } catch (err) {
+                  setLoading(false);
+                }
               }}
               variant='google'
             />
@@ -168,8 +170,8 @@ const styles = StyleSheet.create({
     top: 20,
   },
   ImageBackground: {
-    width: '100%',
     flex: 1,
+    width: '100%',
   },
   loggersContainer: {
     flexDirection: 'row',

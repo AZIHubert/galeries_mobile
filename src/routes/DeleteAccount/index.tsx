@@ -11,8 +11,8 @@ const DeleteAccount = () => {
   return (
     <ScrollableScreen
       header={() => <HeaderForm
-        variant='danger'
         title='delete your account'
+        variant='danger'
       />}
     >
       <Wrapper
