@@ -6,9 +6,10 @@ import {
 } from 'react-native';
 
 import AppText from '#components/AppText';
+
 import theme from '#helpers/theme';
 
-type Align = 'left' | 'center' | 'right';
+type Align = 'center' | 'left' | 'right';
 type Variant = 'primary' | 'secondary';
 
 interface ButtonI {
@@ -44,8 +45,8 @@ const convertAlign = (align?: Align) => {
 const Button = ({
   align = 'center',
   disabled,
-  height = theme.button.height,
   fontSize = theme.button.fontSize,
+  height = theme.button.height,
   marginBottom = 0,
   onPress,
   title,

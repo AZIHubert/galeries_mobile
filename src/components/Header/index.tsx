@@ -1,6 +1,9 @@
-import { useNavigation, DrawerActions } from '@react-navigation/native';
-import Constants from 'expo-constants';
 import { Entypo } from '@expo/vector-icons';
+import {
+  DrawerActions,
+  useNavigation,
+} from '@react-navigation/native';
+import Constants from 'expo-constants';
 import * as React from 'react';
 import {
   Image,
@@ -10,8 +13,10 @@ import {
 } from 'react-native';
 
 import AppText from '#components/AppText';
-import logoG from '#ressources/images/logoG.png';
+
 import theme from '#helpers/theme';
+
+import logoG from '#ressources/images/logoG.png';
 
 interface HeaderI {
   returnButton?: boolean;
@@ -68,9 +73,9 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     backgroundColor: theme.color.secondary,
-    elevation: 5,
-    borderBottomWidth: 2,
     borderBottomColor: theme.color.primary,
+    borderBottomWidth: 2,
+    elevation: 5,
     paddingBottom: theme.header.paddingVertical,
     paddingTop: Constants.statusBarHeight + theme.header.paddingVertical,
   },
@@ -83,11 +88,11 @@ const styles = StyleSheet.create({
     height: theme.header.containerIconSize,
     justifyContent: 'center',
     left: theme.wrapper.marginHorizontal
-    - (theme.header.containerIconSize - theme.header.iconSize) / 2,
+      - (theme.header.containerIconSize - theme.header.iconSize) / 2,
     position: 'absolute',
     top: Constants.statusBarHeight
-    + theme.header.paddingVertical
-    + (theme.header.containerIconSize - theme.header.iconSize) / 2,
+      + theme.header.paddingVertical
+      + (theme.header.containerIconSize - theme.header.iconSize) / 2,
     width: theme.header.containerIconSize,
   },
   returnContainer: {
@@ -95,9 +100,9 @@ const styles = StyleSheet.create({
     borderRadius: theme.header.containerIconSize / 2,
     height: theme.header.containerIconSize,
     justifyContent: 'center',
+    position: 'absolute',
     right: theme.wrapper.marginHorizontal
       - (theme.header.containerIconSize - theme.header.iconSize) / 2,
-    position: 'absolute',
     top: Constants.statusBarHeight
       + theme.header.paddingVertical
       + (theme.header.containerIconSize - theme.header.iconSize) / 2,

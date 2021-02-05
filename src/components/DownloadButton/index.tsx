@@ -16,9 +16,9 @@ const Button = ({
   disabled,
 }: ButtonI) => (
   <TouchableOpacity
+    activeOpacity={theme.touchableOpacity.defaultOpacity}
     disabled={disabled}
     onPress={() => {}}
-    activeOpacity={theme.touchableOpacity.defaultOpacity}
     style={ styles.container }
   >
     <AppText

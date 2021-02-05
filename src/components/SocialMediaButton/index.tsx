@@ -7,7 +7,9 @@ import {
 } from 'react-native';
 
 import AppText from '#components/AppText';
+
 import theme from '#helpers/theme';
+
 import logoFacebook from '#ressources/images/logoFacebook.png';
 import logoGoogle from '#ressources/images/logoGoogle.png';
 
@@ -15,26 +17,26 @@ type Variant = 'facebook' | 'google'
 
 interface ButtonI {
   disabled: boolean;
-  onPress: () => void,
   marginBottom?: number;
+  onPress: () => void,
   variant?: Variant;
 }
 
 interface StyleSheetI {
-  variant: Variant;
   marginBottom: number;
+  variant: Variant;
 }
 
 const Button = ({
   disabled,
+  marginBottom = 0,
   onPress,
   variant = 'facebook',
-  marginBottom = 0,
 }: ButtonI) => (
   <TouchableOpacity
+    activeOpacity={theme.touchableOpacity.defaultOpacity}
     disabled={disabled}
     onPress={onPress}
-    activeOpacity={theme.touchableOpacity.defaultOpacity}
     style={styles({
       marginBottom,
       variant,

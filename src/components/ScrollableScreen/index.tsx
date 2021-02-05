@@ -1,5 +1,5 @@
-import * as React from 'react';
 import Constants from 'expo-constants';
+import * as React from 'react';
 import {
   Keyboard,
   SafeAreaView,
@@ -26,9 +26,11 @@ const ScrollableScreen: React.FC<ScrollableScreenI> = ({
 }) => {
   const asHeader = !!Header;
   return (
-    <View style={styles({
-      asHeader,
-    }).container}>
+    <View
+      style={styles({
+        asHeader,
+      }).container}
+    >
       {Header ? (
         <TouchableWithoutFeedback
           onPress={() => {
@@ -71,9 +73,9 @@ const styles = ({
     flex: 1,
   },
   safeArea: {
+    backgroundColor: theme.color.secondary,
     flex: 1,
     paddingTop: asHeader ? 0 : Constants.statusBarHeight,
-    backgroundColor: theme.color.secondary,
   },
   scrollView: {
     flex: 1,

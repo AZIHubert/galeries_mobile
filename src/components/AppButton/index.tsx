@@ -5,10 +5,11 @@ import {
 } from 'react-native';
 
 import AppText from '#components/AppText';
+
 import theme from '#helpers/theme';
 
-type Align = 'left' | 'center' | 'right';
-type Variant = 'primary' | 'secondary' | 'tertiary' | 'danger';
+type Align = 'center' | 'left' | 'right';
+type Variant = 'danger' | 'primary' | 'secondary' | 'tertiary';
 interface ButtonI {
   align?: Align;
   disabled: boolean;
@@ -42,14 +43,14 @@ const convertAlign = (align?: Align) => {
 
 const convertBackgroundColor = (variant: Variant) => {
   switch (variant) {
+    case 'danger':
+      return theme.color.secondary;
     case 'primary':
       return theme.color.primary;
     case 'secondary':
       return theme.color.secondary;
     case 'tertiary':
       return theme.color.primary;
-    case 'danger':
-      return theme.color.secondary;
     default:
       return theme.color.secondary;
   }
@@ -57,14 +58,14 @@ const convertBackgroundColor = (variant: Variant) => {
 
 const convertBorderColor = (variant: Variant) => {
   switch (variant) {
+    case 'danger':
+      return theme.color.error;
     case 'primary':
       return theme.color.primary;
     case 'secondary':
       return theme.color.primary;
     case 'tertiary':
       return theme.color.secondary;
-    case 'danger':
-      return theme.color.error;
     default:
       return theme.color.primary;
   }
@@ -72,14 +73,14 @@ const convertBorderColor = (variant: Variant) => {
 
 const convertTextColor = (variant: Variant) => {
   switch (variant) {
+    case 'danger':
+      return 'error';
     case 'primary':
       return 'secondary';
     case 'secondary':
       return 'primary';
     case 'tertiary':
       return 'secondary';
-    case 'danger':
-      return 'error';
     default:
       return 'secondary';
   }
@@ -95,9 +96,9 @@ const Button = ({
   variant = 'primary',
 }: ButtonI) => (
   <TouchableOpacity
+    activeOpacity={theme.touchableOpacity.defaultOpacity}
     disabled={disabled}
     onPress={onPress}
-    activeOpacity={theme.touchableOpacity.defaultOpacity}
     style={
       styles({
         align,
