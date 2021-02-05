@@ -119,7 +119,7 @@ const ImageView = ({ route }) => {
 const styles = StyleSheet.create({
   buttonDeleteContainer: {
     alignItems: 'center',
-    backgroundColor: theme.color.error,
+    backgroundColor: theme.color.danger,
     borderRadius: 25,
     height: 30,
     justifyContent: 'center',

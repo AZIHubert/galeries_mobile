@@ -59,7 +59,7 @@ const convertBackgroundColor = (variant: Variant) => {
 const convertBorderColor = (variant: Variant) => {
   switch (variant) {
     case 'danger':
-      return theme.color.error;
+      return theme.color.danger;
     case 'primary':
       return theme.color.primary;
     case 'secondary':

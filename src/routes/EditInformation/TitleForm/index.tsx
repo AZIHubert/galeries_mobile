@@ -40,7 +40,7 @@ const styles = ({
 }: StyleSheetI) => StyleSheet.create({
   container: {
     borderBottomWidth: 2,
-    borderBottomColor: danger ? theme.color.error : theme.color.primary,
+    borderBottomColor: danger ? theme.color.danger : theme.color.primary,
     marginBottom: 30,
     paddingBottom: 10,
   },

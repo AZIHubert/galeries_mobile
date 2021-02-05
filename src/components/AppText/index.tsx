@@ -46,7 +46,7 @@ const converColor = (color: Color) => {
     case 'black':
       return theme.color.black;
     case 'error':
-      return theme.color.error;
+      return theme.color.danger;
     case 'primary':
       return theme.color.primary;
     case 'secondary':

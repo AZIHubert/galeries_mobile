@@ -26,7 +26,7 @@ interface StyleSheetI {
 const convertBackgroundColor = (variant: Variant) => {
   switch (variant) {
     case 'danger':
-      return theme.color.error;
+      return theme.color.danger;
     case 'primary':
       return theme.color.primary;
     default:

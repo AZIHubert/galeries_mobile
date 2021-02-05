@@ -9,13 +9,13 @@ export default {
     paddingVertical: 7,
   },
   color: {
-    error: '#FF0000',
+    black: '#000',
+    danger: '#FF0000',
+    facebook: '#3B579D',
     primary: '#7483FF',
     secondary: '#FFFFF4',
     tertiary: '#78FFF7',
-    black: '#000',
     white: '#fff',
-    facebook: '#3B579D',
   },
   field: {
     label: {

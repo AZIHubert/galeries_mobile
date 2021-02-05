@@ -108,7 +108,7 @@ const styles = ({
   },
   textInput: {
     backgroundColor: theme.color.white,
-    borderColor: error && touched ? theme.color.error : theme.color.primary,
+    borderColor: error && touched ? theme.color.danger : theme.color.primary,
     borderWidth: 1,
     fontSize: theme.field.textInput.fontSize,
     marginBottom: error
