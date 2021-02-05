@@ -2,21 +2,23 @@ import * as React from 'react';
 import { ImageSourcePropType } from 'react-native';
 
 import { UserI } from '#helpers/interfaces';
+
 import defaultProfilePicture from '#ressources/images/defaultProfilePicture.png';
 
 export const AuthContext = React.createContext<{
-  user: null | UserI;
-  setUser: React.Dispatch<React.SetStateAction<UserI | null>>;
   profilePicture:() => ImageSourcePropType | { uri: string};
+  setUser: React.Dispatch<React.SetStateAction<UserI | null>>;
+  user: null | UserI;
 }>({
-      user: null,
-      setUser: () => {},
       profilePicture: () => defaultProfilePicture,
+      setUser: () => {},
+      user: null,
     });
 
 export const AuthProvider: React.FC<{}> = ({ children }) => {
   const [user, setUser] = React.useState<null | UserI>(null);
-  const profilePicture: () => ImageSourcePropType | { uri: string} = () => {
+
+  const profilePicture: () => ImageSourcePropType | { uri: string } = () => {
     if (user && user.currentProfilePicture) {
       return { uri: user.currentProfilePicture.cropedImage.signedUrl };
     }
@@ -28,9 +30,9 @@ export const AuthProvider: React.FC<{}> = ({ children }) => {
   return (
     <AuthContext.Provider
       value={{
-        user,
-        setUser,
         profilePicture,
+        setUser,
+        user,
       }}
     >
       {children}
