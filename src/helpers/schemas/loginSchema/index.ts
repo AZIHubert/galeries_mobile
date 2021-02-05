@@ -5,9 +5,9 @@ import {
 } from '#helpers/formErrors';
 
 const loginSchema = Yup.object().shape({
-  userNameOrEmail: Yup.string()
-    .required(REQUIRED),
   password: Yup.string()
+    .required(REQUIRED),
+  userNameOrEmail: Yup.string()
     .required(REQUIRED),
 });
 

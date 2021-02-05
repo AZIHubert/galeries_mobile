@@ -9,7 +9,7 @@ import {
 import AppButtonRadius from '#components/AppButtonRadius';
 import AppText from '#components/AppText';
 import Field from '#components/Field';
-import { ChangePasswordSchema } from '#helpers/schemas';
+import { changePasswordSchema } from '#helpers/schemas';
 
 interface ChangePasswordFormI {
   loading: boolean;
@@ -33,7 +33,7 @@ const ChangePasswordForm = ({ loading, setLoading }: ChangePasswordFormI) => {
     },
     validateOnBlur: true,
     validateOnChange: false,
-    validationSchema: ChangePasswordSchema,
+    validationSchema: changePasswordSchema,
   });
   return (
     <View>
