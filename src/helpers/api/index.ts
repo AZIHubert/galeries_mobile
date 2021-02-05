@@ -1,12 +1,13 @@
-export { default as updatePasswordSendEmail } from './updatePasswordSendEmail';
-export { default as deleteProfilePicture } from './deleteProfilePicture';
 export { default as deleteAccount } from './deleteAccount';
+export { default as deleteProfilePicture } from './deleteProfilePicture';
 export { default as facebookLogin } from './facebookLogin';
+export { default as getMe } from './getMe';
 export { default as getProfilePictures } from './getProfilePictures';
 export { default as googleLogin } from './googleLogin';
 export { default as login } from './login';
+export { default as logout } from './logout';
 export { default as postProfilePicture } from './postProfilePicture';
+export { default as sendTicket } from './sendTicket';
 export { default as setProfilePicture } from './setProfilePicture';
 export { default as signin } from './signin';
-export { default as sendTicket } from './sendTicket';
-export { default as logout } from './logout';
+export { default as updatePasswordSendEmail } from './updatePasswordSendEmail';

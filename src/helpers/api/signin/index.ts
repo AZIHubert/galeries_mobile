@@ -9,11 +9,19 @@ interface ValuesI {
   userName: string;
 }
 
-export default (values: ValuesI) => client({
-  method: 'post',
-  url: endpoint,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  data: values,
-});
+const signin: (values: ValuesI) => Promise<void> = async (values: ValuesI) => {
+  try {
+    await client({
+      data: values,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'post',
+      url: endpoint,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export default signin;

@@ -1,16 +1,25 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import client from '#src/helpers/api/client';
 
 const endpoint = '/users/me/profilePictures/';
 
-export default async (id: string) => {
-  const token = await AsyncStorage.getItem('auThoken');
-  return client({
-    method: 'delete',
-    url: endpoint + id,
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: token,
-    },
-  });
+const deleteProfilePicture: (id: string) => Promise<void> = async (id: string) => {
+  try {
+    const token = await AsyncStorage.getItem('auThoken');
+    if (token) {
+      await client({
+        headers: {
+          authorization: token,
+          'Content-Type': 'application/json',
+        },
+        method: 'delete',
+        url: endpoint + id,
+      });
+    }
+  } catch (err) {
+    console.log(err);
+  }
 };
+
+export default deleteProfilePicture;
