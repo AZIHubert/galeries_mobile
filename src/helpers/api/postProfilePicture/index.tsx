@@ -1,10 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AxiosResponse } from 'axios';
 
 import client from '#src/helpers/api/client';
 
 const endpoint = '/users/me/profilePictures/';
 
-const postProfilePicture: (uri: string) => Promise<void> = async (uri: string) => {
+const postProfilePicture
+: (uri: string) => Promise<AxiosResponse<any> | null> = async (uri: string) => {
   const uriParts = uri.split('.');
   const fileType = uriParts[uriParts.length - 1];
   const formData = new FormData();
@@ -17,7 +19,7 @@ const postProfilePicture: (uri: string) => Promise<void> = async (uri: string) =
   try {
     const token = await AsyncStorage.getItem('auThoken');
     if (token) {
-      await client({
+      return await client({
         data: formData,
         headers: {
           authorization: token,
@@ -28,8 +30,9 @@ const postProfilePicture: (uri: string) => Promise<void> = async (uri: string) =
       });
     }
   } catch (err) {
-    console.log(err);
+    throw new Error(err);
   }
+  return null;
 };
 
 export default postProfilePicture;

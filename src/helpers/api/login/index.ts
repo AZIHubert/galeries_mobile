@@ -1,3 +1,5 @@
+import { AxiosResponse } from 'axios';
+
 import client from '#src/helpers/api/client';
 
 const endpoint = '/users/login';
@@ -7,9 +9,10 @@ interface ValuesI {
   userNameOrEmail: string;
 }
 
-const login: (values: ValuesI) => Promise<void> = async (values: ValuesI) => {
+const login
+: (values: ValuesI) => Promise<AxiosResponse<any>> = async (values: ValuesI) => {
   try {
-    await client({
+    return await client({
       data: values,
       headers: {
         'Content-Type': 'application/json',
@@ -18,7 +21,7 @@ const login: (values: ValuesI) => Promise<void> = async (values: ValuesI) => {
       url: endpoint,
     });
   } catch (err) {
-    console.log(err);
+    throw new Error(err);
   }
 };
 

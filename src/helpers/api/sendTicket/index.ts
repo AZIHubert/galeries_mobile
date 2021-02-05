@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AxiosResponse } from 'axios';
 
 import client from '#src/helpers/api/client';
 
@@ -9,11 +10,12 @@ interface ValuesI {
   body: string;
 }
 
-const sendTicket: (values: ValuesI) => Promise<void> = async (values: ValuesI) => {
+const sendTicket
+: (values: ValuesI) => Promise<AxiosResponse<any> | null> = async (values: ValuesI) => {
   try {
     const token = await AsyncStorage.getItem('auThoken');
     if (token) {
-      await client({
+      return await client({
         data: values,
         headers: {
           authorization: token,
@@ -24,8 +26,9 @@ const sendTicket: (values: ValuesI) => Promise<void> = async (values: ValuesI) =
       });
     }
   } catch (err) {
-    console.log(err);
+    throw new Error(err);
   }
+  return null;
 };
 
 export default sendTicket;

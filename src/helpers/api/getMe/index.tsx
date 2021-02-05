@@ -1,12 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AxiosResponse } from 'axios';
 
 import client from '#src/helpers/api/client';
 
-const getMe = async () => {
+const getMe: () => Promise<AxiosResponse<any> | null> = async () => {
   try {
     const token = await AsyncStorage.getItem('auThoken');
     if (token) {
-      await client({
+      return await client({
         headers: {
           authorization: token,
           'Content-Type': 'application/json',
@@ -16,8 +17,9 @@ const getMe = async () => {
       });
     }
   } catch (err) {
-    console.log(err);
+    throw new Error(err);
   }
+  return null;
 };
 
 export default getMe;

@@ -1,10 +1,12 @@
+import { AxiosResponse } from 'axios';
 import * as Google from 'expo-google-app-auth';
 
 import client from '#src/helpers/api/client';
 
 const endpoint = '/users/auth/mobile/google';
 
-const googleLogin: () => Promise<void> = async () => {
+const googleLogin
+: () => Promise<AxiosResponse<any> | null> = async () => {
   try {
     const response = await Google.logInAsync({
       androidClientId: '863840240633-o8dmgid62rummljeen43rqe1gev7ottn.apps.googleusercontent.com',
@@ -12,7 +14,7 @@ const googleLogin: () => Promise<void> = async () => {
     });
     if (response.type === 'success') {
       const { user } = response;
-      await client({
+      return await client({
         data: user,
         headers: {
           'Content-Type': 'application/json',
@@ -22,8 +24,9 @@ const googleLogin: () => Promise<void> = async () => {
       });
     }
   } catch (err) {
-    console.log(err);
+    throw new Error(err);
   }
+  return null;
 };
 
 export default googleLogin;

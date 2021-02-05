@@ -110,8 +110,10 @@ const Home = () => {
               marginBottom={10}
               onPress={async () => {
                 try {
-                  const { data } = await facebookLogin();
-                  await AsyncStorage.setItem('auThoken', data.token);
+                  const response = await facebookLogin();
+                  if (response) {
+                    await AsyncStorage.setItem('auThoken', response.data.token);
+                  }
                   setLoading(false);
                   navigation.reset({
                     index: 0,
