@@ -39,9 +39,8 @@ const Profile = () => {
         numColumns={2}
         renderItem={({ item }) => (
           <ProfilePicture
-            id={item.id}
-            current={user ? item.id === user.currentProfilePicture : false}
-            source={item.cropedImage.signedUrl}
+            current={user ? user.currentProfilePictureId === item.id : false}
+            profilePicture={item}
             setProfilePictures={setProfilePictures}
           />
         )}

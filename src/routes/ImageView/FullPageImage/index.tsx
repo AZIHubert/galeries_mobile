@@ -1,70 +1,124 @@
 import { MaterialIcons } from '@expo/vector-icons';
+import Constants from 'expo-constants';
 import * as React from 'react';
 import {
   Dimensions,
   Image,
   ImageBackground,
-  ImageSourcePropType,
   TouchableOpacity,
   StyleSheet,
   View,
 } from 'react-native';
 
 import theme from '#helpers/theme';
+import { ProfilePictureI } from '#helpers/interfaces';
 
 interface FullPageImageI {
-  onPress: () => void
-  source: ImageSourcePropType,
+  onPress: () => void;
+  profilePicture: ProfilePictureI;
 }
 
-const { height } = Dimensions.get('window');
+interface StyleSheetI {
+  width: number;
+  height: number;
+}
+
+const { height: windowHeight, width: windowWidth } = Dimensions.get('window');
 
 const FullPageImage = ({
   onPress,
-  source,
-}: FullPageImageI) => (
-  <ImageBackground
-    blurRadius={15}
-    resizeMode='cover'
-    source={source}
-    style={styles.imageBackground}
-  >
-    <View
-      style={styles.imageContainer}
+  profilePicture,
+}: FullPageImageI) => {
+  const size = () => {
+    const maxHeight = windowHeight
+      - 65
+      - theme.imageView.scrollButton.size
+      - (theme.imageView.scrollButton.paddingBottom * 2)
+      - Constants.statusBarHeight;
+    const defaultHeight = (profilePicture.originalImage.height
+        * (
+          windowWidth
+          - theme.wrapper.marginHorizontal
+          * 2
+        )
+    ) / profilePicture.originalImage.width;
+    const defaultWidth = windowWidth
+      - theme.wrapper.marginHorizontal
+      * 2;
+    if (defaultHeight > maxHeight) {
+      return {
+        height: maxHeight,
+        width: (defaultWidth * maxHeight) / defaultHeight,
+      };
+    }
+    return {
+      height: defaultHeight,
+      width: defaultWidth,
+    };
+  };
+  return (
+    <ImageBackground
+      blurRadius={15}
+      resizeMode='cover'
+      source={{ uri: profilePicture.originalImage.signedUrl }}
+      style={styles({
+        width: size().width,
+        height: size().height,
+      }).imageBackground}
     >
-      <Image
-        resizeMode='contain'
-        source={source}
-        style={styles.image}
-      />
-    </View>
-    <View
-      style={styles.scrollButtonContainer}
-    >
-      <TouchableOpacity
-        activeOpacity={theme.touchableOpacity.defaultOpacity}
-        onPress={onPress}
-        style={styles.scrollButton}
+      <View
+        style={styles({
+          width: size().width,
+          height: size().height,
+        }).imageContainer}
       >
-        <MaterialIcons
-          color={theme.color.secondary}
-          name='info'
-          size={theme.imageView.scrollButton.size}
+        <Image
+          resizeMode='contain'
+          source={{ uri: profilePicture.originalImage.signedUrl }}
+          style={styles({
+            width: size().width,
+            height: size().height,
+          }).image}
         />
-      </TouchableOpacity>
-    </View>
-  </ImageBackground>
-);
+      </View>
+      <View
+        style={styles({
+          width: size().width,
+          height: size().height,
+        }).scrollButtonContainer}
+      >
+        <TouchableOpacity
+          activeOpacity={theme.touchableOpacity.defaultOpacity}
+          onPress={onPress}
+          style={styles({
+            width: size().width,
+            height: size().height,
+          }).scrollButton}
+        >
+          <MaterialIcons
+            color={theme.color.secondary}
+            name='info'
+            size={theme.imageView.scrollButton.size}
+          />
+        </TouchableOpacity>
+      </View>
+    </ImageBackground>
+  );
+};
 
-const styles = StyleSheet.create({
+const styles = ({
+  width,
+  height,
+}: StyleSheetI) => StyleSheet.create({
   image: {
     height,
-    width: '100%',
+    width,
   },
   imageBackground: {
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
+    height: windowHeight,
   },
   imageContainer: {
     alignItems: 'center',

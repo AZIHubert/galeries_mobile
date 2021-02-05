@@ -32,8 +32,7 @@ const LoginForm = ({ loading, setLoading }: LoginFormI) => {
         setLoading(true);
         Keyboard.dismiss();
         login(values)
-          .then((response) => {
-            console.log(response.data);
+          .then(() => {
             setLoading(false);
             navigation.reset({
               index: 0,

@@ -11,6 +11,7 @@ import AppButton from '#components/AppButton';
 import AppText from '#components/AppText';
 import Field from '#components/Field';
 import { deleteAccountSchema } from '#helpers/schemas';
+import { deleteAccount } from '#helpers/api';
 
 interface DeleteAccountFormI {
   loading: boolean;
@@ -25,14 +26,26 @@ const DeleteAccountForm = ({ loading, setLoading }: DeleteAccountFormI) => {
   const navigation = useNavigation();
   const formik = useFormik({
     initialValues,
-    onSubmit: () => {
+    onSubmit: (values, { setFieldError }) => {
       if (!loading) {
         setLoading(true);
         Keyboard.dismiss();
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'home' }],
-        });
+        deleteAccount(values)
+          .then(() => {
+            setLoading(false);
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'home' }],
+            });
+          })
+          .catch((err) => {
+            setLoading(false);
+            const { errors } = err.response.data;
+            if (typeof errors === 'object') {
+              Object.keys(errors).map((error) => setFieldError(error, errors[error]));
+            }
+            // else alert message
+          });
       }
     },
     validateOnBlur: true,

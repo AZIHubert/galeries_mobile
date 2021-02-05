@@ -11,11 +11,12 @@ import {
 
 import { ProfilePictureI } from '#helpers/interfaces';
 import theme from '#helpers/theme';
+import { setProfilePicture, deleteProfilePicture } from '#helpers/api';
+import { AuthContext } from '#src/contexts/AuthProvider';
 
 interface SingleProfilePictureI {
-  id: string;
+  profilePicture: ProfilePictureI;
   current?: boolean;
-  source: string;
   setProfilePictures: React.Dispatch<React.SetStateAction<ProfilePictureI[]>>;
 }
 
@@ -26,11 +27,12 @@ interface StyleSheetI {
 const { width } = Dimensions.get('window');
 
 const ProfilePicture = ({
-  source,
+  profilePicture,
   current = false,
-  id,
   setProfilePictures,
 }: SingleProfilePictureI) => {
+  const { setUser, user } = React.useContext(AuthContext);
+  const [loading, setLoading] = React.useState<boolean>(false);
   const navigation = useNavigation();
   return (
     <View
@@ -40,6 +42,28 @@ const ProfilePicture = ({
     >
       <TouchableOpacity
         activeOpacity={theme.touchableOpacity.defaultOpacity}
+        onPress={async () => {
+          if (!loading) {
+            setLoading(true);
+            await setProfilePicture(profilePicture.id);
+            setLoading(false);
+            setUser((prevState) => {
+              if (prevState) {
+                const remove = profilePicture.id !== prevState.currentProfilePictureId;
+                return {
+                  ...prevState,
+                  currentProfilePictureId: remove
+                    ? profilePicture.id
+                    : null,
+                  currentProfilePicture: remove
+                    ? profilePicture
+                    : null,
+                };
+              }
+              return null;
+            });
+          }
+        }}
         style={styles({
           current,
         }).button}
@@ -48,22 +72,39 @@ const ProfilePicture = ({
         activeOpacity={theme.touchableOpacity.defaultOpacity}
         onPress={() => {
           navigation.navigate('imageView', {
-            source,
+            profilePicture,
+            setProfilePictures,
           });
         }}
         onLongPress={() => Alert.alert('Delete', 'Are you sure you want to delete this image?', [
+          { text: 'no' },
           {
             text: 'yes',
-            onPress: () => setProfilePictures((prevState) => {
-              const profilePictures = prevState.filter((pp) => pp.id !== id);
-              return [...profilePictures];
-            }),
+            onPress: async () => {
+              await deleteProfilePicture(profilePicture.id);
+              if (user && profilePicture.id === user.currentProfilePictureId) {
+                setUser((prevState) => {
+                  if (prevState) {
+                    return {
+                      ...prevState,
+                      currentProfilePictureId: null,
+                      currentProfilePicture: null,
+                    };
+                  }
+                  return null;
+                });
+              }
+              setProfilePictures((prevState) => {
+                const profilePictures = prevState.filter((pp) => pp.id !== profilePicture.id);
+                return [...profilePictures];
+              });
+            },
           },
-          { text: 'no' },
+
         ])}
       >
         <Image
-          source={{ uri: source }}
+          source={{ uri: profilePicture.cropedImage.signedUrl }}
           style={styles({
             current,
           }).image}

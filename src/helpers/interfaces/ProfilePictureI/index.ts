@@ -1,14 +1,7 @@
-interface ImageI {
-  bucketName: string;
-  fileName: string;
-  format: string;
-  height: number;
-  id: string;
-  signedUrl: string;
-  size: string;
-  width: string;
-}
+import ImageI from '../ImageI';
+
 interface ProfilePictureI {
+  createdAt: Date;
   cropedImage: ImageI;
   id: string;
   originalImage: ImageI;

@@ -10,10 +10,12 @@ import {
 import AppText from '#components/AppText';
 import theme from '#helpers/theme';
 import { AuthContext } from '#src/contexts/AuthProvider';
-import defaultProfilePicture from '#ressources/images/defaultProfilePicture.png';
 
 const ProfileButton = () => {
-  const { user } = React.useContext(AuthContext);
+  const {
+    profilePicture,
+    user,
+  } = React.useContext(AuthContext);
   const navigation = useNavigation();
   return (
     <TouchableOpacity
@@ -28,7 +30,7 @@ const ProfileButton = () => {
           style={styles.profilePictureContainer}
         >
           <Image
-            source={user ? { uri: user.defaultProfilePicture } : defaultProfilePicture}
+            source={profilePicture()}
             resizeMode='contain'
             style={styles.profilePicture}
           />

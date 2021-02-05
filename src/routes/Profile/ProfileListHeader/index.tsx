@@ -17,13 +17,13 @@ import { AuthContext } from '#src/contexts/AuthProvider';
 import { postProfilePicture } from '#helpers/api';
 
 interface ProfileListHeaderi {
-  setProfilePictures: React.Dispatch<React.SetStateAction<ProfilePictureI[]>>
+  setProfilePictures: React.Dispatch<React.SetStateAction<ProfilePictureI[]>>;
 }
 
 const ProfileListHeader = ({
   setProfilePictures,
 }: ProfileListHeaderi) => {
-  const { user } = React.useContext(AuthContext);
+  const { user, setUser } = React.useContext(AuthContext);
   const navigation = useNavigation();
   const selectImage = async () => {
     try {
@@ -31,20 +31,21 @@ const ProfileListHeader = ({
         quality: 1,
       });
       if (!result.cancelled) {
-        const uriParts = result.uri.split('.');
-        const fileType = uriParts[uriParts.length - 1];
-        const formData = new FormData();
-        formData.append('image', {
-          // @ts-ignore
-          uri: result.uri,
-          name: `photo.${fileType}`,
-          type: `image/${fileType}`,
-        });
-        const response = await postProfilePicture(formData);
+        const response = await postProfilePicture(result.uri);
         setProfilePictures((prevData) => [
           response.data,
           ...prevData,
         ]);
+        setUser((prevState) => {
+          if (prevState) {
+            return {
+              ...prevState,
+              currentProfilePictureId: response.data.id,
+              currentProfilePicture: response.data,
+            };
+          }
+          return null;
+        });
       }
     } catch (err) {
       console.log('Error reading image', err);
@@ -54,20 +55,21 @@ const ProfileListHeader = ({
     try {
       const result = await Picker.launchCameraAsync();
       if (!result.cancelled) {
-        const uriParts = result.uri.split('.');
-        const fileType = uriParts[uriParts.length - 1];
-        const formData = new FormData();
-        formData.append('image', {
-          // @ts-ignore
-          uri: result.uri,
-          name: `photo.${fileType}`,
-          type: `image/${fileType}`,
-        });
-        const response = await postProfilePicture(formData);
+        const response = await postProfilePicture(result.uri);
         setProfilePictures((prevData) => [
           response.data,
           ...prevData,
         ]);
+        setUser((prevState) => {
+          if (prevState) {
+            return {
+              ...prevState,
+              currentProfilePictureId: response.data.id,
+              currentProfilePicture: response.data,
+            };
+          }
+          return null;
+        });
       }
     } catch (err) {
       console.log('Error reading image', err);
@@ -80,9 +82,7 @@ const ProfileListHeader = ({
       <View
         style={styles.container}
       >
-        <CurrentProfilePicture
-          source={user ? user.defaultProfilePicture : null}
-        />
+        <CurrentProfilePicture />
         <AppText
           fontFamily='bold'
           fontSize={18}

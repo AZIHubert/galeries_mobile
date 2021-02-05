@@ -34,9 +34,8 @@ const LoginForm = ({ loading, setLoading }: SigninFormI) => {
         setLoading(true);
         Keyboard.dismiss();
         signin(values)
-          .then((response) => {
+          .then(() => {
             setLoading(false);
-            console.log(response.data);
             navigation.navigate('sideMenu');
           })
           .catch((err) => {

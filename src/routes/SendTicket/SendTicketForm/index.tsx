@@ -10,6 +10,7 @@ import AppButtonRadius from '#components/AppButtonRadius';
 import AppText from '#components/AppText';
 import Field from '#components/Field';
 import { sendTicketSchema } from '#helpers/schemas';
+import { sendTicket } from '#helpers/api';
 
 interface LoginFormI {
   loading: boolean;
@@ -24,10 +25,23 @@ const initialValues = {
 const LoginForm = ({ loading, setLoading }: LoginFormI) => {
   const formik = useFormik({
     initialValues,
-    onSubmit: () => {
+    onSubmit: (values, { setFieldError, resetForm }) => {
       if (!loading) {
         setLoading(true);
         Keyboard.dismiss();
+        sendTicket(values)
+          .then(() => {
+            setLoading(false);
+            resetForm();
+          })
+          .catch((err) => {
+            setLoading(false);
+            const { errors } = err.response.data;
+            if (typeof errors === 'object') {
+              Object.keys(errors).map((error) => setFieldError(error, errors[error]));
+            }
+            // else alert message
+          });
       }
     },
     validateOnBlur: true,

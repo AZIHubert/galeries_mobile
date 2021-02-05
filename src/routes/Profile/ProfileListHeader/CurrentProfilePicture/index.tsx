@@ -5,32 +5,31 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import { AuthContext } from '#src/contexts/AuthProvider';
 
 import theme from '#helpers/theme';
-import defaultProfilePicture from '#ressources/images/defaultProfilePicture.png';
 
-interface ProfilePictureI {
-  source: string | null
-}
-
-const ProfilePicture = ({ source }: ProfilePictureI) => (
-  <LinearGradient
-    colors={[theme.color.tertiary, theme.color.primary]}
-    end={[1, 1]}
-    start={[0, 0]}
-    style={styles.linearGradient}
-  >
-    <View
-      style={styles.imageContainer}
+const ProfilePicture = () => {
+  const { profilePicture } = React.useContext(AuthContext);
+  return (
+    <LinearGradient
+      colors={[theme.color.tertiary, theme.color.primary]}
+      end={[1, 1]}
+      start={[0, 0]}
+      style={styles.linearGradient}
     >
-      <Image
-        resizeMode='contain'
-        source={source ? { uri: source } : defaultProfilePicture}
-        style={styles.image}
-      />
-    </View>
-  </LinearGradient>
-);
+      <View
+        style={styles.imageContainer}
+      >
+        <Image
+          resizeMode='contain'
+          source={profilePicture()}
+          style={styles.image}
+        />
+      </View>
+    </LinearGradient>
+  );
+};
 
 const styles = StyleSheet.create({
   image: {
@@ -40,7 +39,6 @@ const styles = StyleSheet.create({
   imageContainer: {
     alignItems: 'center',
     borderRadius: 60,
-    elevation: 6,
     justifyContent: 'center',
     overflow: 'hidden',
   },

@@ -10,6 +10,7 @@ import AppButtonRadius from '#components/AppButtonRadius';
 import AppText from '#components/AppText';
 import Field from '#components/Field';
 import { changeEmailSchema } from '#helpers/schemas';
+import { updatePasswordSendEmail } from '#helpers/api';
 
 interface ChangeEmailFormI {
   loading: boolean;
@@ -23,10 +24,22 @@ const initialValues = {
 const ChangeEmailForm = ({ loading, setLoading }: ChangeEmailFormI) => {
   const formik = useFormik({
     initialValues,
-    onSubmit: () => {
+    onSubmit: (values, { setFieldError }) => {
       if (!loading) {
         setLoading(true);
         Keyboard.dismiss();
+        updatePasswordSendEmail(values)
+          .then(() => {
+            setLoading(false);
+          })
+          .catch((err) => {
+            setLoading(false);
+            const { errors } = err.response.data;
+            if (typeof errors === 'object') {
+              Object.keys(errors).map((error) => setFieldError(error, errors[error]));
+            }
+            // else alert message
+          });
       }
     },
     validateOnBlur: true,
