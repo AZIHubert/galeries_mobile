@@ -2,8 +2,8 @@ import ProfilePictureI from '../ProfilePictureI';
 
 interface UserI {
   createdAt: Date;
-  currentProfilePictureId: string | null;
   currentProfilePicture: null | ProfilePictureI;
+  currentProfilePictureId: string | null;
   defaultProfilePicture: string | null;
   email: string | null;
   facebookId: string | null;
