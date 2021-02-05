@@ -1,8 +1,8 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 
-import EditInformation from '#routes/EditInformation';
 import DeleteAccount from '#routes/DeleteAccount';
+import EditInformation from '#routes/EditInformation';
 
 const Stack = createStackNavigator();
 
