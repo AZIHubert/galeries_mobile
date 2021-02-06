@@ -12,8 +12,8 @@ const Drawer = createDrawerNavigator();
 
 const SideMenuDrawer = () => (
   <Drawer.Navigator
-    initialRouteName='desktop'
     drawerContent={() => <Sidebar />}
+    initialRouteName='desktop'
   >
     <Drawer.Screen
       component={DesktopTab}

@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+import {
+  StyleSheet,
+  View,
+} from 'react-native';
 
 import theme from '#helpers/theme';
 
@@ -27,8 +30,8 @@ const styles = ({
 }: StyleSheetI) => StyleSheet.create({
   container: {
     flex: 1,
-    marginTop,
     marginHorizontal: theme.wrapper.marginHorizontal,
+    marginTop,
   },
 });
 

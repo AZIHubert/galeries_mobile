@@ -6,15 +6,14 @@ import {
 
 import Header from '#components/Header';
 import Screen from '#components/Screen';
-import { ProfilePictureI } from '#helpers/interfaces';
-import { profilePictures } from '#helpers/mockDatas';
+
+import { AuthContext } from '#src/contexts/AuthProvider';
 
 import ProfileListHeader from './ProfileListHeader';
 import ProfilePicture from './ProfilePicture';
 
 const Profile = () => {
-  const [allProfilePictures, setAllProfilePictures] = React
-    .useState<ProfilePictureI[]>(profilePictures);
+  const { user } = React.useContext(AuthContext);
   return (
     <Screen
       header={() => <Header
@@ -23,18 +22,13 @@ const Profile = () => {
     >
       <FlatList
         columnWrapperStyle={styles.columnWrapperStyle}
-        data={allProfilePictures}
+        data={user && user.profilePictures}
         keyExtractor={(profilePicture) => profilePicture.id.toString()}
-        ListHeaderComponent={() => <ProfileListHeader
-          setProfilePictures={setAllProfilePictures}
-        />}
+        ListHeaderComponent={() => <ProfileListHeader />}
         numColumns={2}
         renderItem={({ item }) => (
           <ProfilePicture
-            id={item.id}
-            current={item.current}
-            source={item.profilePicture}
-            setProfilePictures={setAllProfilePictures}
+            profilePicture={item}
           />
         )}
       />

@@ -1,7 +1,5 @@
+import { SimpleLineIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import {
-  SimpleLineIcons,
-} from '@expo/vector-icons';
 import * as React from 'react';
 import {
   StyleSheet,
@@ -10,6 +8,7 @@ import {
 } from 'react-native';
 
 import AppText from '#components/AppText';
+
 import theme from '#helpers/theme';
 
 const TicketButton = () => {
@@ -36,13 +35,13 @@ const TicketButton = () => {
           <AppText
             fontSize={10}
           >
-          Share your opinion? Find a bug?
+            Share your opinion? Find a bug?
           </AppText>
         </View>
         <AppText
           fontSize={15}
         >
-        Send a ticket
+          Send a ticket
         </AppText>
       </View>
     </TouchableOpacity>

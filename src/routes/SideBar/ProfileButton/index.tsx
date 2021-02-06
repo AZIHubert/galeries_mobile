@@ -9,17 +9,29 @@ import {
 } from 'react-native';
 
 import AppText from '#components/AppText';
+
+import { UserI } from '#helpers/interfaces';
 import theme from '#helpers/theme';
 
-interface ProfileButtonI {
-  profilePicture: ImageSourcePropType;
-  userName: string;
-}
+import defaultProfilePicture from '#ressources/images/defaultProfilePicture.png';
 
-const ProfileButton = ({
-  profilePicture,
-  userName,
-}: ProfileButtonI) => {
+import { AuthContext } from '#src/contexts/AuthProvider';
+
+const profilePicture
+: (user: UserI | null) => ImageSourcePropType | { uri: string } = (user: UserI | null) => {
+  if (user && user.currentProfilePicture) {
+    return { uri: user.currentProfilePicture.cropedImage.signedUrl };
+  }
+  if (user && user.defaultProfilePicture) {
+    return { uri: user.defaultProfilePicture };
+  }
+  return defaultProfilePicture;
+};
+
+const ProfileButton = () => {
+  const {
+    user,
+  } = React.useContext(AuthContext);
   const navigation = useNavigation();
   return (
     <TouchableOpacity
@@ -34,8 +46,8 @@ const ProfileButton = ({
           style={styles.profilePictureContainer}
         >
           <Image
-            source={profilePicture}
             resizeMode='contain'
+            source={profilePicture(user)}
             style={styles.profilePicture}
           />
         </View>
@@ -48,19 +60,18 @@ const ProfileButton = ({
             fontFamily='bold'
             fontSize={20}
           >
-            {userName}
+            {user ? user.userName : 'user name'}
           </AppText>
         </View>
         <AppText
           fontSize={15}
         >
-         See your profile
+          See your profile
         </AppText>
       </View>
     </TouchableOpacity>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
@@ -70,6 +81,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   profilePicture: {
+    height: 50,
     width: 50,
   },
   profilePictureContainer: {

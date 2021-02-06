@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
+import * as React from 'react';
 
 import ImageView from '#routes/ImageView';
 import Profile from '#routes/Profile';

@@ -1,6 +1,7 @@
-import Constants from 'expo-constants';
 import { MaterialIcons } from '@expo/vector-icons';
+import Constants from 'expo-constants';
 import { LinearGradient } from 'expo-linear-gradient';
+import moment from 'moment';
 import * as React from 'react';
 import {
   Dimensions,
@@ -13,123 +14,165 @@ import AppText from '#components/AppText';
 import AppButton from '#components/AppButton';
 import DownloadButton from '#components/DownloadButton';
 import Wrapper from '#components/Wrapper';
+
+import { setProfilePicture } from '#helpers/api';
+import { ProfilePictureI } from '#helpers/interfaces';
 import theme from '#helpers/theme';
+
+import { AuthContext } from '#src/contexts/AuthProvider';
+
+const formatBytes = (a: number, b = 2) => {
+  if (a === 0) return '0 Bytes'; const c = b < 0 ? 0 : b;
+  const d = Math.floor(Math.log(a) / Math.log(1024));
+  return `${parseFloat((a / 1024 ** d).toFixed(c))} ${['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'][d]}`;
+};
 
 interface InformationI {
   onPress: () => void;
-  size: string;
-  upload: string;
-  weight: string;
+  profilePicture: ProfilePictureI
 }
 
 const { height } = Dimensions.get('window');
 
 const Information = ({
   onPress,
-  size,
-  upload,
-  weight,
-}: InformationI) => (
-  <LinearGradient
-    colors={[theme.color.primary, theme.color.tertiary]}
-    style={styles.container}
-  >
-    <Wrapper
-      marginTop={60}
+  profilePicture,
+}: InformationI) => {
+  const { setUser, user } = React.useContext(AuthContext);
+  const changeProfilePictureText = () => {
+    if (user && user.currentProfilePictureId === profilePicture.id) {
+      return 'remove profile picture';
+    }
+    return 'use as profile picture';
+  };
+  return (
+    <LinearGradient
+      colors={[theme.color.primary, theme.color.tertiary]}
+      style={styles.container}
     >
-      <View
-        style={styles.informationsContainer}
+      <Wrapper
+        marginTop={60}
       >
         <View
-          style={styles.informationsContainerShadow}
-        />
-        <View
-          style={styles.informationInnerContainer}
+          style={styles.informationsContainer}
         >
           <View
-            style={styles.inforamtionAlignText}
-          >
-            <AppText
-              color='black'
-              fontSize={theme.imageView.informations.fontSize}
-            >
-              Upload the
-            </AppText>
-            <AppText
-              color='secondary'
-              fontSize={theme.imageView.informations.fontSize}
-            >
-              {` ${upload}`}
-            </AppText>
-          </View>
+            style={styles.informationsContainerShadow}
+          />
           <View
-            style={styles.inforamtionAlignText}
+            style={styles.informationInnerContainer}
           >
-            <AppText
-              color='black'
-              fontSize={theme.imageView.informations.fontSize}
+            <View
+              style={styles.informationAlignText}
             >
-              Weight
-            </AppText>
-            <AppText
-              color='secondary'
-              fontSize={theme.imageView.informations.fontSize}
+              <AppText
+                color='black'
+                fontSize={theme.imageView.informations.fontSize}
+              >
+                Upload the
+              </AppText>
+              <AppText
+                color='secondary'
+                fontFamily='bold'
+                fontSize={theme.imageView.informations.fontSize}
+              >
+                {` ${moment(profilePicture.createdAt).format('MMMM Do YYYY')}`}
+              </AppText>
+            </View>
+            <View
+              style={styles.informationAlignText}
             >
-              {` ${weight}`}
-            </AppText>
-          </View>
-          <View
-            style={styles.inforamtionAlignText}
-          >
-            <AppText
-              color='black'
-              fontSize={theme.imageView.informations.fontSize}
+              <AppText
+                color='black'
+                fontSize={theme.imageView.informations.fontSize}
+              >
+                Weight:
+              </AppText>
+              <AppText
+                color='secondary'
+                fontFamily='bold'
+                fontSize={theme.imageView.informations.fontSize}
+              >
+                {` ${formatBytes(profilePicture.originalImage.size)}`}
+              </AppText>
+            </View>
+            <View
+              style={styles.informationAlignText}
             >
-              Size
-            </AppText>
-            <AppText
-              color='secondary'
-              fontSize={theme.imageView.informations.fontSize}
-            >
-              {` ${size}`}
-            </AppText>
+              <AppText
+                color='black'
+                fontSize={theme.imageView.informations.fontSize}
+              >
+                Size:
+              </AppText>
+              <AppText
+                color='secondary'
+                fontFamily='bold'
+                fontSize={theme.imageView.informations.fontSize}
+              >
+                {` ${profilePicture.originalImage.width} x ${profilePicture.originalImage.height}`}
+              </AppText>
+            </View>
           </View>
         </View>
-      </View>
-      <AppButton
-        disabled={false}
-        title='use as profile picture'
-        marginBottom={20}
-        onPress={() => {}}
-        variant='tertiary'
-      />
-      <DownloadButton
-        disabled={false}
-      />
-      <View
-        style={styles.scrollButtonContainer}
-      >
-        <TouchableOpacity
-          activeOpacity={theme.touchableOpacity.defaultOpacity}
-          style={styles.scrollButton}
-          onPress={onPress}
+        <AppButton
+          disabled={false}
+          marginBottom={20}
+          onPress={async () => {
+            try {
+              const response = await setProfilePicture(profilePicture.id);
+              if (response) {
+                setUser((prevState) => {
+                  if (prevState) {
+                    const remove = profilePicture.id !== prevState.currentProfilePictureId;
+                    return {
+                      ...prevState,
+                      currentProfilePictureId: remove
+                        ? profilePicture.id
+                        : null,
+                      currentProfilePicture: remove
+                        ? profilePicture
+                        : null,
+                    };
+                  }
+                  return null;
+                });
+              }
+            } catch (err) {
+              console.log(err);
+            }
+          }}
+          title={changeProfilePictureText()}
+          variant='tertiary'
+        />
+        <DownloadButton
+          disabled={false}
+        />
+        <View
+          style={styles.scrollButtonContainer}
         >
-          <MaterialIcons
-            name="arrow-circle-up"
-            size={theme.imageView.scrollButton.size}
-            color={theme.color.secondary}
-          />
-        </TouchableOpacity>
-      </View>
-    </Wrapper>
-  </LinearGradient>
-);
+          <TouchableOpacity
+            activeOpacity={theme.touchableOpacity.defaultOpacity}
+            style={styles.scrollButton}
+            onPress={onPress}
+          >
+            <MaterialIcons
+              name="arrow-circle-up"
+              size={theme.imageView.scrollButton.size}
+              color={theme.color.secondary}
+            />
+          </TouchableOpacity>
+        </View>
+      </Wrapper>
+    </LinearGradient>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     height: height - Constants.statusBarHeight - theme.imageView.scrollButton.size - 50,
   },
-  inforamtionAlignText: {
+  informationAlignText: {
     flexDirection: 'row',
   },
   informationsContainer: {

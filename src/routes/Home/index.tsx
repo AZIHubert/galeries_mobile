@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {
@@ -13,30 +14,32 @@ import Column from '#components/Column';
 import Screen from '#components/Screen';
 import SocialMediaButton from '#components/SocialMediaButton';
 import Wrapper from '#components/Wrapper';
+
+import homeBackground from '#ressources/images/homeBackground.png';
 import logoG from '#ressources/images/logoG.png';
 import logoGaleries from '#ressources/images/logoGaleries.png';
-import homeBackground from '#ressources/images/homeBackground.png';
+
+import {
+  facebookLogin,
+  googleLogin,
+} from '#helpers/api';
 
 const Home = () => {
   const navigation = useNavigation();
-  const [loading, setLoading] = React.useState<boolean>(false);
-  const func = () => {
-    if (!loading) setLoading(true);
-  };
   return (
     <Screen>
       <ImageBackground
-        style={styles.ImageBackground}
         source={homeBackground}
+        style={styles.ImageBackground}
       >
         <Wrapper>
           <View
             style={styles.container}
           >
             <Image
+              resizeMode='contain'
               source={logoG}
               style={styles.gLogo}
-              resizeMode='contain'
             />
             <View
               style={styles.texts}
@@ -49,9 +52,9 @@ const Home = () => {
                 Welcome to
               </AppText>
               <Image
+                resizeMode='contain'
                 source={logoGaleries}
                 style={styles.galerieLogo}
-                resizeMode='contain'
               />
               <View
                 style={styles.catchPhraseContainer}
@@ -84,17 +87,17 @@ const Home = () => {
             >
               <Column>
                 <AppButton
-                  disabled={loading}
-                  onPress={() => navigation.navigate('login')}
+                  disabled={false}
                   marginBottom={24}
+                  onPress={() => navigation.navigate('login')}
                   title='log in'
                 />
               </Column>
               <Column>
                 <AppButton
-                  disabled={loading}
-                  onPress={() => navigation.navigate('signin')}
+                  disabled={false}
                   marginBottom={24}
+                  onPress={() => navigation.navigate('signin')}
                   title='sign in'
                   variant='secondary'
                 />
@@ -103,21 +106,41 @@ const Home = () => {
           </View>
           <View>
             <SocialMediaButton
-              disabled={loading}
+              disabled={false}
               marginBottom={10}
-              onPress={() => navigation.reset({
-                index: 0,
-                routes: [{ name: 'sideMenu' }],
-              })}
+              onPress={async () => {
+                try {
+                  const response = await facebookLogin();
+                  if (response) {
+                    await AsyncStorage.setItem('auThoken', response.data.token);
+                    navigation.reset({
+                      index: 0,
+                      routes: [{ name: 'sideMenu' }],
+                    });
+                  }
+                } catch (err) {
+                  console.log(err);
+                }
+              }}
               variant='facebook'
             />
             <SocialMediaButton
-              disabled={loading}
+              disabled={false}
               marginBottom={30}
-              onPress={() => navigation.reset({
-                index: 0,
-                routes: [{ name: 'sideMenu' }],
-              })}
+              onPress={async () => {
+                try {
+                  const response = await googleLogin();
+                  if (response) {
+                    await AsyncStorage.setItem('auThoken', response.data.token);
+                    navigation.reset({
+                      index: 0,
+                      routes: [{ name: 'sideMenu' }],
+                    });
+                  }
+                } catch (err) {
+                  console.log(err);
+                }
+              }}
               variant='google'
             />
           </View>
@@ -143,8 +166,8 @@ const styles = StyleSheet.create({
     top: 20,
   },
   ImageBackground: {
-    width: '100%',
     flex: 1,
+    width: '100%',
   },
   loggersContainer: {
     flexDirection: 'row',

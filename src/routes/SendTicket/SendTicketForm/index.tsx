@@ -10,24 +10,28 @@ import AppButtonRadius from '#components/AppButtonRadius';
 import AppText from '#components/AppText';
 import Field from '#components/Field';
 import { sendTicketSchema } from '#helpers/schemas';
-
-interface LoginFormI {
-  loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-}
+import { sendTicket } from '#helpers/api';
 
 const initialValues = {
   header: '',
   body: '',
 };
 
-const LoginForm = ({ loading, setLoading }: LoginFormI) => {
+const LoginForm = () => {
   const formik = useFormik({
     initialValues,
-    onSubmit: () => {
-      if (!loading) {
-        setLoading(true);
-        Keyboard.dismiss();
+    onSubmit: async (values, { setFieldError, resetForm }) => {
+      Keyboard.dismiss();
+      try {
+        const response = await sendTicket(values);
+        if (response) {
+          resetForm();
+        }
+      } catch (err) {
+        const { errors } = err.response.data;
+        if (typeof errors === 'object') {
+          Object.keys(errors).map((error) => setFieldError(error, errors[error]));
+        }
       }
     },
     validateOnBlur: true,
@@ -38,10 +42,9 @@ const LoginForm = ({ loading, setLoading }: LoginFormI) => {
     <View
       style={styles.container}
     >
-
       <View>
         <Field
-          editable={!loading}
+          editable={true}
           error={formik.errors.header}
           label='title'
           onBlur={formik.handleBlur('header')}
@@ -54,7 +57,7 @@ const LoginForm = ({ loading, setLoading }: LoginFormI) => {
           value={formik.values.header}
         />
         <Field
-          editable={!loading}
+          editable={true}
           error={formik.errors.body}
           label='body'
           multiline={true}
@@ -76,7 +79,7 @@ const LoginForm = ({ loading, setLoading }: LoginFormI) => {
         </View>
       </View>
       <AppButtonRadius
-        disabled={loading}
+        disabled={false}
         fontSize={25}
         marginBottom={30}
         onPress={formik.handleSubmit}

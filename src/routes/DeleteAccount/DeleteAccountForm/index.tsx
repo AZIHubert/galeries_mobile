@@ -10,29 +10,33 @@ import {
 import AppButton from '#components/AppButton';
 import AppText from '#components/AppText';
 import Field from '#components/Field';
-import { deleteAccountSchema } from '#helpers/schemas';
 
-interface DeleteAccountFormI {
-  loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-}
+import { deleteAccountSchema } from '#helpers/schemas';
+import { deleteAccount } from '#helpers/api';
 
 const initialValues = {
   password: '',
 };
 
-const DeleteAccountForm = ({ loading, setLoading }: DeleteAccountFormI) => {
+const DeleteAccountForm = () => {
   const navigation = useNavigation();
   const formik = useFormik({
     initialValues,
-    onSubmit: () => {
-      if (!loading) {
-        setLoading(true);
-        Keyboard.dismiss();
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'home' }],
-        });
+    onSubmit: async (values, { setFieldError }) => {
+      Keyboard.dismiss();
+      try {
+        const response = await deleteAccount(values);
+        if (response) {
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'home' }],
+          });
+        }
+      } catch (err) {
+        const { errors } = err.response.data;
+        if (typeof errors === 'object') {
+          Object.keys(errors).map((error) => setFieldError(error, errors[error]));
+        }
       }
     },
     validateOnBlur: true,
@@ -52,13 +56,13 @@ const DeleteAccountForm = ({ loading, setLoading }: DeleteAccountFormI) => {
             fontSize={25}
             textAlign='center'
           >
-        Are you sure you want
-to do this?
+            Are you sure you want
+            to do this?
           </AppText>
         </View>
         <View>
           <Field
-            editable={!loading}
+            editable={true}
             error={formik.errors.password}
             label='confirm your password'
             onBlur={formik.handleBlur('password')}
@@ -71,17 +75,19 @@ to do this?
             touched={formik.touched.password}
             value={formik.values.password}
           />
-          <View style={styles.requiredFieldIndicator}>
+          <View
+            style={styles.requiredFieldIndicator}
+          >
             <AppText
               fontSize={15}
             >
-            * required fields
+              * required fields
             </AppText>
           </View>
         </View>
       </View>
       <AppButton
-        disabled={loading}
+        disabled={false}
         fontSize={25}
         marginBottom={30}
         onPress={formik.handleSubmit}
@@ -98,10 +104,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   requiredFieldIndicator: {
-    marginTop: 30,
-    marginBottom: 60,
     flexDirection: 'row',
     justifyContent: 'flex-end',
+    marginTop: 30,
+    marginBottom: 60,
   },
   textContainer: {
     alignItems: 'center',

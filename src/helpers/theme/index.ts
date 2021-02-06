@@ -6,16 +6,16 @@ export default {
     fontSize: 20,
     height: 45,
     paddingHorizontal: 10,
-    paddingVertical: 7,
+    paddingVertical: 20,
   },
   color: {
-    error: '#FF0000',
+    black: '#000',
+    danger: '#FF0000',
+    facebook: '#3B579D',
     primary: '#7483FF',
     secondary: '#FFFFF4',
     tertiary: '#78FFF7',
-    black: '#000',
     white: '#fff',
-    facebook: '#3B579D',
   },
   field: {
     label: {
@@ -48,7 +48,7 @@ export default {
   header: {
     containerIconSize: 40,
     iconSize: 25,
-    paddingVertical: 10,
+    paddingVertical: 20,
   },
   headerForm: {
     containerIconSize: 40,

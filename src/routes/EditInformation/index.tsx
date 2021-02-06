@@ -1,4 +1,9 @@
 import * as React from 'react';
+import {
+  View,
+} from 'react-native';
+
+import { AuthContext } from '#src/contexts/AuthProvider';
 
 import Header from '#components/Header';
 import ScrollableScreen from '#components/ScrollableScreen';
@@ -10,7 +15,7 @@ import DeleteAccount from './DeleteAccount';
 import TitleForm from './TitleForm';
 
 const EditInformation = () => {
-  const [loading, setLoading] = React.useState<boolean>(false);
+  const { user } = React.useContext(AuthContext);
   return (
     <ScrollableScreen
       header={() => <Header
@@ -20,27 +25,23 @@ const EditInformation = () => {
       <Wrapper
         marginTop={50}
       >
-        <TitleForm
-          title='change your password'
-        />
-        <ChangePasswordForm
-          loading={loading}
-          setLoading={setLoading}
-        />
-        <TitleForm
-          title='change your email'
-        />
-        <ChangeEmailForm
-          loading={loading}
-          setLoading={setLoading}
-        />
-        <TitleForm
-          danger
-          title='change your email'
-        />
-        <DeleteAccount
-          loading={loading}
-        />
+        {!!user && !user.googleId && !user.facebookId ? (
+          <View>
+            <TitleForm
+              title='change your password'
+            />
+            <ChangePasswordForm />
+            <TitleForm
+              title='change your email'
+            />
+            <ChangeEmailForm />
+            <TitleForm
+              danger
+              title='change your email'
+            />
+            <DeleteAccount />
+          </View>
+        ) : null}
       </Wrapper>
     </ScrollableScreen>
   );

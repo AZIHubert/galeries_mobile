@@ -1,5 +1,5 @@
-import { useNavigation } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import Constants from 'expo-constants';
 import * as React from 'react';
 import {
@@ -9,9 +9,10 @@ import {
 } from 'react-native';
 
 import AppText from '#components/AppText';
+
 import theme from '#helpers/theme';
 
-type Variant = 'primary' | 'danger';
+type Variant = 'danger' | 'primary';
 
 interface HeaderLoggerI {
   title: string;
@@ -24,10 +25,10 @@ interface StyleSheetI {
 
 const convertBackgroundColor = (variant: Variant) => {
   switch (variant) {
+    case 'danger':
+      return theme.color.danger;
     case 'primary':
       return theme.color.primary;
-    case 'danger':
-      return theme.color.error;
     default:
       return theme.color.secondary;
   }

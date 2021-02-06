@@ -7,7 +7,6 @@ import {
 import AppText from '#components/AppText';
 import Screen from '#components/Screen';
 import Wrapper from '#components/Wrapper';
-import defaultProfilePicture from '#ressources/images/defaultProfilePicture.png';
 
 import InformationButton from './InformationButton';
 import Logo from './Logo';
@@ -25,10 +24,7 @@ const SideBar = () => (
       >
         <View>
           <Logo />
-          <ProfileButton
-            profilePicture={defaultProfilePicture}
-            userName='Allan Aoudji'
-          />
+          <ProfileButton />
           <InformationButton />
           <TicketButton />
           <LogoutButton />

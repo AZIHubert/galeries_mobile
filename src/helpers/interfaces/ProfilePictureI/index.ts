@@ -1,11 +1,11 @@
-import {
-  ImageSourcePropType,
-} from 'react-native';
+import ImageI from '../ImageI';
 
 interface ProfilePictureI {
-  id: number;
-  current?: boolean;
-  profilePicture: ImageSourcePropType;
+  createdAt: Date;
+  cropedImage: ImageI;
+  id: string;
+  originalImage: ImageI;
+  pendingImage: ImageI
 }
 
 export default ProfilePictureI;

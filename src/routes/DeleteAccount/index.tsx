@@ -6,26 +6,19 @@ import Wrapper from '#components/Wrapper';
 
 import DeleteAccountForm from './DeleteAccountForm';
 
-const DeleteAccount = () => {
-  const [loading, setLoading] = React.useState<boolean>(false);
-  return (
-    <ScrollableScreen
-      header={() => <HeaderForm
-        variant='danger'
-        title='delete your account'
-        screen='editinformation'
-      />}
+const DeleteAccount = () => (
+  <ScrollableScreen
+    header={() => <HeaderForm
+      title='delete your account'
+      variant='danger'
+    />}
+  >
+    <Wrapper
+      marginTop={50}
     >
-      <Wrapper
-        marginTop={50}
-      >
-        <DeleteAccountForm
-          loading={loading}
-          setLoading={setLoading}
-        />
-      </Wrapper>
-    </ScrollableScreen>
-  );
-};
+      <DeleteAccountForm />
+    </Wrapper>
+  </ScrollableScreen>
+);
 
 export default DeleteAccount;

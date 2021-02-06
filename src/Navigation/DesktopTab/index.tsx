@@ -5,11 +5,13 @@ import {
 } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import * as React from 'react';
+import { StyleSheet } from 'react-native';
 
 import theme from '#helpers/theme';
-import Notification from '#routes/Notification';
-import Landing from '#routes/Landing';
+
 import CreateGalerie from '#routes/CreateGalerie';
+import Landing from '#routes/Landing';
+import Notification from '#routes/Notification';
 
 const Tab = createBottomTabNavigator();
 
@@ -19,10 +21,7 @@ const DesktopTab = () => (
     tabBarOptions={{
       activeTintColor: theme.color.primary,
       inactiveTintColor: theme.color.primary,
-      style: {
-        height: 60,
-        backgroundColor: theme.color.secondary,
-      },
+      style: styles.tabBar,
     }}
   >
     <Tab.Screen
@@ -102,5 +101,12 @@ const DesktopTab = () => (
     />
   </Tab.Navigator>
 );
+
+const styles = StyleSheet.create({
+  tabBar: {
+    backgroundColor: theme.color.secondary,
+    height: 60,
+  },
+});
 
 export default DesktopTab;

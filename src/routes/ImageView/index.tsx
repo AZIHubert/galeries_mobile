@@ -1,24 +1,31 @@
+import {
+  Entypo,
+  MaterialIcons,
+} from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import Constants from 'expo-constants';
-import { AntDesign } from '@expo/vector-icons';
 import * as React from 'react';
 import {
-  TouchableOpacity,
+  Alert,
   ScrollView,
   StyleSheet,
+  TouchableOpacity,
   View,
-  ImageSourcePropType,
 } from 'react-native';
 
+import { deleteProfilePicture } from '#helpers/api';
+
 import theme from '#helpers/theme';
-import profilePicture from '#ressources/images/mockImages/profilePicture9.jpg';
+
+import { AuthContext } from '#src/contexts/AuthProvider';
 
 import FullPageImage from './FullPageImage';
 import Informations from './Informations';
 
 const ImageView = ({ route }) => {
-  const navigation = useNavigation();
+  const { setUser, user } = React.useContext(AuthContext);
   const scrollView = React.useRef<ScrollView | null>(null);
+  const navigation = useNavigation();
 
   const scollToBottom = () => {
     if (scrollView.current) {
@@ -26,7 +33,9 @@ const ImageView = ({ route }) => {
     }
   };
   const scrollToTop = () => {
-    scrollView.current?.scrollTo({ x: 0, animated: true });
+    if (scrollView.current) {
+      scrollView.current.scrollTo({ x: 0, animated: true });
+    }
   };
 
   return (
@@ -34,35 +43,89 @@ const ImageView = ({ route }) => {
       style={{ flex: 1 }}
     >
       <ScrollView
-        stickyHeaderIndices={[0]}
-        ref={scrollView}
         contentContainerStyle={styles.contentContainer}
-        style={styles.scrollView}
+        ref={scrollView}
+        stickyHeaderIndices={[0]}
+        style={styles.container}
       >
         <View
-          style={styles.container}
+          style={styles.buttonsContainer}
         >
-          <TouchableOpacity
-            activeOpacity={theme.touchableOpacity.defaultOpacity}
-            style={styles.buttonContainer}
-            onPress={() => navigation.goBack()}
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}
           >
-            <AntDesign
-              color={theme.color.primary}
-              name="closecircle"
-              size={30}
-            />
-          </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={theme.touchableOpacity.defaultOpacity}
+              onPress={
+                () => Alert.alert('Delete', 'Are you sure you want to delete this image?', [
+                  { text: 'no' },
+                  {
+                    text: 'yes',
+                    onPress: async () => {
+                      try {
+                        const response = await deleteProfilePicture(
+                          route.params.profilePicture.id,
+                        );
+                        if (response && user) {
+                          setUser((prevState) => {
+                            if (prevState) {
+                              const profilePictures = prevState.profilePictures
+                                .filter((pp) => pp.id !== route.params.profilePicture.id);
+                              return {
+                                ...prevState,
+                                currentProfilePictureId: null,
+                                currentProfilePicture: null,
+                                profilePictures: [...profilePictures],
+                              };
+                            }
+                            return null;
+                          });
+                          navigation.goBack();
+                        }
+                      } catch (err) {
+                        console.log(err);
+                      }
+                    },
+                  },
+                ])
+              }
+              style={[
+                styles.buttonDeleteContainer,
+                styles.buttonsInnerContainer,
+              ]}
+            >
+              <MaterialIcons
+                color={theme.color.secondary}
+                name="delete-outline"
+                size={20}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={theme.touchableOpacity.defaultOpacity}
+              onPress={() => navigation.goBack()}
+              style={[
+                styles.buttonCloseContainer,
+                styles.buttonsInnerContainer,
+              ]}
+            >
+              <Entypo
+                color={theme.color.secondary}
+                name="cross"
+                size={20}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
         <FullPageImage
           onPress={scollToBottom}
-          source={route.params.source}
+          profilePicture={route.params.profilePicture}
         />
         <Informations
           onPress={scrollToTop}
-          size='2000x3000'
-          upload='24th Septembre 2020'
-          weight='6ko'
+          profilePicture={route.params.profilePicture}
         />
       </ScrollView>
     </View>
@@ -70,27 +133,33 @@ const ImageView = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
-  buttonContainer: {
+  buttonCloseContainer: {
+    backgroundColor: theme.color.primary,
+  },
+  buttonDeleteContainer: {
+    backgroundColor: theme.color.danger,
+  },
+  buttonsContainer: {
+    paddingHorizontal: theme.wrapper.marginHorizontal,
+    paddingTop: 25 + Constants.statusBarHeight,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    width: '100%',
+  },
+  buttonsInnerContainer: {
     alignItems: 'center',
-    backgroundColor: theme.color.secondary,
     borderRadius: 25,
     height: 30,
     justifyContent: 'center',
     width: 30,
   },
   container: {
-    paddingRight: theme.wrapper.marginHorizontal,
-    paddingTop: 25 + Constants.statusBarHeight,
-    position: 'absolute',
-    right: 0,
-    top: 0,
+    flex: 1,
+    zIndex: -1,
   },
   contentContainer: {
     flexGrow: 1,
-  },
-  scrollView: {
-    flex: 1,
-    zIndex: -1,
   },
 });
 

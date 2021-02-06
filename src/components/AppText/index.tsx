@@ -6,10 +6,10 @@ import {
 
 import theme from '#helpers/theme';
 
-type Color = 'primary' | 'secondary' | 'black' | 'white' | 'error';
+type Color = 'black' | 'error' | 'primary' | 'secondary' | 'white';
 type FontFamily = 'bold' | 'oblique' | 'roman';
-type TextAlign = 'auto' | 'left' | 'right' | 'center' | 'justify';
-type TextTransform = 'capitalize' | 'uppercase' | 'none' | 'lowercase';
+type TextAlign = 'auto' | 'center' | 'justify' | 'left' | 'right';
+type TextTransform = 'capitalize' | 'lowercase' | 'none' | 'uppercase';
 
 interface LoaderI {
   children: string | string[];
@@ -43,16 +43,16 @@ const convertFontFamily = (fontFamily: FontFamily) => {
 
 const converColor = (color: Color) => {
   switch (color) {
+    case 'black':
+      return theme.color.black;
+    case 'error':
+      return theme.color.danger;
     case 'primary':
       return theme.color.primary;
     case 'secondary':
       return theme.color.secondary;
-    case 'black':
-      return theme.color.black;
     case 'white':
       return theme.color.white;
-    case 'error':
-      return theme.color.error;
     default:
       return theme.color.black;
   }

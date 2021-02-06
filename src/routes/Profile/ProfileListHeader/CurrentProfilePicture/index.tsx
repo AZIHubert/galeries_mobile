@@ -2,31 +2,50 @@ import { LinearGradient } from 'expo-linear-gradient';
 import * as React from 'react';
 import {
   Image,
+  ImageSourcePropType,
   StyleSheet,
   View,
 } from 'react-native';
 
 import theme from '#helpers/theme';
+import { UserI } from '#helpers/interfaces';
+
 import defaultProfilePicture from '#ressources/images/defaultProfilePicture.png';
 
-const ProfilePicture = () => (
-  <LinearGradient
-    colors={[theme.color.tertiary, theme.color.primary]}
-    end={[1, 1]}
-    start={[0, 0]}
-    style={styles.linearGradient}
-  >
-    <View
-      style={styles.imageContainer}
+import { AuthContext } from '#src/contexts/AuthProvider';
+
+const profilePicture
+: (user: UserI | null) => ImageSourcePropType | { uri: string } = (user: UserI | null) => {
+  if (user && user.currentProfilePicture) {
+    return { uri: user.currentProfilePicture.cropedImage.signedUrl };
+  }
+  if (user && user.defaultProfilePicture) {
+    return { uri: user.defaultProfilePicture };
+  }
+  return defaultProfilePicture;
+};
+
+const ProfilePicture = () => {
+  const { user } = React.useContext(AuthContext);
+  return (
+    <LinearGradient
+      colors={[theme.color.tertiary, theme.color.primary]}
+      end={[1, 1]}
+      start={[0, 0]}
+      style={styles.linearGradient}
     >
-      <Image
-        resizeMode='contain'
-        source={defaultProfilePicture}
-        style={styles.image}
-      />
-    </View>
-  </LinearGradient>
-);
+      <View
+        style={styles.imageContainer}
+      >
+        <Image
+          resizeMode='cover'
+          source={profilePicture(user)}
+          style={styles.image}
+        />
+      </View>
+    </LinearGradient>
+  );
+};
 
 const styles = StyleSheet.create({
   image: {
@@ -36,7 +55,6 @@ const styles = StyleSheet.create({
   imageContainer: {
     alignItems: 'center',
     borderRadius: 60,
-    elevation: 6,
     justifyContent: 'center',
     overflow: 'hidden',
   },

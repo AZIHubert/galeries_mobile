@@ -9,24 +9,26 @@ import {
 import AppButtonRadius from '#components/AppButtonRadius';
 import AppText from '#components/AppText';
 import Field from '#components/Field';
-import { changeEmailSchema } from '#helpers/schemas';
 
-interface ChangeEmailFormI {
-  loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-}
+import { updatePasswordSendEmail } from '#helpers/api';
+import { changeEmailSchema } from '#helpers/schemas';
 
 const initialValues = {
   password: '',
 };
 
-const ChangeEmailForm = ({ loading, setLoading }: ChangeEmailFormI) => {
+const ChangeEmailForm = () => {
   const formik = useFormik({
     initialValues,
-    onSubmit: () => {
-      if (!loading) {
-        setLoading(true);
-        Keyboard.dismiss();
+    onSubmit: async (values, { setFieldError }) => {
+      Keyboard.dismiss();
+      try {
+        await updatePasswordSendEmail(values);
+      } catch (err) {
+        const { errors } = err.response.data;
+        if (typeof errors === 'object') {
+          Object.keys(errors).map((error) => setFieldError(error, errors[error]));
+        }
       }
     },
     validateOnBlur: true,
@@ -48,7 +50,7 @@ const ChangeEmailForm = ({ loading, setLoading }: ChangeEmailFormI) => {
         </AppText>
       </View>
       <Field
-        editable={!loading}
+        editable={true}
         error={formik.errors.password}
         label='password'
         onBlur={formik.handleBlur('password')}
@@ -65,11 +67,11 @@ const ChangeEmailForm = ({ loading, setLoading }: ChangeEmailFormI) => {
         <AppText
           fontSize={15}
         >
-            * required fields
+          * required fields
         </AppText>
       </View>
       <AppButtonRadius
-        disabled={loading}
+        disabled={false}
         fontSize={25}
         marginBottom={75}
         onPress={formik.handleSubmit}

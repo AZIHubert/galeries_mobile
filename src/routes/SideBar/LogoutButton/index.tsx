@@ -1,7 +1,6 @@
+import { MaterialIcons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-import {
-  MaterialIcons,
-} from '@expo/vector-icons';
 import * as React from 'react';
 import {
   StyleSheet,
@@ -10,15 +9,31 @@ import {
 } from 'react-native';
 
 import AppText from '#components/AppText';
+
+import { logout } from '#helpers/api';
 import theme from '#helpers/theme';
 
+import { AuthContext } from '#src/contexts/AuthProvider';
+
 const LogoutButton = () => {
+  const { setUser } = React.useContext(AuthContext);
   const navigation = useNavigation();
   return (
     <TouchableOpacity
       activeOpacity={theme.touchableOpacity.defaultOpacity}
       style={styles.container}
-      onPress={() => navigation.navigate('home')}
+      onPress={async () => {
+        try {
+          const response = await logout();
+          if (response) {
+            await AsyncStorage.clear();
+            setUser(null);
+            navigation.navigate('home');
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      }}
     >
       <View
         style={styles.imageContainer}
@@ -34,7 +49,7 @@ const LogoutButton = () => {
           fontFamily='bold'
           fontSize={15}
         >
-        Loug out
+          Loug out
         </AppText>
       </View>
     </TouchableOpacity>

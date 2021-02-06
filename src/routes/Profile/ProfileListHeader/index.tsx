@@ -9,42 +9,58 @@ import {
 import AppButton from '#components/AppButton';
 import AppText from '#components/AppText';
 import Wrapper from '#components/Wrapper';
-import { ProfilePictureI } from '#helpers/interfaces';
+
+import { postProfilePicture } from '#helpers/api';
 import theme from '#helpers/theme';
+
+import { AuthContext } from '#src/contexts/AuthProvider';
 
 import CurrentProfilePicture from './CurrentProfilePicture';
 
-interface ProfileListHeaderi {
-  setProfilePictures: React.Dispatch<React.SetStateAction<ProfilePictureI[]>>
-}
-
-const ProfileListHeader = ({
-  setProfilePictures,
-}: ProfileListHeaderi) => {
+const ProfileListHeader = () => {
+  const { setUser, user } = React.useContext(AuthContext);
   const navigation = useNavigation();
   const selectImage = async () => {
     try {
       const result = await Picker.launchImageLibraryAsync({
+        mediaTypes: Picker.MediaTypeOptions.Images,
         quality: 1,
       });
       if (!result.cancelled) {
-        // result uri
-        setProfilePictures((prevState: ProfilePictureI[]) => [
-          ...prevState,
-        ]);
+        await setProfilePicture(result.uri);
       }
     } catch (err) {
       console.log('Error reading image', err);
+    }
+  };
+  const setProfilePicture = async (uri: string) => {
+    try {
+      const response = await postProfilePicture(uri);
+      if (response) {
+        setUser((prevState) => {
+          if (prevState) {
+            return {
+              ...prevState,
+              currentProfilePictureId: response.data.id,
+              currentProfilePicture: response.data,
+              profilePictures: [
+                response.data,
+                ...prevState.profilePictures,
+              ],
+            };
+          }
+          return null;
+        });
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
   const takeImage = async () => {
     try {
       const result = await Picker.launchCameraAsync();
       if (!result.cancelled) {
-        // result.uri
-        setProfilePictures((prevState: ProfilePictureI[]) => [
-          ...prevState,
-        ]);
+        setProfilePicture(result.uri);
       }
     } catch (err) {
       console.log('Error reading image', err);
@@ -62,7 +78,7 @@ const ProfileListHeader = ({
           fontFamily='bold'
           fontSize={18}
         >
-          Allan Aoudji
+          {user ? user.userName : 'user name'}
         </AppText>
         <View
           style={styles.separator}
@@ -72,14 +88,14 @@ const ProfileListHeader = ({
         disabled={false}
         height={35}
         marginBottom={16}
-        onPress={selectImage}
+        onPress={() => selectImage()}
         title='Add a profile picture'
       />
       <AppButton
         disabled={false}
         height={35}
         marginBottom={32}
-        onPress={takeImage}
+        onPress={() => takeImage()}
         title='Take a picture'
       />
       <AppButton
@@ -109,4 +125,5 @@ const styles = StyleSheet.create({
     width: 45,
   },
 });
+
 export default ProfileListHeader;
