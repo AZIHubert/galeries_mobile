@@ -23,7 +23,6 @@ import FullPageImage from './FullPageImage';
 import Informations from './Informations';
 
 const ImageView = ({ route }) => {
-  const [loading, setLoading] = React.useState<boolean>(false);
   const { setUser, user } = React.useContext(AuthContext);
   const scrollView = React.useRef<ScrollView | null>(null);
   const navigation = useNavigation();
@@ -66,37 +65,28 @@ const ImageView = ({ route }) => {
                   {
                     text: 'yes',
                     onPress: async () => {
-                      if (!loading) {
-                        setLoading(true);
-                        try {
-                          const response = await deleteProfilePicture(
-                            route.params.profilePicture.id,
-                          );
-                          if (response
-                            && user
-                            && route.params.profilePicture.id === user.currentProfilePictureId
-                          ) {
-                            setUser((prevState) => {
-                              if (prevState) {
-                                return {
-                                  ...prevState,
-                                  currentProfilePictureId: null,
-                                  currentProfilePicture: null,
-                                };
-                              }
-                              return null;
-                            });
-                            route.params.setProfilePictures((prevState) => {
-                              const profilePictures = prevState.filter(
-                                (pp) => pp.id !== route.params.profilePicture.id,
-                              );
-                              return [...profilePictures];
-                            });
-                            navigation.goBack();
-                          }
-                        } catch (err) {
-                          setLoading(false);
+                      try {
+                        const response = await deleteProfilePicture(
+                          route.params.profilePicture.id,
+                        );
+                        if (response && user) {
+                          setUser((prevState) => {
+                            if (prevState) {
+                              const profilePictures = prevState.profilePictures
+                                .filter((pp) => pp.id !== route.params.profilePicture.id);
+                              return {
+                                ...prevState,
+                                currentProfilePictureId: null,
+                                currentProfilePicture: null,
+                                profilePictures: [...profilePictures],
+                              };
+                            }
+                            return null;
+                          });
+                          navigation.goBack();
                         }
+                      } catch (err) {
+                        console.log(err);
                       }
                     },
                   },

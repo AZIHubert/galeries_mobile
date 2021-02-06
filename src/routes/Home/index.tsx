@@ -26,7 +26,6 @@ import {
 
 const Home = () => {
   const navigation = useNavigation();
-  const [loading, setLoading] = React.useState<boolean>(false);
   return (
     <Screen>
       <ImageBackground
@@ -88,7 +87,7 @@ const Home = () => {
             >
               <Column>
                 <AppButton
-                  disabled={loading}
+                  disabled={false}
                   marginBottom={24}
                   onPress={() => navigation.navigate('login')}
                   title='log in'
@@ -96,7 +95,7 @@ const Home = () => {
               </Column>
               <Column>
                 <AppButton
-                  disabled={loading}
+                  disabled={false}
                   marginBottom={24}
                   onPress={() => navigation.navigate('signin')}
                   title='sign in'
@@ -107,11 +106,10 @@ const Home = () => {
           </View>
           <View>
             <SocialMediaButton
-              disabled={loading}
+              disabled={false}
               marginBottom={10}
               onPress={async () => {
                 try {
-                  setLoading(true);
                   const response = await facebookLogin();
                   if (response) {
                     await AsyncStorage.setItem('auThoken', response.data.token);
@@ -120,19 +118,17 @@ const Home = () => {
                       routes: [{ name: 'sideMenu' }],
                     });
                   }
-                  setLoading(false);
                 } catch (err) {
-                  setLoading(false);
+                  console.log(err);
                 }
               }}
               variant='facebook'
             />
             <SocialMediaButton
-              disabled={loading}
+              disabled={false}
               marginBottom={30}
               onPress={async () => {
                 try {
-                  setLoading(true);
                   const response = await googleLogin();
                   if (response) {
                     await AsyncStorage.setItem('auThoken', response.data.token);
@@ -142,7 +138,7 @@ const Home = () => {
                     });
                   }
                 } catch (err) {
-                  setLoading(false);
+                  console.log(err);
                 }
               }}
               variant='google'

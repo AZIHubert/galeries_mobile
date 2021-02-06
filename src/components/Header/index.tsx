@@ -33,7 +33,10 @@ const Header = ({
       <TouchableOpacity
         activeOpacity={theme.touchableOpacity.defaultOpacity}
         onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-        style={styles.iconContainer}
+        style={[
+          styles.iconContainer,
+          styles.menuContainer,
+        ]}
       >
         <Entypo
           color={theme.color.primary}
@@ -49,22 +52,27 @@ const Header = ({
         })}
       >
         <Image
-          resizeMode='contain'
+          resizeMode='cover'
           source={logoG}
           style={styles.image}
         />
       </TouchableOpacity>
-      {returnButton && <TouchableOpacity
-        activeOpacity={theme.touchableOpacity.defaultOpacity}
-        style={styles.returnContainer}
-        onPress={() => navigation.goBack()}
-      >
-        <AppText
-          fontSize={20}
+      {returnButton && (
+        <TouchableOpacity
+          activeOpacity={theme.touchableOpacity.defaultOpacity}
+          onPress={() => navigation.goBack()}
+          style={[
+            styles.iconContainer,
+            styles.returnContainer,
+          ]}
         >
-          return
-        </AppText>
-      </TouchableOpacity>}
+          <AppText
+            fontSize={20}
+          >
+            return
+          </AppText>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -76,36 +84,29 @@ const styles = StyleSheet.create({
     borderBottomColor: theme.color.primary,
     borderBottomWidth: 2,
     elevation: 5,
+    justifyContent: 'center',
     paddingBottom: theme.header.paddingVertical,
     paddingTop: Constants.statusBarHeight + theme.header.paddingVertical,
   },
   image: {
+    height: 35,
     width: 30,
   },
   iconContainer: {
     alignItems: 'center',
-    borderRadius: theme.header.containerIconSize / 2,
-    height: theme.header.containerIconSize,
+    height: '100%',
     justifyContent: 'center',
+    position: 'absolute',
+    top: Constants.statusBarHeight + theme.header.paddingVertical,
+  },
+  menuContainer: {
     left: theme.wrapper.marginHorizontal
       - (theme.header.containerIconSize - theme.header.iconSize) / 2,
-    position: 'absolute',
-    top: Constants.statusBarHeight
-      + theme.header.paddingVertical
-      + (theme.header.containerIconSize - theme.header.iconSize) / 2,
     width: theme.header.containerIconSize,
   },
   returnContainer: {
-    alignItems: 'center',
-    borderRadius: theme.header.containerIconSize / 2,
-    height: theme.header.containerIconSize,
-    justifyContent: 'center',
-    position: 'absolute',
     right: theme.wrapper.marginHorizontal
       - (theme.header.containerIconSize - theme.header.iconSize) / 2,
-    top: Constants.statusBarHeight
-      + theme.header.paddingVertical
-      + (theme.header.containerIconSize - theme.header.iconSize) / 2,
   },
 });
 

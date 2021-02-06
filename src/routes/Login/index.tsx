@@ -6,24 +6,18 @@ import Wrapper from '#components/Wrapper';
 
 import LoginForm from './LoginForm';
 
-const Login = () => {
-  const [loading, setLoading] = React.useState<boolean>(false);
-  return (
-    <ScrollableScreen
-      header={() => <HeaderForm
-        title='log in'
-      />}
+const Login = () => (
+  <ScrollableScreen
+    header={() => <HeaderForm
+      title='log in'
+    />}
+  >
+    <Wrapper
+      marginTop={50}
     >
-      <Wrapper
-        marginTop={50}
-      >
-        <LoginForm
-          loading={loading}
-          setLoading={setLoading}
-        />
-      </Wrapper>
-    </ScrollableScreen>
-  );
-};
+      <LoginForm />
+    </Wrapper>
+  </ScrollableScreen>
+);
 
 export default Login;

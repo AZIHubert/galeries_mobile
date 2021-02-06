@@ -29,7 +29,6 @@ const ProfilePicture = ({
   profilePicture,
 }: SingleProfilePictureI) => {
   const { setUser, user } = React.useContext(AuthContext);
-  const [loading, setLoading] = React.useState<boolean>(false);
   const navigation = useNavigation();
   const current = user ? user.currentProfilePictureId === profilePicture.id : false;
   return (
@@ -41,32 +40,27 @@ const ProfilePicture = ({
       <TouchableOpacity
         activeOpacity={theme.touchableOpacity.defaultOpacity}
         onPress={async () => {
-          if (!loading) {
-            setLoading(true);
-            try {
-              const response = await setProfilePicture(profilePicture.id);
-              if (response) {
-                setLoading(false);
-                setUser((prevState) => {
-                  if (prevState) {
-                    const remove = profilePicture.id !== prevState.currentProfilePictureId;
-                    return {
-                      ...prevState,
-                      currentProfilePictureId: remove
-                        ? profilePicture.id
-                        : null,
-                      currentProfilePicture: remove
-                        ? profilePicture
-                        : null,
-                    };
-                  }
-                  return null;
-                });
-              }
-            } catch (err) {
-              setLoading(false);
-              console.log(err);
+          try {
+            const response = await setProfilePicture(profilePicture.id);
+            if (response) {
+              setUser((prevState) => {
+                if (prevState) {
+                  const remove = profilePicture.id !== prevState.currentProfilePictureId;
+                  return {
+                    ...prevState,
+                    currentProfilePictureId: remove
+                      ? profilePicture.id
+                      : null,
+                    currentProfilePicture: remove
+                      ? profilePicture
+                      : null,
+                  };
+                }
+                return null;
+              });
             }
+          } catch (err) {
+            console.log(err);
           }
         }}
         style={styles({
@@ -85,33 +79,29 @@ const ProfilePicture = ({
           {
             text: 'yes',
             onPress: async () => {
-              if (!loading) {
-                setLoading(true);
-                try {
-                  const response = await deleteProfilePicture(profilePicture.id);
-                  if (response
-                    && user
-                    && profilePicture.id === user.currentProfilePictureId
-                  ) {
-                    setUser((prevState) => {
-                      if (prevState) {
-                        const profilePictures = prevState.profilePictures
-                          .filter((pp) => pp.id !== profilePicture.id);
-                        return {
-                          ...prevState,
-                          currentProfilePictureId: null,
-                          currentProfilePicture: null,
-                          profilePictures,
-                        };
-                      }
-                      return null;
-                    });
-                    setLoading(false);
-                  }
-                } catch (err) {
-                  console.log(err);
-                  setLoading(false);
+              try {
+                const response = await deleteProfilePicture(profilePicture.id);
+                if (response && user) {
+                  setUser((prevState) => {
+                    if (prevState) {
+                      const profilePictures = prevState.profilePictures
+                        .filter((pp) => pp.id !== profilePicture.id);
+                      return {
+                        ...prevState,
+                        currentProfilePictureId: current
+                          ? null
+                          : prevState.currentProfilePictureId,
+                        currentProfilePicture: current
+                          ? null
+                          : prevState.currentProfilePicture,
+                        profilePictures: [...profilePictures],
+                      };
+                    }
+                    return null;
+                  });
                 }
+              } catch (err) {
+                console.log(err);
               }
             },
           },

@@ -8,13 +8,7 @@ import {
 import AppButton from '#components/AppButton';
 import AppText from '#components/AppText';
 
-interface DeleteAccountI {
-  loading: boolean;
-}
-
-const DeleteAccount = ({
-  loading,
-}: DeleteAccountI) => {
+const DeleteAccount = () => {
   const navigation = useNavigation();
   return (
     <View>
@@ -30,7 +24,7 @@ const DeleteAccount = ({
         </AppText>
       </View>
       <AppButton
-        disabled={loading}
+        disabled={false}
         fontSize={25}
         marginBottom={75}
         onPress={() => navigation.navigate('deleteaccount')}

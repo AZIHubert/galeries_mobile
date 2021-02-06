@@ -15,37 +15,28 @@ import Field from '#components/Field';
 import { login } from '#helpers/api';
 import { loginSchema } from '#helpers/schemas';
 
-interface LoginFormI {
-  loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
 const initialValues = {
   password: '',
   userNameOrEmail: '',
 };
 
-const LoginForm = ({ loading, setLoading }: LoginFormI) => {
+const LoginForm = () => {
   const navigation = useNavigation();
   const formik = useFormik({
     initialValues,
     onSubmit: async (values, { setFieldError }) => {
-      if (!loading) {
-        setLoading(true);
-        Keyboard.dismiss();
-        try {
-          const response = await login(values);
-          await AsyncStorage.setItem('auThoken', response.data.token);
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'sideMenu' }],
-          });
-        } catch (err) {
-          const { errors } = err.response.data;
-          if (typeof errors === 'object') {
-            Object.keys(errors).map((error) => setFieldError(error, errors[error]));
-          }
-          setLoading(false);
+      Keyboard.dismiss();
+      try {
+        const response = await login(values);
+        await AsyncStorage.setItem('auThoken', response.data.token);
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'sideMenu' }],
+        });
+      } catch (err) {
+        const { errors } = err.response.data;
+        if (typeof errors === 'object') {
+          Object.keys(errors).map((error) => setFieldError(error, errors[error]));
         }
       }
     },
@@ -59,7 +50,7 @@ const LoginForm = ({ loading, setLoading }: LoginFormI) => {
     >
       <View>
         <Field
-          editable={!loading}
+          editable={true}
           error={formik.errors.userNameOrEmail}
           label='user name or email'
           onBlur={formik.handleBlur('userNameOrEmail')}
@@ -72,7 +63,7 @@ const LoginForm = ({ loading, setLoading }: LoginFormI) => {
           value={formik.values.userNameOrEmail}
         />
         <Field
-          editable={!loading}
+          editable={true}
           error={formik.errors.password}
           label='password'
           onBlur={formik.handleBlur('password')}
@@ -94,7 +85,7 @@ const LoginForm = ({ loading, setLoading }: LoginFormI) => {
         </View>
       </View>
       <AppButtonRadius
-        disabled={loading}
+        disabled={false}
         fontSize={25}
         marginBottom={30}
         onPress={formik.handleSubmit}

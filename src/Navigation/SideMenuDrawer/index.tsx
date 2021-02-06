@@ -33,4 +33,5 @@ const SideMenuDrawer = () => (
     />
   </Drawer.Navigator>
 );
+
 export default SideMenuDrawer;

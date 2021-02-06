@@ -15,11 +15,6 @@ import Field from '#components/Field';
 import { signin } from '#helpers/api';
 import { signinSchema } from '#helpers/schemas';
 
-interface SigninFormI {
-  loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
 const initialValues = {
   confirmPassword: '',
   email: '',
@@ -27,27 +22,23 @@ const initialValues = {
   userName: '',
 };
 
-const LoginForm = ({ loading, setLoading }: SigninFormI) => {
+const LoginForm = () => {
   const navigation = useNavigation();
   const formik = useFormik({
     initialValues,
     onSubmit: async (values, { setFieldError }) => {
-      if (!loading) {
-        setLoading(true);
-        Keyboard.dismiss();
-        try {
-          const response = await signin(values);
-          await AsyncStorage.setItem('auThoken', response.data.token);
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'sideMenu' }],
-          });
-        } catch (err) {
-          const { errors } = err.response.data;
-          if (typeof errors === 'object') {
-            Object.keys(errors).map((error) => setFieldError(error, errors[error]));
-          }
-          setLoading(false);
+      Keyboard.dismiss();
+      try {
+        const response = await signin(values);
+        await AsyncStorage.setItem('auThoken', response.data.token);
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'sideMenu' }],
+        });
+      } catch (err) {
+        const { errors } = err.response.data;
+        if (typeof errors === 'object') {
+          Object.keys(errors).map((error) => setFieldError(error, errors[error]));
         }
       }
     },
@@ -61,7 +52,7 @@ const LoginForm = ({ loading, setLoading }: SigninFormI) => {
     >
       <View>
         <Field
-          editable={!loading}
+          editable={true}
           error={formik.errors.userName}
           label='user name'
           onBlur={formik.handleBlur('userName')}
@@ -74,7 +65,7 @@ const LoginForm = ({ loading, setLoading }: SigninFormI) => {
           value={formik.values.userName}
         />
         <Field
-          editable={!loading}
+          editable={true}
           error={formik.errors.email}
           label='email'
           onBlur={formik.handleBlur('email')}
@@ -87,7 +78,7 @@ const LoginForm = ({ loading, setLoading }: SigninFormI) => {
           value={formik.values.email}
         />
         <Field
-          editable={!loading}
+          editable={true}
           error={formik.errors.password}
           label='password'
           onBlur={formik.handleBlur('password')}
@@ -101,7 +92,7 @@ const LoginForm = ({ loading, setLoading }: SigninFormI) => {
           value={formik.values.password}
         />
         <Field
-          editable={!loading}
+          editable={true}
           error={formik.errors.confirmPassword}
           label='confirm password'
           onBlur={formik.handleBlur('confirmPassword')}
@@ -123,7 +114,7 @@ const LoginForm = ({ loading, setLoading }: SigninFormI) => {
         </View>
       </View>
       <AppButtonRadius
-        disabled={loading}
+        disabled={false}
         fontSize={25}
         marginBottom={30}
         onPress={formik.handleSubmit}

@@ -12,25 +12,17 @@ import Field from '#components/Field';
 
 import { changePasswordSchema } from '#helpers/schemas';
 
-interface ChangePasswordFormI {
-  loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
 const initialValues = {
   confirmNewPassword: '',
   currentPassword: '',
   newPassword: '',
 };
 
-const ChangePasswordForm = ({ loading, setLoading }: ChangePasswordFormI) => {
+const ChangePasswordForm = () => {
   const formik = useFormik({
     initialValues,
     onSubmit: () => {
-      if (!loading) {
-        setLoading(true);
-        Keyboard.dismiss();
-      }
+      Keyboard.dismiss();
     },
     validateOnBlur: true,
     validateOnChange: false,
@@ -39,7 +31,7 @@ const ChangePasswordForm = ({ loading, setLoading }: ChangePasswordFormI) => {
   return (
     <View>
       <Field
-        editable={!loading}
+        editable={true}
         error={formik.errors.currentPassword}
         label='current password'
         onBlur={formik.handleBlur('currentPassword')}
@@ -53,7 +45,7 @@ const ChangePasswordForm = ({ loading, setLoading }: ChangePasswordFormI) => {
         value={formik.values.currentPassword}
       />
       <Field
-        editable={!loading}
+        editable={true}
         error={formik.errors.newPassword}
         label='new password'
         onBlur={formik.handleBlur('newPassword')}
@@ -67,7 +59,7 @@ const ChangePasswordForm = ({ loading, setLoading }: ChangePasswordFormI) => {
         value={formik.values.newPassword}
       />
       <Field
-        editable={!loading}
+        editable={true}
         error={formik.errors.confirmNewPassword}
         label='confirm new password'
         onBlur={formik.handleBlur('confirmNewPassword')}
@@ -88,7 +80,7 @@ const ChangePasswordForm = ({ loading, setLoading }: ChangePasswordFormI) => {
         </AppText>
       </View>
       <AppButtonRadius
-        disabled={loading}
+        disabled={false}
         fontSize={25}
         marginBottom={75}
         onPress={formik.handleSubmit}

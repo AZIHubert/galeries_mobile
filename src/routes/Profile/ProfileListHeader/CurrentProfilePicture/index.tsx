@@ -38,7 +38,7 @@ const ProfilePicture = () => {
         style={styles.imageContainer}
       >
         <Image
-          resizeMode='contain'
+          resizeMode='cover'
           source={profilePicture(user)}
           style={styles.image}
         />

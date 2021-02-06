@@ -2,6 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Image,
+  ImageSourcePropType,
   TouchableOpacity,
   View,
   StyleSheet,
@@ -9,12 +10,28 @@ import {
 
 import AppText from '#components/AppText';
 
+import { UserI } from '#helpers/interfaces';
 import theme from '#helpers/theme';
+
+import defaultProfilePicture from '#ressources/images/defaultProfilePicture.png';
 
 import { AuthContext } from '#src/contexts/AuthProvider';
 
+const profilePicture
+: (user: UserI | null) => ImageSourcePropType | { uri: string } = (user: UserI | null) => {
+  if (user && user.currentProfilePicture) {
+    return { uri: user.currentProfilePicture.cropedImage.signedUrl };
+  }
+  if (user && user.defaultProfilePicture) {
+    return { uri: user.defaultProfilePicture };
+  }
+  return defaultProfilePicture;
+};
+
 const ProfileButton = () => {
-  const { user } = React.useContext(AuthContext);
+  const {
+    user,
+  } = React.useContext(AuthContext);
   const navigation = useNavigation();
   return (
     <TouchableOpacity
@@ -28,11 +45,11 @@ const ProfileButton = () => {
         <View
           style={styles.profilePictureContainer}
         >
-          {/* <Image
+          <Image
             resizeMode='contain'
-            source={profilePicture}
+            source={profilePicture(user)}
             style={styles.profilePicture}
-          /> */}
+          />
         </View>
       </View>
       <View>

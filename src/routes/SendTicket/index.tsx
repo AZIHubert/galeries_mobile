@@ -6,24 +6,18 @@ import Wrapper from '#components/Wrapper';
 
 import SendTicketForm from './SendTicketForm';
 
-const SendTicket = () => {
-  const [loading, setLoading] = React.useState<boolean>(false);
-  return (
-    <ScrollableScreen
-      header={() => <HeaderForm
-        title='send a ticket'
-      />}
+const SendTicket = () => (
+  <ScrollableScreen
+    header={() => <HeaderForm
+      title='send a ticket'
+    />}
+  >
+    <Wrapper
+      marginTop={50}
     >
-      <Wrapper
-        marginTop={50}
-      >
-        <SendTicketForm
-          loading={loading}
-          setLoading={setLoading}
-        />
-      </Wrapper>
-    </ScrollableScreen>
-  );
-};
+      <SendTicketForm />
+    </Wrapper>
+  </ScrollableScreen>
+);
 
 export default SendTicket;

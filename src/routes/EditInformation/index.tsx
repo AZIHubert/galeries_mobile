@@ -15,7 +15,6 @@ import DeleteAccount from './DeleteAccount';
 import TitleForm from './TitleForm';
 
 const EditInformation = () => {
-  const [loading, setLoading] = React.useState<boolean>(false);
   const { user } = React.useContext(AuthContext);
   return (
     <ScrollableScreen
@@ -31,24 +30,16 @@ const EditInformation = () => {
             <TitleForm
               title='change your password'
             />
-            <ChangePasswordForm
-              loading={loading}
-              setLoading={setLoading}
-            />
+            <ChangePasswordForm />
             <TitleForm
               title='change your email'
             />
-            <ChangeEmailForm
-              loading={loading}
-              setLoading={setLoading}
-            />
+            <ChangeEmailForm />
             <TitleForm
               danger
               title='change your email'
             />
-            <DeleteAccount
-              loading={loading}
-            />
+            <DeleteAccount />
           </View>
         ) : null}
       </Wrapper>

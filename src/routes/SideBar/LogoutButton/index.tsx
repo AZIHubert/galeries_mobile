@@ -16,7 +16,6 @@ import theme from '#helpers/theme';
 import { AuthContext } from '#src/contexts/AuthProvider';
 
 const LogoutButton = () => {
-  const [loading, setLoading] = React.useState<boolean>(false);
   const { setUser } = React.useContext(AuthContext);
   const navigation = useNavigation();
   return (
@@ -24,20 +23,15 @@ const LogoutButton = () => {
       activeOpacity={theme.touchableOpacity.defaultOpacity}
       style={styles.container}
       onPress={async () => {
-        if (!loading) {
-          setLoading(true);
-          try {
-            const response = await logout();
-            if (response) {
-              await AsyncStorage.clear();
-              setUser(null);
-              setLoading(false);
-              navigation.navigate('home');
-            }
-          } catch (err) {
-            console.log(err);
-            setLoading(false);
+        try {
+          const response = await logout();
+          if (response) {
+            await AsyncStorage.clear();
+            setUser(null);
+            navigation.navigate('home');
           }
+        } catch (err) {
+          console.log(err);
         }
       }}
     >

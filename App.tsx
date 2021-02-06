@@ -6,13 +6,13 @@ import Navigation from '#src/Navigation';
 import { AuthProvider } from '#src/contexts/AuthProvider';
 
 const App = () => (
-  <AuthProvider>
-    <Loader>
+  <Loader>
+    <AuthProvider>
       <Permission>
         <Navigation />
       </Permission>
-    </Loader>
-  </AuthProvider>
+    </AuthProvider>
+  </Loader>
 );
 
 export default App;

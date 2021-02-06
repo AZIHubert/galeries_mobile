@@ -6,24 +6,18 @@ import Wrapper from '#components/Wrapper';
 
 import SigninForm from './SigninForm';
 
-const Signin = () => {
-  const [loading, setLoading] = React.useState<boolean>(false);
-  return (
-    <ScrollableScreen
-      header={() => <HeaderForm
-        title='sign in'
-      />}
+const Signin = () => (
+  <ScrollableScreen
+    header={() => <HeaderForm
+      title='sign in'
+    />}
+  >
+    <Wrapper
+      marginTop={50}
     >
-      <Wrapper
-        marginTop={50}
-      >
-        <SigninForm
-          loading={loading}
-          setLoading={setLoading}
-        />
-      </Wrapper>
-    </ScrollableScreen>
-  );
-};
+      <SigninForm />
+    </Wrapper>
+  </ScrollableScreen>
+);
 
 export default Signin;

@@ -126,4 +126,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default React.memo(ProfileListHeader);
+export default ProfileListHeader;

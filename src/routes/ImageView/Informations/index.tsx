@@ -38,7 +38,6 @@ const Information = ({
   onPress,
   profilePicture,
 }: InformationI) => {
-  const [loading, setLoading] = React.useState<boolean>(false);
   const { setUser, user } = React.useContext(AuthContext);
   const changeProfilePictureText = () => {
     if (user && user.currentProfilePictureId === profilePicture.id) {
@@ -120,31 +119,27 @@ const Information = ({
           disabled={false}
           marginBottom={20}
           onPress={async () => {
-            if (!loading) {
-              setLoading(true);
-              try {
-                const response = await setProfilePicture(profilePicture.id);
-                if (response) {
-                  setLoading(false);
-                  setUser((prevState) => {
-                    if (prevState) {
-                      const remove = profilePicture.id !== prevState.currentProfilePictureId;
-                      return {
-                        ...prevState,
-                        currentProfilePictureId: remove
-                          ? profilePicture.id
-                          : null,
-                        currentProfilePicture: remove
-                          ? profilePicture
-                          : null,
-                      };
-                    }
-                    return null;
-                  });
-                }
-              } catch (err) {
-                setLoading(false);
+            try {
+              const response = await setProfilePicture(profilePicture.id);
+              if (response) {
+                setUser((prevState) => {
+                  if (prevState) {
+                    const remove = profilePicture.id !== prevState.currentProfilePictureId;
+                    return {
+                      ...prevState,
+                      currentProfilePictureId: remove
+                        ? profilePicture.id
+                        : null,
+                      currentProfilePicture: remove
+                        ? profilePicture
+                        : null,
+                    };
+                  }
+                  return null;
+                });
               }
+            } catch (err) {
+              console.log(err);
             }
           }}
           title={changeProfilePictureText()}

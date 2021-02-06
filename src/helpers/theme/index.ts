@@ -6,7 +6,7 @@ export default {
     fontSize: 20,
     height: 45,
     paddingHorizontal: 10,
-    paddingVertical: 7,
+    paddingVertical: 20,
   },
   color: {
     black: '#000',
@@ -48,7 +48,7 @@ export default {
   header: {
     containerIconSize: 40,
     iconSize: 25,
-    paddingVertical: 10,
+    paddingVertical: 20,
   },
   headerForm: {
     containerIconSize: 40,

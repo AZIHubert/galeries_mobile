@@ -14,41 +14,28 @@ import Field from '#components/Field';
 import { deleteAccountSchema } from '#helpers/schemas';
 import { deleteAccount } from '#helpers/api';
 
-interface DeleteAccountFormI {
-  loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
 const initialValues = {
   password: '',
 };
 
-const DeleteAccountForm = ({
-  loading,
-  setLoading,
-}: DeleteAccountFormI) => {
+const DeleteAccountForm = () => {
   const navigation = useNavigation();
   const formik = useFormik({
     initialValues,
     onSubmit: async (values, { setFieldError }) => {
-      if (!loading) {
-        setLoading(true);
-        Keyboard.dismiss();
-        try {
-          const response = await deleteAccount(values);
-          if (response) {
-            setLoading(false);
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'home' }],
-            });
-          }
-        } catch (err) {
-          setLoading(false);
-          const { errors } = err.response.data;
-          if (typeof errors === 'object') {
-            Object.keys(errors).map((error) => setFieldError(error, errors[error]));
-          }
+      Keyboard.dismiss();
+      try {
+        const response = await deleteAccount(values);
+        if (response) {
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'home' }],
+          });
+        }
+      } catch (err) {
+        const { errors } = err.response.data;
+        if (typeof errors === 'object') {
+          Object.keys(errors).map((error) => setFieldError(error, errors[error]));
         }
       }
     },
@@ -75,7 +62,7 @@ const DeleteAccountForm = ({
         </View>
         <View>
           <Field
-            editable={!loading}
+            editable={true}
             error={formik.errors.password}
             label='confirm your password'
             onBlur={formik.handleBlur('password')}
@@ -100,7 +87,7 @@ const DeleteAccountForm = ({
         </View>
       </View>
       <AppButton
-        disabled={loading}
+        disabled={false}
         fontSize={25}
         marginBottom={30}
         onPress={formik.handleSubmit}
