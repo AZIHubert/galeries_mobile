@@ -3,7 +3,7 @@ import * as Google from 'expo-google-app-auth';
 
 import client from '#src/helpers/api/client';
 
-const endpoint = '/users/auth/mobile/google';
+const endpoint = '/users/auth/google';
 
 const googleLogin
 : () => Promise<AxiosResponse<any> | null> = async () => {

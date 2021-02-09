@@ -3,7 +3,7 @@ import * as Facebook from 'expo-facebook';
 
 import client from '#src/helpers/api/client';
 
-const endpoint = '/users/auth/mobile/facebook';
+const endpoint = '/users/auth/facebook';
 
 const facebookLogin
 : () => Promise<AxiosResponse<any> | null> = async () => {
