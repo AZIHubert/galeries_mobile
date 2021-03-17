@@ -14,7 +14,7 @@ export default (
 ) => axios.request({
   data: body,
   method,
-  baseURL: 'http://localhost:5000',
+  baseURL: 'http://192.168.1.84:5000',
   url: `${url}${params || ''}${page ? `?page=${page}` : ''}`,
   headers: {
     authorization: token,

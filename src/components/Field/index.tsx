@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 
 import AppText from '#components/AppText';
+
 import theme from '#helpers/theme';
 
 interface FieldI {

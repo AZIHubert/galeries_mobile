@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { useFormik } from 'formik';
 import * as React from 'react';
@@ -6,44 +5,61 @@ import {
   Keyboard,
   StyleSheet,
   View,
+  TouchableWithoutFeedback,
 } from 'react-native';
+import {
+  useSelector,
+  useDispatch,
+} from 'react-redux';
 
 import AppButtonRadius from '#components/AppButtonRadius';
 import AppText from '#components/AppText';
 import Field from '#components/Field';
 
-import { login } from '#helpers/api';
 import { loginSchema } from '#helpers/schemas';
 
-const initialValues = {
+import {
+  fetchLogin,
+  setLogin,
+} from '#store/actions';
+import {
+  loadingSelector,
+  loginErrorSelector,
+  notificationSelector,
+} from '#store/selectors';
+
+const initialValues: form.LoginI = {
   password: '',
   userNameOrEmail: '',
 };
 
 const LoginForm = () => {
-  const navigation = useNavigation();
+  const dispatch = useDispatch();
   const formik = useFormik({
     initialValues,
-    onSubmit: async (values, { setFieldError }) => {
+    onSubmit: async (values) => {
       Keyboard.dismiss();
-      try {
-        const response = await login(values);
-        await AsyncStorage.setItem('auThoken', response.data.token);
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'sideMenu' }],
-        });
-      } catch (err) {
-        const { errors } = err.response.data;
-        if (typeof errors === 'object') {
-          Object.keys(errors).map((error) => setFieldError(error, errors[error]));
-        }
+      if (!loading) {
+        dispatch(
+          fetchLogin(values),
+        );
       }
     },
     validateOnBlur: true,
     validateOnChange: false,
     validationSchema: loginSchema,
   });
+  const navigation = useNavigation();
+  const loading = useSelector(loadingSelector);
+  const loginError = useSelector(loginErrorSelector);
+  const notification = useSelector(notificationSelector);
+
+  React.useEffect(() => {
+    if (notification.text === 'You\'re account need to be confimed') {
+      navigation.navigate('confirmAccount');
+    }
+  }, [notification]);
+
   return (
     <View
       style={styles.container}
@@ -51,12 +67,24 @@ const LoginForm = () => {
       <View>
         <Field
           editable={true}
-          error={formik.errors.userNameOrEmail}
+          error={
+            formik.errors.userNameOrEmail || loginError.userNameOrEmail
+          }
           label='user name or email'
           onBlur={formik.handleBlur('userNameOrEmail')}
           onChangeText={(e: string) => {
             formik.setFieldError('userNameOrEmail', '');
             formik.setFieldValue('userNameOrEmail', e);
+            if (loginError.userNameOrEmail) {
+              dispatch(
+                setLogin({
+                  errors: {
+                    ...loginError,
+                    userNameOrEmail: '',
+                  },
+                }),
+              );
+            }
           }}
           requiredField={true}
           touched={formik.touched.userNameOrEmail}
@@ -64,12 +92,24 @@ const LoginForm = () => {
         />
         <Field
           editable={true}
-          error={formik.errors.password}
+          error={
+            formik.errors.password || loginError.password
+          }
           label='password'
           onBlur={formik.handleBlur('password')}
           onChangeText={(e: string) => {
             formik.setFieldError('password', '');
             formik.setFieldValue('password', e);
+            if (loginError.password) {
+              dispatch(
+                setLogin({
+                  errors: {
+                    ...loginError,
+                    password: '',
+                  },
+                }),
+              );
+            }
           }}
           requiredField={true}
           secureTextEntry={true}
@@ -83,6 +123,21 @@ const LoginForm = () => {
             * required fields
           </AppText>
         </View>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            navigation.navigate('resetPassword');
+          }}
+        >
+          <View>
+            <AppText
+              color='black'
+              fontSize={17}
+              textDecorationLine='underline'
+            >
+              Forgot your password?
+            </AppText>
+          </View>
+        </TouchableWithoutFeedback>
       </View>
       <AppButtonRadius
         disabled={false}

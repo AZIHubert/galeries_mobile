@@ -1,10 +1,15 @@
 export const PROFILE_PICTURES = '[PROFILE PICTURES]';
 
 export const PROFILE_PICTURES_FETCH = `${PROFILE_PICTURES} Fetch`;
+export const PROFILE_PICTURES_REFRESH = `${PROFILE_PICTURES} Refresh`;
 export const PROFILE_PICTURES_SET = `${PROFILE_PICTURES} Set`;
 
 export const fetchProfilePictures: () => store.ActionI = () => ({
   type: PROFILE_PICTURES_FETCH,
+});
+
+export const refreshProfilePictures: () => store.ActionI = () => ({
+  type: PROFILE_PICTURES_REFRESH,
 });
 
 export const resetProfilePictures: () => store.ActionI = () => ({

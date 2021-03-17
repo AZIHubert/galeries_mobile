@@ -96,14 +96,14 @@ const successUpdatePassword: Middleware = (
   { dispatch },
 ) => (
   next,
-) => (
+) => async (
   action: store.ActionI,
 ) => {
   next(action);
   if (action.type === `${UPDATE_PASSWORD} ${API_SUCCESS}`) {
     if (action.payload) {
-      setAuthToken(action.payload.data.token);
-      setExpiresToken(action.payload.data.expiresIn);
+      await setAuthToken(action.payload.data.token);
+      await setExpiresToken(action.payload.data.expiresIn);
     }
     dispatch(setUpdatePassword({
       status: 'success',

@@ -1,11 +1,12 @@
-import defaultProfilePicture from '#ressources/svg/defaultProfilePicture.svg';
+import { ImageSourcePropType } from 'react-native';
+import defaultProfilePicture from '#ressources/images/defaultProfilePicture.png';
 
 const profilePicture: (
   user: UserI | null
 ) => {
-  croped: string;
-  original?: string;
-  pending?: string;
+  croped: string | ImageSourcePropType;
+  original?: string | ImageSourcePropType;
+  pending?: string | ImageSourcePropType;
 } = (
   user: UserI | null,
 ) => {
@@ -24,7 +25,7 @@ const profilePicture: (
     }
   }
   return {
-    croped: defaultProfilePicture,
+    croped: defaultProfilePicture as ImageSourcePropType,
   };
 };
 

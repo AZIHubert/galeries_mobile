@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Middleware } from 'redux';
 
 import {
@@ -91,12 +92,12 @@ const successAccount: Middleware = (
   { dispatch },
 ) => (
   next,
-) => (
+) => async (
   action: store.ActionI,
 ) => {
   next(action);
   if (action.type === `${ACCOUNT} ${API_SUCCESS}`) {
-    localStorage.clear();
+    await AsyncStorage.clear();
     dispatch(setUser(null));
     dispatch(resetProfilePictures());
     dispatch(setLoader(false));

@@ -10,6 +10,7 @@ import theme from '#helpers/theme';
 
 type Align = 'center' | 'left' | 'right';
 type Variant = 'danger' | 'primary' | 'secondary' | 'tertiary';
+
 interface ButtonI {
   align?: Align;
   disabled: boolean;

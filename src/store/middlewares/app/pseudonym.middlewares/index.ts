@@ -114,6 +114,11 @@ const successPseudonym: Middleware = (
       }),
     );
     dispatch(
+      setNotification({
+        text: 'Pseudonym changed',
+      }),
+    );
+    dispatch(
       setLoader(false),
     );
   }

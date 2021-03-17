@@ -1,6 +1,10 @@
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import {
+  useDispatch,
+  useSelector,
+} from 'react-redux';
+import {
   Alert,
   Dimensions,
   Image,
@@ -9,14 +13,20 @@ import {
   View,
 } from 'react-native';
 
-import { setProfilePicture, deleteProfilePicture } from '#helpers/api';
-import { ProfilePictureI } from '#helpers/interfaces';
 import theme from '#helpers/theme';
 
-import { AuthContext } from '#src/contexts/AuthProvider';
+import {
+  deleteProfilePicture,
+  putProfilePicture,
+} from '#store/actions';
+import {
+  loadingSelector,
+  userSelector,
+} from '#store/selectors';
 
 interface SingleProfilePictureI {
   profilePicture: ProfilePictureI;
+  id: string;
 }
 
 interface StyleSheetI {
@@ -27,10 +37,15 @@ const { width } = Dimensions.get('window');
 
 const ProfilePicture = ({
   profilePicture,
+  id,
 }: SingleProfilePictureI) => {
-  const { setUser, user } = React.useContext(AuthContext);
+  const dispatch = useDispatch();
   const navigation = useNavigation();
-  const current = user ? user.currentProfilePictureId === profilePicture.id : false;
+  const loading = useSelector(loadingSelector);
+  const user = useSelector(userSelector);
+
+  const current = user ? user.currentProfilePictureId === id : false;
+
   return (
     <View
       style={styles({
@@ -40,27 +55,10 @@ const ProfilePicture = ({
       <TouchableOpacity
         activeOpacity={theme.touchableOpacity.defaultOpacity}
         onPress={async () => {
-          try {
-            const response = await setProfilePicture(profilePicture.id);
-            if (response) {
-              setUser((prevState) => {
-                if (prevState) {
-                  const remove = profilePicture.id !== prevState.currentProfilePictureId;
-                  return {
-                    ...prevState,
-                    currentProfilePictureId: remove
-                      ? profilePicture.id
-                      : null,
-                    currentProfilePicture: remove
-                      ? profilePicture
-                      : null,
-                  };
-                }
-                return null;
-              });
-            }
-          } catch (err) {
-            console.log(err);
+          if (!loading) {
+            dispatch(
+              putProfilePicture({ id }),
+            );
           }
         }}
         style={styles({
@@ -71,42 +69,30 @@ const ProfilePicture = ({
         activeOpacity={theme.touchableOpacity.defaultOpacity}
         onPress={() => {
           navigation.navigate('imageView', {
-            profilePicture,
+            profilePicture: {
+              ...profilePicture,
+              id,
+            },
           });
         }}
-        onLongPress={() => Alert.alert('Delete', 'Are you sure you want to delete this image?', [
-          { text: 'no' },
-          {
-            text: 'yes',
-            onPress: async () => {
-              try {
-                const response = await deleteProfilePicture(profilePicture.id);
-                if (response && user) {
-                  setUser((prevState) => {
-                    if (prevState) {
-                      const profilePictures = prevState.profilePictures
-                        .filter((pp) => pp.id !== profilePicture.id);
-                      return {
-                        ...prevState,
-                        currentProfilePictureId: current
-                          ? null
-                          : prevState.currentProfilePictureId,
-                        currentProfilePicture: current
-                          ? null
-                          : prevState.currentProfilePicture,
-                        profilePictures: [...profilePictures],
-                      };
-                    }
-                    return null;
-                  });
+        onLongPress={() => Alert.alert(
+          'Delete',
+          'Are you sure you want to delete this image?',
+          [
+            { text: 'no' },
+            {
+              text: 'yes',
+              onPress: async () => {
+                if (!loading) {
+                  dispatch(
+                    deleteProfilePicture({ id }),
+                  );
                 }
-              } catch (err) {
-                console.log(err);
-              }
+              },
             },
-          },
 
-        ])}
+          ],
+        )}
       >
         <Image
           source={{ uri: profilePicture.cropedImage.signedUrl }}

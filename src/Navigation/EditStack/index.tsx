@@ -4,11 +4,11 @@ import * as React from 'react';
 import DeleteAccount from '#routes/DeleteAccount';
 import EditInformation from '#routes/EditInformation';
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<navigation.EditParamList>();
 
 const EditStack = () => (
   <Stack.Navigator
-    initialRouteName='profile'
+    initialRouteName='editinformation'
     mode='modal'
     screenOptions={{
       headerShown: false,

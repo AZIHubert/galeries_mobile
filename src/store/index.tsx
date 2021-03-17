@@ -1,14 +1,10 @@
-import { applyMiddleware, createStore } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
-
+import { applyMiddleware, createStore, compose } from 'redux';
 import { appMiddleware, coreMiddleware } from './middlewares';
 import reducers from './reducers';
 
-const composedEnhancer = composeWithDevTools(
-  applyMiddleware(...coreMiddleware, ...appMiddleware),
-);
-
 export default createStore(
   reducers,
-  composedEnhancer,
+  compose(
+    applyMiddleware(...coreMiddleware, ...appMiddleware),
+  ),
 );

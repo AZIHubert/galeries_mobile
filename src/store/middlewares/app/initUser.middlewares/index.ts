@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Middleware } from 'redux';
 
 import {
@@ -15,8 +16,8 @@ const fetchInitUser: Middleware = (
   { dispatch },
 ) => (
   next,
-) => (
-  action,
+) => async (
+  action: store.ActionI,
 ) => {
   next(action);
   if (action.type === INIT_USER_FETCH) {
@@ -26,7 +27,7 @@ const fetchInitUser: Middleware = (
       dispatch(setInit(true));
       dispatch(fetchUser());
     } else {
-      localStorage.clear();
+      await AsyncStorage.clear();
     }
   }
 };

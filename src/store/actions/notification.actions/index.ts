@@ -11,7 +11,10 @@ export const resetNotification: () => store.ActionI = () => ({
 });
 
 export const setNotification: (
-  data: store.NotificationI,
+  data: {
+    error?: boolean
+    text?: string;
+  },
 ) => store.ActionI = (
   data,
 ) => ({

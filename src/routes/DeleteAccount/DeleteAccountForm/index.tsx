@@ -6,43 +6,65 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import {
+  useDispatch,
+  useSelector,
+} from 'react-redux';
 
 import AppButton from '#components/AppButton';
 import AppText from '#components/AppText';
 import Field from '#components/Field';
 
-import { deleteAccountSchema } from '#helpers/schemas';
-import { deleteAccount } from '#helpers/api';
+import {
+  deleteAccountSchema,
+} from '#helpers/schemas';
 
-const initialValues = {
+import {
+  accountErrorsSelector,
+  accountStatusSelector,
+  loadingSelector,
+} from '#store/selectors';
+import {
+  deleteAccount,
+  setAccount,
+} from '#store/actions';
+
+const initialValues: form.AccountI = {
+  deleteAccountSentence: '',
   password: '',
+  userNameOrEmail: '',
 };
 
 const DeleteAccountForm = () => {
-  const navigation = useNavigation();
+  const dispatch = useDispatch();
   const formik = useFormik({
     initialValues,
-    onSubmit: async (values, { setFieldError }) => {
+    onSubmit: async (values) => {
       Keyboard.dismiss();
-      try {
-        const response = await deleteAccount(values);
-        if (response) {
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'home' }],
-          });
-        }
-      } catch (err) {
-        const { errors } = err.response.data;
-        if (typeof errors === 'object') {
-          Object.keys(errors).map((error) => setFieldError(error, errors[error]));
-        }
+      if (!loading) {
+        dispatch(
+          deleteAccount(values),
+        );
       }
     },
     validateOnBlur: true,
     validateOnChange: false,
     validationSchema: deleteAccountSchema,
   });
+  const navigation = useNavigation();
+  const accountErrors = useSelector(accountErrorsSelector);
+  const accountStatus = useSelector(accountStatusSelector);
+  const loading = useSelector(loadingSelector);
+
+  React.useEffect(() => () => {
+    if (accountStatus === 'success') {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'home' }],
+      });
+    }
+  });
+
   return (
     <View
       style={styles.container}
@@ -63,12 +85,74 @@ const DeleteAccountForm = () => {
         <View>
           <Field
             editable={true}
-            error={formik.errors.password}
+            error={
+              formik.errors.userNameOrEmail || accountErrors.userNameOrEmail
+            }
+            label='user name or email'
+            onBlur={formik.handleBlur('userNameOrEmail')}
+            onChangeText={(e: string) => {
+              formik.setFieldError('userNameOrEmail', '');
+              formik.setFieldValue('userNameOrEmail', e);
+              if (accountErrors.userNameOrEmail) {
+                dispatch(
+                  setAccount({
+                    errors: {
+                      ...accountErrors,
+                      userNameOrEmail: '',
+                    },
+                  }),
+                );
+              }
+            }}
+            requiredField={true}
+            touched={formik.touched.userNameOrEmail}
+            value={formik.values.userNameOrEmail}
+          />
+          <Field
+            editable={true}
+            error={
+              formik.errors.deleteAccountSentence || accountErrors.deleteAccountSentence
+            }
+            label='To verify, type "delete my account" below:'
+            onBlur={formik.handleBlur('deleteAccountSentence')}
+            onChangeText={(e: string) => {
+              formik.setFieldError('deleteAccountSentence', '');
+              formik.setFieldValue('deleteAccountSentence', e);
+              if (accountErrors.deleteAccountSentence) {
+                dispatch(
+                  setAccount({
+                    errors: {
+                      ...accountErrors,
+                      deleteAccountSentence: '',
+                    },
+                  }),
+                );
+              }
+            }}
+            requiredField={true}
+            touched={formik.touched.deleteAccountSentence}
+            value={formik.values.deleteAccountSentence}
+          />
+          <Field
+            editable={true}
+            error={
+              formik.errors.password || accountErrors.password
+            }
             label='confirm your password'
             onBlur={formik.handleBlur('password')}
             onChangeText={(e: string) => {
               formik.setFieldError('password', '');
               formik.setFieldValue('password', e);
+              if (accountErrors.password) {
+                dispatch(
+                  setAccount({
+                    errors: {
+                      ...accountErrors,
+                      password: '',
+                    },
+                  }),
+                );
+              }
             }}
             requiredField={true}
             secureTextEntry={true}

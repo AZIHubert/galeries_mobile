@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { useFormik } from 'formik';
 import * as React from 'react';
@@ -7,15 +6,29 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import {
+  useDispatch,
+  useSelector,
+} from 'react-redux';
 
 import AppButtonRadius from '#components/AppButtonRadius';
 import AppText from '#components/AppText';
 import Field from '#components/Field';
 
-import { signin } from '#helpers/api';
 import { signinSchema } from '#helpers/schemas';
 
-const initialValues = {
+import {
+  fetchSignin,
+  resetSignin,
+  setSignin,
+} from '#store/actions';
+import {
+  loadingSelector,
+  signinErrorSelector,
+  signinStatusSelector,
+} from '#store/selectors';
+
+const initialValues: form.SigninI = {
   confirmPassword: '',
   email: '',
   password: '',
@@ -23,29 +36,35 @@ const initialValues = {
 };
 
 const LoginForm = () => {
-  const navigation = useNavigation();
+  const dispatch = useDispatch();
   const formik = useFormik({
     initialValues,
-    onSubmit: async (values, { setFieldError }) => {
+    onSubmit: async (values) => {
       Keyboard.dismiss();
-      try {
-        const response = await signin(values);
-        await AsyncStorage.setItem('auThoken', response.data.token);
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'sideMenu' }],
-        });
-      } catch (err) {
-        const { errors } = err.response.data;
-        if (typeof errors === 'object') {
-          Object.keys(errors).map((error) => setFieldError(error, errors[error]));
-        }
+      if (!loading) {
+        dispatch(
+          fetchSignin(values),
+        );
       }
     },
     validateOnBlur: true,
     validateOnChange: false,
     validationSchema: signinSchema,
   });
+  const navigation = useNavigation();
+  const loading = useSelector(loadingSelector);
+  const signinError = useSelector(signinErrorSelector);
+  const signinStatus = useSelector(signinStatusSelector);
+
+  React.useEffect(() => {
+    if (signinStatus === 'success') {
+      dispatch(resetSignin());
+      navigation.navigate('signinLanding', {
+        email: formik.values.email,
+      });
+    }
+  }, [signinStatus]);
+
   return (
     <View
       style={styles.container}
@@ -53,12 +72,24 @@ const LoginForm = () => {
       <View>
         <Field
           editable={true}
-          error={formik.errors.userName}
+          error={
+            formik.errors.userName || signinError.userName
+          }
           label='user name'
           onBlur={formik.handleBlur('userName')}
           onChangeText={(e: string) => {
             formik.setFieldError('userName', '');
             formik.setFieldValue('userName', e);
+            if (signinError.userName) {
+              dispatch(
+                setSignin({
+                  errors: {
+                    ...signinError,
+                    userName: '',
+                  },
+                }),
+              );
+            }
           }}
           requiredField={true}
           touched={formik.touched.userName}
@@ -66,12 +97,24 @@ const LoginForm = () => {
         />
         <Field
           editable={true}
-          error={formik.errors.email}
+          error={
+            formik.errors.email || signinError.email
+          }
           label='email'
           onBlur={formik.handleBlur('email')}
           onChangeText={(e: string) => {
             formik.setFieldError('email', '');
             formik.setFieldValue('email', e);
+            if (signinError.email) {
+              dispatch(
+                setSignin({
+                  errors: {
+                    ...signinError,
+                    email: '',
+                  },
+                }),
+              );
+            }
           }}
           requiredField={true}
           touched={formik.touched.email}
@@ -79,12 +122,24 @@ const LoginForm = () => {
         />
         <Field
           editable={true}
-          error={formik.errors.password}
+          error={
+            formik.errors.password || signinError.password
+          }
           label='password'
           onBlur={formik.handleBlur('password')}
           onChangeText={(e: string) => {
             formik.setFieldError('password', '');
             formik.setFieldValue('password', e);
+            if (signinError.password) {
+              dispatch(
+                setSignin({
+                  errors: {
+                    ...signinError,
+                    password: '',
+                  },
+                }),
+              );
+            }
           }}
           requiredField={true}
           secureTextEntry={true}
@@ -93,12 +148,24 @@ const LoginForm = () => {
         />
         <Field
           editable={true}
-          error={formik.errors.confirmPassword}
+          error={
+            formik.errors.confirmPassword || signinError.confirmPassword
+          }
           label='confirm password'
           onBlur={formik.handleBlur('confirmPassword')}
           onChangeText={(e: string) => {
             formik.setFieldError('confirmPassword', '');
             formik.setFieldValue('confirmPassword', e);
+            if (signinError.password) {
+              dispatch(
+                setSignin({
+                  errors: {
+                    ...signinError,
+                    confirmPassword: '',
+                  },
+                }),
+              );
+            }
           }}
           requiredField={true}
           secureTextEntry={true}

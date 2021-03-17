@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
 
 import { endPoints } from '#store/constant';
@@ -11,8 +12,8 @@ import {
 } from '#store/helpers';
 
 export default async () => {
-  const token = getAuthToken();
-  const expiresIn = getExpiresToken();
+  const token = await getAuthToken();
+  const expiresIn = await getExpiresToken();
   if (token && expiresIn) {
     const isExpired = moment().isAfter(JSON.parse(expiresIn));
     if (isExpired) {
@@ -23,10 +24,10 @@ export default async () => {
           endPoints.REFRESH_TOKEN,
           token,
         );
-        setAuthToken(response.data.token);
-        setExpiresToken(response.data.expiresIn);
+        await setAuthToken(response.data.token);
+        await setExpiresToken(response.data.expiresIn);
       } catch (err) {
-        localStorage.clear();
+        await AsyncStorage.clear();
       }
     }
   }

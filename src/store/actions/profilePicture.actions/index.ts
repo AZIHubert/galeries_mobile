@@ -1,3 +1,5 @@
+import { ImageSourcePropType } from 'react-native';
+
 export const PROFILE_PICTURE = '[PROFILE PICTURE]';
 
 export const PROFILE_PICTURE_DELETE = `${PROFILE_PICTURE} Delete`;
@@ -61,9 +63,9 @@ export const setProfilePicture: (
   data: {
     status?: store.Status
     current?: {
-      croped: string;
-      original?: string;
-      pending?: string;
+      croped: string | ImageSourcePropType;
+      original?: string | ImageSourcePropType;
+      pending?: string | ImageSourcePropType;
     }
   }
 ) => store.ActionI = (

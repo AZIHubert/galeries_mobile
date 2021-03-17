@@ -1,38 +1,43 @@
-import { useNavigation } from '@react-navigation/native';
+import {
+  useNavigation,
+} from '@react-navigation/native';
 import * as React from 'react';
 import {
+  useSelector,
+} from 'react-redux';
+import {
   Image,
-  ImageSourcePropType,
+  StyleSheet,
   TouchableOpacity,
   View,
-  StyleSheet,
 } from 'react-native';
 
 import AppText from '#components/AppText';
 
-import { UserI } from '#helpers/interfaces';
 import theme from '#helpers/theme';
 
 import defaultProfilePicture from '#ressources/images/defaultProfilePicture.png';
 
-import { AuthContext } from '#src/contexts/AuthProvider';
-
-const profilePicture
-: (user: UserI | null) => ImageSourcePropType | { uri: string } = (user: UserI | null) => {
-  if (user && user.currentProfilePicture) {
-    return { uri: user.currentProfilePicture.cropedImage.signedUrl };
-  }
-  if (user && user.defaultProfilePicture) {
-    return { uri: user.defaultProfilePicture };
-  }
-  return defaultProfilePicture;
-};
+import {
+  profilePictureCurrentSelector,
+  userSelector,
+} from '#store/selectors';
 
 const ProfileButton = () => {
-  const {
-    user,
-  } = React.useContext(AuthContext);
   const navigation = useNavigation();
+  const { croped } = useSelector(profilePictureCurrentSelector);
+  const user = useSelector(userSelector);
+
+  const uri = () => {
+    if (typeof croped === 'string') {
+      if (croped !== '') {
+        return { uri: croped };
+      }
+      return defaultProfilePicture;
+    }
+    return croped;
+  };
+
   return (
     <TouchableOpacity
       activeOpacity={theme.touchableOpacity.defaultOpacity}
@@ -47,7 +52,7 @@ const ProfileButton = () => {
         >
           <Image
             resizeMode='contain'
-            source={profilePicture(user)}
+            source={uri()}
             style={styles.profilePicture}
           />
         </View>

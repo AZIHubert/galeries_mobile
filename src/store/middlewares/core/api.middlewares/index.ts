@@ -9,8 +9,8 @@ import {
 import {
   request,
   getAuthToken,
-  refreshToken,
 } from '#store/helpers';
+import refreshToken from '#store/refreshToken';
 
 const apiMiddleware: Middleware = (
   { dispatch },
@@ -32,7 +32,7 @@ const apiMiddleware: Middleware = (
       && payload.meta.url
       && payload.meta.entity
     ) {
-      const token = getAuthToken();
+      const token = await getAuthToken();
       const {
         confirmToken,
         contentType,

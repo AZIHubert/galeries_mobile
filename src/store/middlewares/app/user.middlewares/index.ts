@@ -15,7 +15,9 @@ import {
 
 import { endPoints } from '#store/constant';
 
-import { selectProfilPicture } from '#store/helpers';
+import {
+  selectProfilPicture,
+} from '#store/helpers';
 
 const errorUser: Middleware = (
   { dispatch },

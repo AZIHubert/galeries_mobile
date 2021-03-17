@@ -5,6 +5,7 @@ import {
   API_ERROR,
   PROFILE_PICTURES,
   PROFILE_PICTURES_FETCH,
+  PROFILE_PICTURES_REFRESH,
   apiRequest,
   setLoader,
   setNotification,
@@ -61,6 +62,34 @@ const fetchProfilePictures: Middleware = (
   }
 };
 
+const refreshProfilePictures: Middleware = (
+  { dispatch },
+) => (
+  next,
+) => (
+  action: store.ActionI,
+) => {
+  next(action);
+  if (action.type === PROFILE_PICTURES_REFRESH) {
+    dispatch(
+      setProfilePictures({
+        status: 'fetching',
+      }),
+    );
+    dispatch(
+      apiRequest(
+        null,
+        'GET',
+        endPoints.PROFILE_PICTURE,
+        PROFILE_PICTURES,
+        undefined,
+        undefined,
+        1,
+      ),
+    );
+  }
+};
+
 const successProfilePictures: Middleware = (
   { dispatch, getState },
 ) => (
@@ -99,5 +128,6 @@ const successProfilePictures: Middleware = (
 export default [
   errorProfilePictures,
   fetchProfilePictures,
+  refreshProfilePictures,
   successProfilePictures,
 ];

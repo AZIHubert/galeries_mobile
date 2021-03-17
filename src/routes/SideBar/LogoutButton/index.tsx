@@ -1,7 +1,8 @@
 import { MaterialIcons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
+import {
+  useDispatch,
+} from 'react-redux';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -10,29 +11,23 @@ import {
 
 import AppText from '#components/AppText';
 
-import { logout } from '#helpers/api';
 import theme from '#helpers/theme';
 
-import { AuthContext } from '#src/contexts/AuthProvider';
+import {
+  fetchLogout,
+} from '#store/actions';
 
 const LogoutButton = () => {
-  const { setUser } = React.useContext(AuthContext);
-  const navigation = useNavigation();
+  const dispatch = useDispatch();
+
   return (
     <TouchableOpacity
       activeOpacity={theme.touchableOpacity.defaultOpacity}
       style={styles.container}
-      onPress={async () => {
-        try {
-          const response = await logout();
-          if (response) {
-            await AsyncStorage.clear();
-            setUser(null);
-            navigation.navigate('home');
-          }
-        } catch (err) {
-          console.log(err);
-        }
+      onPress={() => {
+        dispatch(
+          fetchLogout(),
+        );
       }}
     >
       <View
