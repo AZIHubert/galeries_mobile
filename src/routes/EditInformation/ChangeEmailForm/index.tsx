@@ -5,36 +5,61 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import {
+  useDispatch,
+  useSelector,
+} from 'react-redux';
 
 import AppButtonRadius from '#components/AppButtonRadius';
 import AppText from '#components/AppText';
 import Field from '#components/Field';
 
-import { updatePasswordSendEmail } from '#helpers/api';
-import { changeEmailSchema } from '#helpers/schemas';
+import {
+  changeEmailSchema,
+} from '#helpers/schemas';
 
-const initialValues = {
+import {
+  postUpdateEmail,
+  setUpdateEmail,
+} from '#store/actions';
+import {
+  loadingSelector,
+  updateEmailErrorSelector,
+  updateEmailStatusSelector,
+} from '#store/selectors';
+
+const initialValues: form.ChangeEmailI = {
   password: '',
 };
 
 const ChangeEmailForm = () => {
+  const dispatch = useDispatch();
   const formik = useFormik({
     initialValues,
-    onSubmit: async (values, { setFieldError }) => {
+    onSubmit: async (values) => {
       Keyboard.dismiss();
-      try {
-        await updatePasswordSendEmail(values);
-      } catch (err) {
-        const { errors } = err.response.data;
-        if (typeof errors === 'object') {
-          Object.keys(errors).map((error) => setFieldError(error, errors[error]));
-        }
+      if (!loading) {
+        dispatch(
+          postUpdateEmail(values),
+        );
       }
     },
     validateOnBlur: true,
     validateOnChange: false,
     validationSchema: changeEmailSchema,
   });
+  const loading = useSelector(loadingSelector);
+  const updateEmailError = useSelector(updateEmailErrorSelector);
+  const updateEmailStatus = useSelector(updateEmailStatusSelector);
+
+  React.useEffect(() => {
+    if (updateEmailStatus === 'success') {
+      formik.resetForm({
+        values: initialValues,
+      });
+    }
+  }, [updateEmailStatus]);
+
   return (
     <View>
       <View
@@ -51,12 +76,24 @@ const ChangeEmailForm = () => {
       </View>
       <Field
         editable={true}
-        error={formik.errors.password}
+        error={
+          formik.errors.password || updateEmailError.password
+        }
         label='password'
         onBlur={formik.handleBlur('password')}
         onChangeText={(e: string) => {
           formik.setFieldError('password', '');
           formik.setFieldValue('password', e);
+          if (updateEmailError.password) {
+            dispatch(
+              setUpdateEmail({
+                errors: {
+                  ...updateEmailError,
+                  password: '',
+                },
+              }),
+            );
+          }
         }}
         requiredField={true}
         secureTextEntry={true}

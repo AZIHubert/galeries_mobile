@@ -4,7 +4,7 @@ import * as React from 'react';
 import ImageView from '#routes/ImageView';
 import Profile from '#routes/Profile';
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<navigation.ProfileParamList>();
 
 const ProfileStack = () => (
   <Stack.Navigator

@@ -1,16 +1,16 @@
 export default {
   button: {
-    borderRadius: 10,
+    borderRadius: 16,
     borderWidth: 2,
     elevation: 2,
     fontSize: 20,
-    height: 45,
+    height: 40,
     paddingHorizontal: 10,
     paddingVertical: 20,
   },
   color: {
     black: '#000',
-    danger: '#FF0000',
+    danger: '#FC4903',
     facebook: '#3B579D',
     primary: '#7483FF',
     secondary: '#FFFFF4',

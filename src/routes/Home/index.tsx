@@ -1,5 +1,8 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
+import {
+  useNavigation,
+} from '@react-navigation/native';
+import * as Facebook from 'expo-facebook';
+import * as Google from 'expo-google-app-auth';
 import React from 'react';
 import {
   Image,
@@ -7,6 +10,10 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import {
+  useDispatch,
+  useSelector,
+} from 'react-redux';
 
 import AppButton from '#components/AppButton';
 import AppText from '#components/AppText';
@@ -20,12 +27,28 @@ import logoG from '#ressources/images/logoG.png';
 import logoGaleries from '#ressources/images/logoGaleries.png';
 
 import {
-  facebookLogin,
-  googleLogin,
-} from '#helpers/api';
+  fetchLoginFacebook,
+  fetchLoginGoogle,
+  setNotification,
+} from '#store/actions';
+import {
+  userSelector,
+} from '#store/selectors';
 
 const Home = () => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
+  const user = useSelector(userSelector);
+
+  React.useEffect(() => {
+    if (user) {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'sideMenu' }],
+      });
+    }
+  }, [user]);
+
   return (
     <Screen>
       <ImageBackground
@@ -110,16 +133,26 @@ const Home = () => {
               marginBottom={10}
               onPress={async () => {
                 try {
-                  const response = await facebookLogin();
-                  if (response) {
-                    await AsyncStorage.setItem('auThoken', response.data.token);
-                    navigation.reset({
-                      index: 0,
-                      routes: [{ name: 'sideMenu' }],
-                    });
-                  }
+                  await Facebook.initializeAsync({
+                    appId: '688539228486770',
+                  });
                 } catch (err) {
-                  console.log(err);
+                  dispatch(
+                    setNotification({
+                      text: 'Something went wrong. Please try again.',
+                    }),
+                  );
+                }
+                const facebookResponse = await Facebook
+                  .logInWithReadPermissionsAsync({
+                    permissions: ['public_profile'],
+                  });
+                if (facebookResponse.type === 'success') {
+                  const fetchInfo = await fetch(`https://graph.facebook.com/me?access_token=${facebookResponse.token}&fields=email,gender,name,picture.type(large)`);
+                  const facebookUser = await fetchInfo.json();
+                  dispatch(
+                    fetchLoginFacebook(facebookUser),
+                  );
                 }
               }}
               variant='facebook'
@@ -129,16 +162,22 @@ const Home = () => {
               marginBottom={30}
               onPress={async () => {
                 try {
-                  const response = await googleLogin();
-                  if (response) {
-                    await AsyncStorage.setItem('auThoken', response.data.token);
-                    navigation.reset({
-                      index: 0,
-                      routes: [{ name: 'sideMenu' }],
-                    });
+                  const response = await Google.logInAsync({
+                    androidClientId: '863840240633-o8dmgid62rummljeen43rqe1gev7ottn.apps.googleusercontent.com',
+                    iosClientId: '863840240633-6feiofu53fj43d7de2rgpc1qn3epb7d0.apps.googleusercontent.com',
+                  });
+                  if (response.type === 'success') {
+                    const { user: googleUser } = response;
+                    dispatch(
+                      fetchLoginGoogle(googleUser),
+                    );
                   }
                 } catch (err) {
-                  console.log(err);
+                  dispatch(
+                    setNotification({
+                      text: 'Something went wrong. Please try again.',
+                    }),
+                  );
                 }
               }}
               variant='google'

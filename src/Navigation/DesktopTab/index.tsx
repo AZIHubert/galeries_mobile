@@ -13,7 +13,7 @@ import CreateGalerie from '#routes/CreateGalerie';
 import Landing from '#routes/Landing';
 import Notification from '#routes/Notification';
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<navigation.DesktopParamList>();
 
 const DesktopTab = () => (
   <Tab.Navigator

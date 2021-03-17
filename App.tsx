@@ -1,18 +1,19 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 
 import Loader from '#src/Loader';
 import Permission from '#src/Permission';
 import Navigation from '#src/Navigation';
-import { AuthProvider } from '#src/contexts/AuthProvider';
+import store from '#src/store';
 
 const App = () => (
-  <Loader>
-    <AuthProvider>
+  <Provider store={store}>
+    <Loader>
       <Permission>
         <Navigation />
       </Permission>
-    </AuthProvider>
-  </Loader>
+    </Loader>
+  </Provider>
 );
 
 export default App;

@@ -18,7 +18,9 @@ const Permission: React.FC<PermissionI> = ({ children }) => {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View
+      style={styles.container}
+    >
       { children }
     </View>
   );

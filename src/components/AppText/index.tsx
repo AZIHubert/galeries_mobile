@@ -6,10 +6,31 @@ import {
 
 import theme from '#helpers/theme';
 
-type Color = 'black' | 'error' | 'primary' | 'secondary' | 'white';
-type FontFamily = 'bold' | 'oblique' | 'roman';
-type TextAlign = 'auto' | 'center' | 'justify' | 'left' | 'right';
-type TextTransform = 'capitalize' | 'lowercase' | 'none' | 'uppercase';
+type Color =
+  'black' |
+  'error' |
+  'primary' |
+  'secondary' |
+  'white';
+type FontFamily =
+  'bold' |
+  'oblique' |
+  'roman';
+type TextAlign =
+  'auto' |
+  'center' |
+  'justify' |
+  'left' |
+  'right';
+type TextDecorationLine =
+  'line-through' |
+  'none' |
+  'underline';
+type TextTransform =
+  'capitalize' |
+  'lowercase' |
+  'none' |
+  'uppercase';
 
 interface LoaderI {
   children: string | string[];
@@ -17,6 +38,7 @@ interface LoaderI {
   fontFamily?: FontFamily
   fontSize?: number;
   textAlign?: TextAlign;
+  textDecorationLine?: TextDecorationLine;
   textTransform?: TextTransform;
 }
 
@@ -25,6 +47,7 @@ interface StyleSheetI {
   fontFamily: FontFamily
   fontSize: number;
   textAlign: TextAlign;
+  textDecorationLine: TextDecorationLine;
   textTransform: TextTransform;
 }
 
@@ -64,6 +87,7 @@ const AppText: React.FC<LoaderI> = ({
   fontFamily = 'roman',
   fontSize = theme.text.fontSize,
   textAlign = 'auto',
+  textDecorationLine = 'none',
   textTransform = 'none',
 }) => (
   <Text
@@ -73,6 +97,7 @@ const AppText: React.FC<LoaderI> = ({
       fontSize,
       textAlign,
       textTransform,
+      textDecorationLine,
     }).text}
   >
     { children }
@@ -85,6 +110,7 @@ const styles = ({
   fontSize,
   textAlign,
   textTransform,
+  textDecorationLine,
 }: StyleSheetI) => StyleSheet.create({
   text: {
     color: converColor(color),
@@ -92,6 +118,7 @@ const styles = ({
     fontSize,
     textTransform,
     textAlign,
+    textDecorationLine,
   },
 });
 

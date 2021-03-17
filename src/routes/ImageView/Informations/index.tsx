@@ -9,17 +9,24 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {
+  useDispatch,
+  useSelector,
+} from 'react-redux';
 
 import AppText from '#components/AppText';
 import AppButton from '#components/AppButton';
-import DownloadButton from '#components/DownloadButton';
 import Wrapper from '#components/Wrapper';
 
-import { setProfilePicture } from '#helpers/api';
-import { ProfilePictureI } from '#helpers/interfaces';
 import theme from '#helpers/theme';
 
-import { AuthContext } from '#src/contexts/AuthProvider';
+import {
+  putProfilePicture,
+} from '#store/actions';
+import {
+  loadingSelector,
+  userSelector,
+} from '#store/selectors';
 
 const formatBytes = (a: number, b = 2) => {
   if (a === 0) return '0 Bytes'; const c = b < 0 ? 0 : b;
@@ -38,13 +45,17 @@ const Information = ({
   onPress,
   profilePicture,
 }: InformationI) => {
-  const { setUser, user } = React.useContext(AuthContext);
+  const dispatch = useDispatch();
+  const loading = useSelector(loadingSelector);
+  const user = useSelector(userSelector);
+
   const changeProfilePictureText = () => {
     if (user && user.currentProfilePictureId === profilePicture.id) {
       return 'remove profile picture';
     }
     return 'use as profile picture';
   };
+
   return (
     <LinearGradient
       colors={[theme.color.primary, theme.color.tertiary]}
@@ -119,34 +130,16 @@ const Information = ({
           disabled={false}
           marginBottom={20}
           onPress={async () => {
-            try {
-              const response = await setProfilePicture(profilePicture.id);
-              if (response) {
-                setUser((prevState) => {
-                  if (prevState) {
-                    const remove = profilePicture.id !== prevState.currentProfilePictureId;
-                    return {
-                      ...prevState,
-                      currentProfilePictureId: remove
-                        ? profilePicture.id
-                        : null,
-                      currentProfilePicture: remove
-                        ? profilePicture
-                        : null,
-                    };
-                  }
-                  return null;
-                });
-              }
-            } catch (err) {
-              console.log(err);
+            if (!loading) {
+              dispatch(
+                putProfilePicture({
+                  id: profilePicture.id,
+                }),
+              );
             }
           }}
           title={changeProfilePictureText()}
           variant='tertiary'
-        />
-        <DownloadButton
-          disabled={false}
         />
         <View
           style={styles.scrollButtonContainer}

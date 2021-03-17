@@ -1,32 +1,35 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import * as React from 'react';
 import {
+  useSelector,
+} from 'react-redux';
+import {
   Image,
-  ImageSourcePropType,
   StyleSheet,
   View,
 } from 'react-native';
 
 import theme from '#helpers/theme';
-import { UserI } from '#helpers/interfaces';
+
+import {
+  profilePictureCurrentSelector,
+} from '#store/selectors';
 
 import defaultProfilePicture from '#ressources/images/defaultProfilePicture.png';
 
-import { AuthContext } from '#src/contexts/AuthProvider';
-
-const profilePicture
-: (user: UserI | null) => ImageSourcePropType | { uri: string } = (user: UserI | null) => {
-  if (user && user.currentProfilePicture) {
-    return { uri: user.currentProfilePicture.cropedImage.signedUrl };
-  }
-  if (user && user.defaultProfilePicture) {
-    return { uri: user.defaultProfilePicture };
-  }
-  return defaultProfilePicture;
-};
-
 const ProfilePicture = () => {
-  const { user } = React.useContext(AuthContext);
+  const { croped } = useSelector(profilePictureCurrentSelector);
+
+  const uri = () => {
+    if (typeof croped === 'string') {
+      if (croped !== '') {
+        return { uri: croped };
+      }
+      return defaultProfilePicture;
+    }
+    return croped;
+  };
+
   return (
     <LinearGradient
       colors={[theme.color.tertiary, theme.color.primary]}
@@ -39,7 +42,7 @@ const ProfilePicture = () => {
       >
         <Image
           resizeMode='cover'
-          source={profilePicture(user)}
+          source={uri()}
           style={styles.image}
         />
       </View>
@@ -49,8 +52,8 @@ const ProfilePicture = () => {
 
 const styles = StyleSheet.create({
   image: {
-    height: 120 - 6,
-    width: 120 - 6,
+    height: 126 - 6,
+    width: 126 - 6,
   },
   imageContainer: {
     alignItems: 'center',
@@ -61,10 +64,10 @@ const styles = StyleSheet.create({
   linearGradient: {
     alignItems: 'center',
     borderRadius: 63,
-    height: 120,
+    height: 126,
     justifyContent: 'center',
-    marginBottom: 15,
-    width: 120,
+    marginBottom: 45,
+    width: 126,
   },
 });
 

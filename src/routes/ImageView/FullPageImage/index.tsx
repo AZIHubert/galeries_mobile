@@ -10,7 +10,6 @@ import {
   View,
 } from 'react-native';
 
-import { ProfilePictureI } from '#helpers/interfaces';
 import theme from '#helpers/theme';
 
 interface FullPageImageI {
@@ -56,6 +55,7 @@ const FullPageImage = ({
       width: defaultWidth,
     };
   };
+
   return (
     <ImageBackground
       blurRadius={15}
